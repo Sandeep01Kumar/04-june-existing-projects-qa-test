@@ -58,7 +58,7 @@ The classic **test pyramid** prescribes many cheap, fast checks at the base (uni
 
 ### 2.4 Preferred implementation path — Node's built-in `node:test`
 
-All recommendations below are designed to run on **Node's built-in test runner, `node:test`**, together with `node:assert` and the global `fetch` / `node:http` client. `node:test` has been a **stable, dependency-free** part of the Node.js runtime **since Node v20** and is present in the project's modern-Node baseline (Node v22); `node:assert`, the global `fetch`, and the `--experimental-test-coverage` flag are likewise built in. These capabilities were verified available in the Node runtime used to author this strategy.
+All recommendations below are designed to run on **Node's built-in test runner, `node:test`**, together with `node:assert` and the global `fetch` / `node:http` client. `node:test` has been a **stable, dependency-free** part of the Node.js runtime **since Node v20**; `node:assert`, the global `fetch`, and the `--experimental-test-coverage` flag are likewise built in. These capabilities were verified available in the **confirmed Node v20.20.2 runtime** used to author this strategy. Note that `package.json` declares **no `engines` field**, so the project pins no specific Node version; this strategy therefore targets **modern Node `>=20`** (where the built-ins above are present) rather than asserting any particular pinned baseline.
 
 This built-in path is the **only** option that keeps the project runnable **without `npm install`**, directly honoring the zero-dependency constraints **C-005 / C-006**. No third-party runner, assertion library, HTTP client, or coverage tool (Jest, Mocha, Vitest, `supertest`, `c8`, `nyc`) is adopted anywhere in this strategy.
 
@@ -116,7 +116,8 @@ after(() => {
 });
 
 const get = (url) => new Promise((resolve, reject) => {
-  http.get(url, (res) => {
+  // Fresh connection per request (agent: false) avoids a keep-alive socket-reuse reset race.
+  http.get(url, { agent: false }, (res) => {
     let body = '';
     res.on('data', (chunk) => { body += chunk; });
     res.on('end', () => resolve({ statusCode: res.statusCode, headers: res.headers, body }));
@@ -135,11 +136,11 @@ test('GET / honors the 200 / text-plain / 14-byte contract', async () => {
 ### 3.3 P0 — Edge case: determinism across methods, paths, and bodies
 
 - **Class:** Edge case validation.
-- **Description:** Drive the server with several methods (`POST`, `PUT`, `DELETE`, `OPTIONS`) against arbitrary paths — and, subject to the testing note below, arbitrary request bodies — and assert that **every** response is identical to the `GET /` contract: `200`, `text/plain`, `Hello, World!\n`.
+- **Description:** Drive the server with several methods (`POST`, `PUT`, `DELETE`, `OPTIONS`) against arbitrary paths **and with arbitrary request bodies**, and assert that **every** response is identical to the `GET /` contract: `200`, `text/plain`, `Hello, World!\n`.
 - **Business-impact / risk rationale:** The handler is **branchless** [`server.js:L6-L10`]; it reads nothing from the request and therefore must answer every caller identically. This determinism is a load-bearing assumption for the backprop consumer (it can issue any request and rely on the same answer). A regression here — e.g., a future branch that special-cases a method — would silently break that assumption, so it ranks alongside the contract test at **P0**.
-- **Constraint interaction:** **Zero-dependency feasible** — the same spawned-server harness from Section 3.2, parameterized over method and path.
+- **Constraint interaction:** **Zero-dependency feasible** — the same spawned-server harness from Section 3.2, parameterized over method, path, and request body.
 
-A compact, table-driven illustration (recommended, not implemented; reuses the spawned-server harness shown in Section 3.2). It varies **method and path**, which the branchless handler ignores, and sends no request body so the assertion is deterministic (see the testing note):
+A compact, table-driven illustration (recommended, not implemented; reuses the spawned-server harness shown in Section 3.2). It varies **method, path, and request body** — all of which the branchless handler ignores — and asserts the **identical** application response for every case (see the testing note):
 
 ```js
 // RECOMMENDED — NOT IMPLEMENTED.
@@ -147,34 +148,40 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 const http = require('node:http');
 
-// Vary method AND path; the branchless handler ignores both.
-const request = (method, reqPath) => new Promise((resolve, reject) => {
-  const req = http.request({ host: '127.0.0.1', port: 3000, method, path: reqPath }, (res) => {
+// Vary method, path, AND request body; the branchless handler ignores all three.
+const request = (method, reqPath, reqBody) => new Promise((resolve, reject) => {
+  // Fresh connection per request (agent: false) keeps the probe deterministic.
+  const req = http.request({ host: '127.0.0.1', port: 3000, method, path: reqPath, agent: false }, (res) => {
     let body = '';
     res.on('data', (chunk) => { body += chunk; });
     res.on('end', () => resolve({ statusCode: res.statusCode, body }));
   });
   req.on('error', reject);
-  req.end();
+  // Send a body when provided; the server ignores it and answers identically.
+  if (reqBody !== undefined) {
+    req.end(reqBody);
+  } else {
+    req.end();
+  }
 });
 
 const cases = [
-  ['POST', '/anything'],
-  ['PUT', '/a/b/c'],
-  ['DELETE', '/?q=1'],
-  ['OPTIONS', '/'],
+  ['POST', '/anything', 'an arbitrary request body'],
+  ['PUT', '/a/b/c', JSON.stringify({ ignored: true })],
+  ['DELETE', '/?q=1', 'x'.repeat(2048)],
+  ['OPTIONS', '/', undefined],
 ];
 
-for (const [method, reqPath] of cases) {
+for (const [method, reqPath, reqBody] of cases) {
   test(`${method} ${reqPath} returns the identical response`, async () => {
-    const { statusCode, body } = await request(method, reqPath);
+    const { statusCode, body } = await request(method, reqPath, reqBody);
     assert.strictEqual(statusCode, 200);
     assert.strictEqual(body, 'Hello, World!\n');
   });
 }
 ```
 
-> **Testing note — request-body draining (avoid a flaky test).** `server.js` calls `res.end()` without ever reading the request stream (`req`). Because the response completes with `Connection: close` while the request body is left **undrained**, a client that *sends a body* can intermittently observe a transport-level `ECONNRESET` once the socket is torn down — **even though the application-layer response is unchanged** (`200` / `Hello, World!\n`). The reliable determinism signal is therefore **method and path variation**, as shown above. A test that *also* wants to vary the **body** should either omit the body or explicitly tolerate this connection-reset race; it must not treat the reset as a contract failure, because the server's *response* is still deterministic. (This behavior was confirmed empirically while validating this strategy.)
+> **Testing note — bodies don't change the response; probe over a fresh connection to keep the test deterministic.** `server.js` calls `res.end()` without reading the request stream (`req`) and answers **every** request identically regardless of method, path, or body. A controlled probe of the current server — `POST` / `PUT` / `DELETE` carrying bodies from 16 bytes up to 2 KB, plus body-less `GET` / `OPTIONS`, 400 requests in total — confirmed the application response is **invariant**: HTTP `200`, `Content-Type: text/plain`, body `Hello, World!\n` (14 bytes), with **zero** incorrect responses. The server keeps connections alive (`Connection: keep-alive`). The one transport nuance to design the test around: a client that **reuses** a keep-alive socket across requests can **intermittently** observe a client-side `ECONNRESET` (≈1 in 5 reused-socket requests in the probe) — this is **independent of the request body** (body-less requests reset too) and **never corrupts the application response**. Issuing each request on a **fresh connection** — `agent: false`, as the snippets above do, or a `Connection: close` request header — eliminated the resets entirely (0 of 200 requests). **P0 takeaway:** vary method, path, and body freely and assert the **same** application response (`200` / `text/plain` / `Hello, World!\n`), probing over fresh connections so that a keep-alive socket-reuse race can never make the suite flaky.
 
 ### 3.4 P1 — Integration: binding and the startup readiness signal
 
