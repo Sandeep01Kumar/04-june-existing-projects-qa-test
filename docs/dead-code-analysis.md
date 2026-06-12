@@ -88,7 +88,7 @@ The table below uses the four report fields mandated by the prompt — **File Pa
 | `server.js` (unused **variables**) | All four `const` declarations — `http` (`L1`), `hostname` (`L3`), `port` (`L4`), `server` (`L6`) — are referenced (see Section 4.2). | High | **None** — no unused variables. |
 | `server.js:L1` (unused **imports**) | The single import `http` is used by `http.createServer` (`server.js:L6`). | High | **None** — the import is live. |
 | *(all 4 files)* (unused / orphan **files**) | Every file has an active role: `server.js` (runtime), `package.json` (manifest), `package-lock.json` (lockfile), `README.md` (governance). None is orphaned. | High | **None** — no orphan files. |
-| `server.js` (**unreachable** code) | All 14 lines execute on startup; the request handler is branchless (no conditional/early-return paths), so no statement is unreachable. | High | **None** — no unreachable code. |
+| `server.js` (**unreachable** code) | All top-level statements execute during startup, and the branchless request-handler body (`server.js:L7`–`server.js:L9`) is reachable whenever a request is handled; no conditional or early-return path makes any statement unreachable. | High | **None** — no unreachable code. |
 | `server.js:L6` (observation: `req` parameter) | `req` is never read; the handler body (`L7`–`L9`) touches only `res`. It is the idiomatic first positional parameter of an `(req, res)` HTTP handler. | High | **KEEP** (advisory). Idiomatic placeholder; removal harms clarity and is also barred by C-001. See Section 5. |
 | `package.json:L5` (observation: `main` field) | `"main": "index.js"` references a file that does not exist; the real entry point is `node server.js`. | High | **Report-only** (no change). Correcting it would edit `package.json`, which is barred by C-001. See Section 6. |
 
@@ -149,7 +149,7 @@ The marginal benefit of removal (one fewer unread identifier) is negligible agai
 - **Unused variables — none.** All four `const` bindings are referenced.
 - **Unused imports — none.** The single `http` import is used.
 - **Unused / orphan files — none.** All four files have an active role.
-- **Unreachable code — none.** All 14 lines run on startup; the handler is branchless.
+- **Unreachable code — none.** All top-level statements execute during startup, and the branchless request-handler body (`server.js:L7`–`server.js:L9`) is reachable whenever a request is handled; no conditional or early-return path makes any statement unreachable.
 
 The only two observations are non-removable: the idiomatic `req` parameter (`server.js:L6`) is recommended for **retention**, and the dangling `main` reference (`package.json:L5`) is recorded as **report-only** because correcting it is barred by C-001.
 
