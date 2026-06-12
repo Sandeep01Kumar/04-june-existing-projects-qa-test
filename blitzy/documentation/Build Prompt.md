@@ -1,0 +1,1 @@
+This is a software project. Could you analyze the codebase and identify dead or unused code? Please find unused functions, classes, variables, imports, files, and unreachable code. Verify all references before marking code as unused, and provide a report with file paths, evidence, confidence levels, and recommended cleanup actions.
