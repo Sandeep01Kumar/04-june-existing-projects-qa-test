@@ -24,7 +24,7 @@ A minimal, single-file **Node.js HTTP server** that always returns a static `Hel
 ## Overview
 
 `hao-backprop-test` is a deliberately tiny project whose entire runtime lives in a single
-file, `server.js`. It starts a Node.js HTTP server and answers **every** request — regardless
+file, `server.js`. It starts a Node.js HTTP server and answers **every request it receives** — regardless
 of method, path, query string, headers, or body — with one fixed plain-text response. `Source: server.js:L6-L10`
 
 The project exists to serve as a **deterministic fixture** for a "backprop integration"
@@ -84,7 +84,7 @@ sequenceDiagram
 
 ## Prerequisites
 
-- **Node.js 22.x LTS** — the runtime used to validate this project (verified version `v22.22.2`). The built-in `http` module the server relies on ships with Node.js, so no additional runtime is required. `Source: server.js:L1`
+- **Node.js LTS (20.x or newer)** — the runtime used to validate this project (verified version `v20.20.2`). The built-in `http` module the server relies on ships with Node.js and is stable across the Node.js 20.x and 22.x LTS lines, so the server runs identically on either and no additional runtime is required. `Source: server.js:L1`
 - **npm** — bundled with Node.js (verified version `11.1.0`). It is needed only for the optional, no-op install described below; it is **not** required to run the server.
 
 No other tooling, framework, compiler, or build step is needed. `Source: package.json:L1-L11`
@@ -158,7 +158,7 @@ handler; this is transport-level behavior outside the handler's control. `Source
 
 | Property        | Value                                                  | Source            |
 |-----------------|--------------------------------------------------------|-------------------|
-| Method          | ANY (`GET`, `POST`, `PUT`, `DELETE`, …)                | `server.js:L6-L10`|
+| Method          | Any **Node-recognized** method — `GET`, `POST`, `PUT`, `DELETE`, WebDAV verbs, … (unrecognized tokens get `400` before the handler; see note above) | `server.js:L6-L10`|
 | Path            | ANY (`/`, `/any/path`, `/foo?x=1`, …)                  | `server.js:L6-L10`|
 | Status code     | `200 OK`                                               | `server.js:L7`    |
 | `Content-Type`  | `text/plain`                                           | `server.js:L8`    |
@@ -265,6 +265,19 @@ hao-backprop-test/
 | `package-lock.json` | Dependency lockfile confirming zero dependencies.                    | `package-lock.json:L6-L11` |
 | `README.md`         | This comprehensive developer guide.                                  | —                       |
 | `TESTING.md`        | Testing strategy and manual validation commands.                     | —                       |
+
+### Package Metadata
+
+The package metadata below is reproduced **verbatim** from `package.json` and matches it exactly. `Source: package.json:L2-L10`
+
+| Field         | Value                    | Source             |
+|---------------|--------------------------|--------------------|
+| `name`        | `hello_world`            | `package.json:L2`  |
+| `version`     | `1.0.0`                  | `package.json:L3`  |
+| `description` | `Hello world in Node.js` | `package.json:L4`  |
+| `main`        | `index.js` — documented entry-point discrepancy (no `index.js` file exists; see [Running the Server](#running-the-server)) | `package.json:L5` |
+| `author`      | `hxu`                    | `package.json:L9`  |
+| `license`     | `MIT`                    | `package.json:L10` |
 
 ---
 
