@@ -283,7 +283,8 @@ catch-all behavior really *is* unconditional, plus one genuine failure mode (por
 | **Very long URL path** | A path with hundreds of characters | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — unchanged | `server.js:L6-L10` |
 | **Odd / encoded path** | Percent-encoded or unusual characters (e.g. `/%E2%9C%93/…`) | `200`, `text/plain`, `Hello, World!\n` — path is ignored | `server.js:L6-L10` |
 | **Query strings** | `/foo?x=1&y=2` | `200`, `text/plain`, `Hello, World!\n` — query ignored | `server.js:L6-L10` |
-| **Unusual / non-standard methods** | `PATCH`, `OPTIONS`, or a custom verb | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — the handler ignores the method, so every verb yields the identical response | `server.js:L6-L10` |
+| **Unusual / extension methods** | `PATCH`, `OPTIONS`, or a Node-recognized extension method such as a WebDAV verb (`PROPFIND`, `MKCOL`, `LOCK`, …) | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — the handler ignores the method, so every **recognized** method yields the identical response | `server.js:L6-L10` |
+| **Arbitrary / unrecognized method tokens** | A non-standard token such as `FOOBAR` or `CUSTOM` | `400 Bad Request` with `Connection: close` and an **empty body** — Node's HTTP parser rejects unrecognized method tokens **before the handler runs**; this is transport-level behavior, not application logic | `server.js:L6-L10` |
 | **Request with a body** | `POST`/`PUT` with a payload | Request body is **not inspected or consumed by application code**; the response is unchanged (`200`, `text/plain`, `Hello, World!\n`) | `server.js:L6-L10` |
 | **Many concurrent requests** | Fire N requests in parallel | Every response is identical (`200`, `text/plain`, 14 bytes) — determinism under load | `server.js:L6-L10` |
 | **Repeated requests (idempotency)** | Same request many times | Byte-identical responses every time (aside from the variable `Date` header) | `server.js:L6-L10` |

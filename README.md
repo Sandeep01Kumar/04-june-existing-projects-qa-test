@@ -136,7 +136,9 @@ server is bound and listening. `Source: server.js:L12-L14`
 repository** — the actual runtime module is `server.js`. In addition, `package.json` defines
 **no `start` script** (only a placeholder `test` script). Consequently:
 
-- `npm start` will **not** work (the script is undefined).
+- `npm start` **works** — although no explicit `start` script is defined, npm falls back to
+  its built-in default and runs `node server.js` (npm applies this default because a
+  `server.js` file exists in the package root).
 - `node .` / `node index.js` will **fail** (the `main` target does not exist).
 - The correct, supported launch command is **`node server.js`**.
 
@@ -148,8 +150,11 @@ repository; it is intentionally left **as-is** and is not corrected by this proj
 ## API Documentation
 
 The server exposes a **single catch-all endpoint**. The request handler does not inspect the
-method, path, query, headers, or body, so every request — on every route, with every verb —
-receives the identical response. `Source: server.js:L6-L10`
+method, path, query, headers, or body, so every request that reaches it — on every route, with
+every **standard HTTP method** (and Node-recognized extension methods such as the WebDAV verbs)
+— receives the identical response. Node's HTTP parser rejects unrecognized method tokens (for
+example `FOOBAR`) with `400 Bad Request` before the handler runs, so they never reach the
+handler; this is transport-level behavior outside the handler's control. `Source: server.js:L6-L10`
 
 | Property        | Value                                                  | Source            |
 |-----------------|--------------------------------------------------------|-------------------|
@@ -182,7 +187,9 @@ Hello, World!
 
 ### Example: catch-all confirmation (any method / any path)
 
-Every method on every path returns the same 14-byte body, confirming the branchless contract:
+Every **standard HTTP method** on every path returns the same 14-byte body, confirming the
+branchless contract (Node's HTTP parser rejects unrecognized method tokens with `400` before
+the handler runs):
 
 ```bash
 $ curl -s -X POST http://127.0.0.1:3000/any/path   # -> Hello, World!
