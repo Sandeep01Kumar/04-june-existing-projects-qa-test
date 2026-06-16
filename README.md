@@ -93,14 +93,11 @@ No other tooling, framework, compiler, or build step is needed. `Source: package
 
 ## Installation
 
-Clone the repository, then (optionally) run `npm install`:
+This project has **zero dependencies**, so there is nothing to install. From the root of your checked-out repository, you can optionally run `npm install` (it is a no-op — see the note below):
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd hao-backprop-test
-
-# Optional: this is a no-op for this project (see note below)
+# From the root of your checked-out repository (the directory containing server.js).
+# Optional: this is a no-op for this project because there are zero dependencies.
 npm install
 ```
 

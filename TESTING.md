@@ -34,7 +34,7 @@ test fixture for an external *backprop integration* workflow.
 The **system under test (SUT)** is a single module, `server.js`, which starts a Node.js
 HTTP server bound to the loopback interface `127.0.0.1` on port `3000` using only the
 built-in `http` module — no third-party framework is involved.
-_Source: `server.js:L2`, `server.js:L5`, `server.js:L7`._
+_Source: `server.js:L1`, `server.js:L3`, `server.js:L4`._
 
 Its entire externally observable behavior is one HTTP **response contract**:
 
@@ -45,7 +45,7 @@ Its entire externally observable behavior is one HTTP **response contract**:
 | Response body   | `Hello, World!\n` (14 bytes)   |
 | Startup log     | `Server running at http://127.0.0.1:3000/` |
 
-_Source: `server.js:L21-L25` (handler), `server.js:L35-L37` (startup log)._
+_Source: `server.js:L6-L10` (handler), `server.js:L12-L14` (startup log)._
 
 Because the server is tiny and fully deterministic, the goal of this strategy is **not**
 broad coverage of complex logic — there is none — but **high-confidence verification of the
@@ -104,7 +104,7 @@ Key facts about the current state:
 `hao-backprop-test` is a **deterministic fixture**: the request handler is *branchless*. It
 never inspects the request method, URL/path, query string, headers, or body, and it always
 writes the same status, the same header, and the same body for every request.
-_Source: `server.js:L21-L25`._
+_Source: `server.js:L6-L10`._
 
 ```mermaid
 flowchart LR
@@ -132,7 +132,7 @@ This determinism shapes the entire strategy:
   catch-all behavior holds across methods, paths, query strings, and bodies.
 - **Boot reliability matters as much as response correctness.** A fixture that does not start
   is useless to the consumer, so verifying the process boots, logs its readiness line, and
-  binds the expected host/port is a first-class concern. _Source: `server.js:L35-L37`._
+  binds the expected host/port is a first-class concern. _Source: `server.js:L12-L14`._
 - **Failure modes are narrow but real.** The most realistic failure is not a wrong response;
   it is the process refusing to start because the port is already in use. That edge case
   deserves explicit attention (see [Edge Case Validations](#7-edge-case-validations)).
@@ -147,17 +147,17 @@ testability refactor** (next section).
 
 **What could be unit-tested.** The only unit-testable logic is the request handler itself —
 the three statements that set the status code, set the `Content-Type` header, and end the
-response with the static body. _Source: `server.js:L21-L25`._ A unit test would invoke the
+response with the static body. _Source: `server.js:L6-L10`._ A unit test would invoke the
 handler with mock `req`/`res` objects and assert that:
 
-- `res.statusCode` is set to `200`; _Source: `server.js:L22`._
-- `res.setHeader` is called with `('Content-Type', 'text/plain')`; _Source: `server.js:L23`._
-- `res.end` is called with the payload `Hello, World!\n` (14 bytes). _Source: `server.js:L24`._
+- `res.statusCode` is set to `200`; _Source: `server.js:L7`._
+- `res.setHeader` is called with `('Content-Type', 'text/plain')`; _Source: `server.js:L8`._
+- `res.end` is called with the payload `Hello, World!\n` (14 bytes). _Source: `server.js:L9`._
 
 **The testability barrier (must-read).** `server.js` **does not export anything** — it has no
 `module.exports`. The request handler is defined inline as an anonymous arrow function passed
 directly to `http.createServer`, and the file begins listening as a *side effect* of being
-required or run. _Source: `server.js:L21-L37`._ Consequently, a unit test cannot import the
+required or run. _Source: `server.js:L6-L14`._ Consequently, a unit test cannot import the
 handler in isolation, and merely `require()`-ing the module would start a real listening
 socket — turning every "unit" test into an integration test (and risking port conflicts).
 
@@ -212,16 +212,16 @@ code change** and validates the handler, the listen call, and the host/port bind
 Recommended integration flow:
 
 1. **Boot the process.** Spawn `node server.js` as a child process.
-   _Source: `server.js:L35-L37`._
+   _Source: `server.js:L12-L14`._
 2. **Wait for readiness.** Detect the listening state either by watching stdout for the exact
    startup line `Server running at http://127.0.0.1:3000/`, or by polling
-   `http://127.0.0.1:3000/` until the first successful response. _Source: `server.js:L36`._
+   `http://127.0.0.1:3000/` until the first successful response. _Source: `server.js:L13`._
 3. **Probe with an HTTP request.** Issue a request (e.g., `GET /`) using the built-in `http`
    client (or `fetch`) and capture the status code, the `Content-Type` header, and the body.
 4. **Assert the contract.** Status `200`, `Content-Type: text/plain`, body `Hello, World!\n`
-   (14 bytes), and `Content-Length: 14`. _Source: `server.js:L21-L25`._
+   (14 bytes), and `Content-Length: 14`. _Source: `server.js:L6-L10`._
 5. **Verify the startup log.** Assert the process emitted exactly
-   `Server running at http://127.0.0.1:3000/` on stdout. _Source: `server.js:L36`._
+   `Server running at http://127.0.0.1:3000/` on stdout. _Source: `server.js:L13`._
 6. **Tear down cleanly.** Kill the child process and confirm the port is released so repeated
    test runs do not collide on port `3000` (see [EADDRINUSE](#7-edge-case-validations)).
 
@@ -241,7 +241,7 @@ Practical guidance:
 
 Because the handler is a catch-all, the central API property to verify is **invariance**: the
 same response for every method and every path. The matrix below was **executed live** against
-`node server.js` and each row produced the identical contract. _Source: `server.js:L21-L25`._
+`node server.js` and each row produced the identical contract. _Source: `server.js:L6-L10`._
 
 For **every** scenario, the expected response is:
 
@@ -261,12 +261,12 @@ For **every** scenario, the expected response is:
 Assertion notes:
 
 - **Assert the body exactly**, including the trailing newline — the body is precisely the
-  14-byte string `Hello, World!\n`. _Source: `server.js:L24`._
+  14-byte string `Hello, World!\n`. _Source: `server.js:L9`._
 - **Only `Content-Type` is set by application code.** `Content-Length` is computed by Node
   from the body, and `Date`, `Connection: keep-alive`, and `Keep-Alive` are added
   automatically by the Node `http` module; assert `Content-Type` strictly and treat the
   auto-generated headers as present-but-variable (the `Date` value changes per request).
-  _Source: `server.js:L23`._
+  _Source: `server.js:L8`._
 - **Invariance is the assertion.** Tests should explicitly confirm that rows 1–5 produce
   byte-identical bodies and identical status/`Content-Type`, proving the catch-all behavior.
 
@@ -280,28 +280,28 @@ catch-all behavior really *is* unconditional, plus one genuine failure mode (por
 
 | Edge case | What to send / do | Expected behavior | Source |
 |-----------|-------------------|-------------------|--------|
-| **Very long URL path** | A path with hundreds of characters | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — unchanged | `server.js:L21-L25` |
-| **Odd / encoded path** | Percent-encoded or unusual characters (e.g. `/%E2%9C%93/…`) | `200`, `text/plain`, `Hello, World!\n` — path is ignored | `server.js:L21-L25` |
-| **Query strings** | `/foo?x=1&y=2` | `200`, `text/plain`, `Hello, World!\n` — query ignored | `server.js:L21-L25` |
-| **Unusual / non-standard methods** | `PATCH`, `OPTIONS`, `HEAD`, or a custom verb | `200`, `text/plain`, body `Hello, World!\n` for body-bearing methods (e.g. `PATCH`, `OPTIONS`). For `HEAD`, Node follows HTTP semantics: status `200` and `Content-Type: text/plain` still match, but **no response body is sent and `Content-Length` is omitted** | `server.js:L21-L25` |
-| **Request with a body** | `POST`/`PUT` with a payload | Request body is **not inspected or consumed by application code**; the response is unchanged (`200`, `text/plain`, `Hello, World!\n`) | `server.js:L21-L25` |
-| **Many concurrent requests** | Fire N requests in parallel | Every response is identical (`200`, `text/plain`, 14 bytes) — determinism under load | `server.js:L21-L25` |
-| **Repeated requests (idempotency)** | Same request many times | Byte-identical responses every time (aside from the variable `Date` header) | `server.js:L21-L25` |
-| **Port already in use (`EADDRINUSE`)** | Start a second instance while `3000` is occupied | The process throws an **unhandled** `'error'` event and **crashes** (see below) | `server.js:L35` |
-| **Loopback-only reachability** | Connect from a non-local host | **Not reachable** — the server binds `127.0.0.1`, so only local clients can connect | `server.js:L5` |
+| **Very long URL path** | A path with hundreds of characters | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — unchanged | `server.js:L6-L10` |
+| **Odd / encoded path** | Percent-encoded or unusual characters (e.g. `/%E2%9C%93/…`) | `200`, `text/plain`, `Hello, World!\n` — path is ignored | `server.js:L6-L10` |
+| **Query strings** | `/foo?x=1&y=2` | `200`, `text/plain`, `Hello, World!\n` — query ignored | `server.js:L6-L10` |
+| **Unusual / non-standard methods** | `PATCH`, `OPTIONS`, or a custom verb | `200`, `text/plain`, `Hello, World!\n` (14 bytes) — the handler ignores the method, so every verb yields the identical response | `server.js:L6-L10` |
+| **Request with a body** | `POST`/`PUT` with a payload | Request body is **not inspected or consumed by application code**; the response is unchanged (`200`, `text/plain`, `Hello, World!\n`) | `server.js:L6-L10` |
+| **Many concurrent requests** | Fire N requests in parallel | Every response is identical (`200`, `text/plain`, 14 bytes) — determinism under load | `server.js:L6-L10` |
+| **Repeated requests (idempotency)** | Same request many times | Byte-identical responses every time (aside from the variable `Date` header) | `server.js:L6-L10` |
+| **Port already in use (`EADDRINUSE`)** | Start a second instance while `3000` is occupied | The process throws an **unhandled** `'error'` event and **crashes** (see below) | `server.js:L12` |
+| **Loopback-only reachability** | Connect from a non-local host | **Not reachable** — the server binds `127.0.0.1`, so only local clients can connect | `server.js:L3` |
 
 > **Note on request bodies:** the handler never attaches `data`/`end` listeners and never reads
 > `req`, so request bodies are **not consumed by application code**. The response is written and
 > ended immediately and is byte-identical regardless of any payload. For very large request
 > bodies, client-observed behavior can vary depending on whether the client finishes sending the
 > body before the response is received and the connection is closed — this is Node/transport
-> behavior, not application logic. _Source: `server.js:L21-L25`._
+> behavior, not application logic. _Source: `server.js:L6-L10`._
 
 ### Port-in-use (`EADDRINUSE`) — a real failure mode
 
 This is the one edge case that produces a hard failure rather than the happy-path response.
 `server.listen(...)` is called **without** an attached `'error'` listener.
-_Source: `server.js:L35-L37`._ When port `3000` is already bound, Node emits an unhandled
+_Source: `server.js:L12-L14`._ When port `3000` is already bound, Node emits an unhandled
 `'error'` event and the process terminates with a non-zero exit code. Observed output when a
 second instance is started while the first is running:
 
@@ -336,8 +336,8 @@ The meaningful coverage targets are small and well-defined:
 
 | Coverage target | Location | How to cover it |
 |-----------------|----------|-----------------|
-| Request handler (status / header / body writes) | `server.js:L21-L25` | One HTTP integration request asserting the contract, **or** a unit test after the testability refactor |
-| Listen callback (startup log side effect) | `server.js:L35-L37` | Assert the startup log line is emitted during the boot/integration test |
+| Request handler (status / header / body writes) | `server.js:L6-L10` | One HTTP integration request asserting the contract, **or** a unit test after the testability refactor |
+| Listen callback (startup log side effect) | `server.js:L12-L14` | Assert the startup log line is emitted during the boot/integration test |
 
 Because the executable surface is tiny and branchless, a single **HTTP integration test** of
 the response contract plus a **boot/startup-log assertion** would exercise essentially the
@@ -365,12 +365,12 @@ response-contract integration test is the single most important test to have.
 
 | Priority | Test category | Business impact | Risk addressed | Rationale |
 |----------|---------------|-----------------|----------------|-----------|
-| **P0** | **API response-contract integration test** (`GET /` → `200`, `text/plain`, `Hello, World!\n`, 14 bytes) | **Critical** — this *is* the fixture's whole contract with the backprop consumer | A regression here silently breaks every consumer | If only one test exists, it must be this one. _Source: `server.js:L21-L25`._ |
-| **P1** | **Startup / boot verification** (process starts, binds `127.0.0.1:3000`, logs the readiness line) | High — a fixture that never starts is unusable | Boot/bind failures; missing or changed startup log | Readiness is a precondition for every other interaction. _Source: `server.js:L35-L37`._ |
-| **P1** | **Port-collision handling (`EADDRINUSE`)** | High — the most realistic real-world failure mode | Unhandled crash when port `3000` is busy | Common in CI and shared dev environments; explicitly verify the failure is detectable. _Source: `server.js:L35`._ |
-| **P2** | **API invariance matrix** (POST/PUT/DELETE/odd methods & paths all identical) | Medium — confirms the catch-all guarantee | Accidental introduction of routing/branching | Cheap to run once the server is booted; strengthens confidence in determinism. _Source: `server.js:L21-L25`._ |
-| **P2** | **Edge cases** (long/encoded paths, bodies not consumed, concurrency, idempotency) | Medium — robustness and determinism under varied input/load | Subtle non-determinism | Valuable but lower-yield given the branchless handler. _Source: `server.js:L21-L25`._ |
-| **P3** | **Unit tests of the handler** (mock `req`/`res`) | Low (today) — gated behind the testability refactor | Logic regressions in the 3-line handler | Adds little beyond the P0 integration test until `module.exports` is added. _Source: `server.js:L21-L37`._ |
+| **P0** | **API response-contract integration test** (`GET /` → `200`, `text/plain`, `Hello, World!\n`, 14 bytes) | **Critical** — this *is* the fixture's whole contract with the backprop consumer | A regression here silently breaks every consumer | If only one test exists, it must be this one. _Source: `server.js:L6-L10`._ |
+| **P1** | **Startup / boot verification** (process starts, binds `127.0.0.1:3000`, logs the readiness line) | High — a fixture that never starts is unusable | Boot/bind failures; missing or changed startup log | Readiness is a precondition for every other interaction. _Source: `server.js:L12-L14`._ |
+| **P1** | **Port-collision handling (`EADDRINUSE`)** | High — the most realistic real-world failure mode | Unhandled crash when port `3000` is busy | Common in CI and shared dev environments; explicitly verify the failure is detectable. _Source: `server.js:L12`._ |
+| **P2** | **API invariance matrix** (POST/PUT/DELETE/odd methods & paths all identical) | Medium — confirms the catch-all guarantee | Accidental introduction of routing/branching | Cheap to run once the server is booted; strengthens confidence in determinism. _Source: `server.js:L6-L10`._ |
+| **P2** | **Edge cases** (long/encoded paths, bodies not consumed, concurrency, idempotency) | Medium — robustness and determinism under varied input/load | Subtle non-determinism | Valuable but lower-yield given the branchless handler. _Source: `server.js:L6-L10`._ |
+| **P3** | **Unit tests of the handler** (mock `req`/`res`) | Low (today) — gated behind the testability refactor | Logic regressions in the 3-line handler | Adds little beyond the P0 integration test until `module.exports` is added. _Source: `server.js:L6-L14`._ |
 
 **Reading the ranking:** start at **P0** and only invest further down as time allows. For
 this fixture, P0 + P1 already deliver almost all of the achievable confidence; P2/P3 are
@@ -443,7 +443,7 @@ Content-Length: 14
 Hello, World!
 
 # 3) Confirm the catch-all contract across methods and paths — every call returns the
-#    same 14-byte body "Hello, World!\n".  Source: server.js:L21-L25.
+#    same 14-byte body "Hello, World!\n".  Source: server.js:L6-L10.
 $ curl -s -X POST   http://127.0.0.1:3000/any/path
 Hello, World!
 $ curl -s -X PUT    http://127.0.0.1:3000/
@@ -466,9 +466,9 @@ Notes:
 - The **only** application-set header is `Content-Type: text/plain`; `Content-Length` is
   computed by Node from the body, and `Date`, `Connection`, and `Keep-Alive` are added
   automatically by the Node `http` module. Assert `Content-Type` strictly and treat `Date` as
-  variable. _Source: `server.js:L23`._
+  variable. _Source: `server.js:L8`._
 - The body is exactly `Hello, World!\n` — 14 bytes including the trailing newline.
-  _Source: `server.js:L24`._
+  _Source: `server.js:L9`._
 - To verify the current placeholder test behavior described in
   [Section 2](#2-current-state), run `npm test`; it prints `Error: no test specified` and
   exits with status `1`. _Source: `package.json:L7`._
