@@ -1,9 +1,8 @@
-# Blitzy Project Guide — hao-backprop-test
+# Blitzy Project Guide — hello_world Test Suite
 
-> **Project:** `hao-backprop-test` (npm package `hello_world`, v1.0.0)
-> **Branch:** `blitzy-c78fadc3-1afa-4210-a77f-762946afbe89` · **HEAD:** `b88a16b` · **Baseline:** `f4ba68e`
-> **Engagement type:** Documentation-only static analysis (additive deliverables; zero source mutation)
-> **Author of changes:** agent@blitzy.com · **Runtime:** Node.js v20.20.2
+> **Engagement:** Greenfield automated test suite for `server.js` (Jest + supertest)
+> **Branch:** `blitzy-12d03d26-2843-485b-81c7-0a98f23d9e28`  •  **HEAD:** `995a62a`
+> **Status:** ✅ Production-ready (autonomous scope complete) — pending human review & merge
 
 ---
 
@@ -11,62 +10,61 @@
 
 ### 1.1 Project Overview
 
-The engagement performs a whole-repository static analysis of `hao-backprop-test` — a deliberately minimal, zero-dependency Node.js HTTP-server fixture (four baseline files, ~39 lines) used for backprop integration testing. It produces two additive Markdown deliverables: a **dead/unused-code report** (OBJ-1, from the user prompt) and a **risk-prioritized testing strategy** (OBJ-2, from rule "Add Testing Rule IW"). Both are analysis/documentation artifacts. The repository is governed by constraint **C-001** — the `README.md` "Do not touch!" directive — so all four baseline files (`server.js`, `package.json`, `package-lock.json`, `README.md`) must remain byte-identical. The business value is an evidence-backed maintainability and test-readiness assessment delivered without disturbing the protected fixture.
+`hello_world` is a single-module Node.js fixture whose `server.js` is a 14-line HTTP server that binds `127.0.0.1:3000` and answers every request with `200`, `Content-Type: text/plain`, and the body `Hello, World!\n`. This engagement introduced the project's **first automated test suite** — it previously had zero tests, no runner, and a placeholder `test` script. The technical scope was to author a comprehensive Jest + supertest suite verifying the server's externally observable behavioral contract (responses, status codes, headers, startup/shutdown lifecycle, error handling, and edge cases) **while leaving `server.js` byte-for-byte unchanged**. The business impact is a strict 0% → 100% coverage improvement and a durable regression guard for any future change to the fixture.
 
 ### 1.2 Completion Status
 
 ```mermaid
-%%{init: {"theme":"base","themeVariables":{"pie1":"#5B39F3","pie2":"#FFFFFF","pieStrokeColor":"#B23AF2","pieStrokeWidth":"2px","pieOuterStrokeWidth":"2px","pieSectionTextColor":"#B23AF2","pieLegendTextColor":"#222222"}}}%%
-pie showData title Completion 86.7% — Completed 13h / Remaining 2h
-    "Completed Work (AI)" : 13
-    "Remaining Work" : 2
+%%{init: {'theme':'base','themeVariables':{'pie1':'#5B39F3','pie2':'#FFFFFF','pieStrokeColor':'#B23AF2','pieStrokeWidth':'2px','pieOuterStrokeColor':'#B23AF2','pieOuterStrokeWidth':'2px','pieTitleTextColor':'#B23AF2','pieSectionTextColor':'#000000','pieLegendTextColor':'#000000'}}}%%
+pie showData
+    title hello_world Test Suite — 90.0% Complete
+    "Completed Work (AI)" : 27
+    "Remaining Work" : 3
 ```
 
-| Metric | Hours |
+| Metric | Value |
 |--------|-------|
-| **Total Hours** | **15.0** |
-| **Completed Hours (AI + Manual)** | **13.0** (13.0 AI · 0.0 Manual) |
-| **Remaining Hours** | **2.0** |
-| **Percent Complete** | **86.7%** |
+| **Total Hours** | 30.0 |
+| **Completed Hours (AI + Manual)** | 27.0 (27.0 AI + 0.0 Manual) |
+| **Remaining Hours** | 3.0 |
+| **Percent Complete** | **90.0%** |
 
-> Completion is computed per the AAP-scoped, hours-based PA1 methodology: `13.0 / (13.0 + 2.0) = 86.7%`. All AAP-specified deliverables are complete and validated; the remaining 2.0 hours are non-autonomous, path-to-production human activities (review/acceptance and a scope-confirmation decision).
+> Completion is computed strictly over AAP-scoped work plus standard path-to-production activities: `27.0 / 30.0 = 90.0%`. Every AAP-specified deliverable is 100% complete; the remaining 10% is the human review-and-merge gate an autonomous agent cannot self-approve.
 
 ### 1.3 Key Accomplishments
 
-- ✅ **OBJ-1 delivered** — `docs/dead-code-analysis.md` (158 lines) covers all six prompt categories with file path / evidence / confidence / recommended action, a High/Medium/Low taxonomy, and an auditable 9-element reference-verification matrix. Headline: **zero removable dead code**.
-- ✅ **OBJ-2 delivered** — `docs/testing-strategy.md` (307 lines) enumerates all five recommendation classes ranked P0→P2 by business impact × failure likelihood, each annotated with its constraint interaction.
-- ✅ **Reference verification honored** — every symbol traced declaration→usage before any verdict; no element flagged unused without documented evidence.
-- ✅ **Two real findings, honestly reported** — idiomatic `req` parameter (KEEP) and the dangling `package.json` `main: "index.js"` reference (report-only under C-001).
-- ✅ **C-001 baseline integrity = 100%** — all four baseline files byte-identical to `f4ba68e`; net change is the two new docs only (+465 insertions).
-- ✅ **Zero-dependency posture preserved** — `npm install` is a clean no-op; `npm audit` = 0 vulnerabilities (C-005/C-006).
-- ✅ **End-to-end validation passed** — syntax, runtime contract, determinism, EADDRINUSE failure mode, and 6/6 ephemeral `node:test` recommendations all verified.
-- ✅ **Accuracy fix applied** — an unverified quantified ECONNRESET claim in §3.3 was empirically disproven (~1,800 requests, zero resets) and corrected (commit `b88a16b`).
+- ✅ **32 automated tests** across 2 suites — **32/32 passing**, deterministic across multiple runs (`npm test`).
+- ✅ **100% coverage** of `server.js` (statements, branches, functions, lines), enforced by a `coverageThreshold` gate (0% → 100%).
+- ✅ **Hybrid test architecture** implemented: in-process `require()` contract suite (for coverage) + black-box child-process spawn lifecycle suite (for real startup/shutdown).
+- ✅ **Custom Jest sequencer** orders the lifecycle suite before the contract suite, eliminating port-3000 contention; serialized execution (`--runInBand`, `maxWorkers: 1`).
+- ✅ **Reusable harness** (`server-harness.js`) built on Node core only — spawn + stdout readiness detection, idempotent teardown, TCP port probes, and an `agent: false` HTTP client.
+- ✅ **Source immutability preserved (C-001):** `server.js` and `README.md` byte-identical; `package.json` changes strictly additive.
+- ✅ **Zero dependency vulnerabilities** (`npm audit`), with `jest@30.4.2` + `supertest@7.2.2` pinned and a proactive `js-yaml@4.2.0` override.
+- ✅ **All 5 mandated test classes** delivered (unit, integration, API, edge-case, coverage-improvement) plus error handling (`EADDRINUSE`).
 
 ### 1.4 Critical Unresolved Issues
 
-There are **no critical (release-blocking) issues**. The code compiles, runs, and is deterministic; both deliverables are complete and committed. One low-impact advisory decision is tracked:
-
 | Issue | Impact | Owner | ETA |
 |-------|--------|-------|-----|
-| Scope interpretation: "recommended cleanup actions" could mean *report* (default) or *execute cleanup* | Low — default (analysis-only) is well-justified by the prompt's "provide a report" wording; executing cleanup would conflict with C-001 | Product owner / repo maintainer | < 0.5 h |
+| _None_ — no defects, no failing tests, no compilation/runtime errors. | None — autonomous validation found zero blocking issues. | — | — |
+
+> There are **no critical unresolved issues**. The two items below are non-blocking and documented for completeness only: (a) `package.json` `"main": "index.js"` is a dangling reference (report-only, out of scope per C-001); (b) tests were validated on Node v20.20.2 while the AAP referenced v22.x — a recommended verification, not a defect (both versions are supported by the stack).
 
 ### 1.5 Access Issues
 
-**No access issues identified.**
-
 | System/Resource | Type of Access | Issue Description | Resolution Status | Owner |
 |-----------------|----------------|-------------------|-------------------|-------|
-| Git repository | Read/write on branch | None — branch checked out, commits succeed, working tree clean | ✅ No issue | — |
-| npm registry | Dependency resolution | None — zero dependencies; `npm install` is an offline-capable no-op | ✅ No issue | — |
-| Node.js runtime | Local execution | None — v20.20.2 present; server runs and binds loopback | ✅ No issue | — |
+| _None_ | — | No access issues identified. The repository, branch, runtime (Node/npm), and npm registry dependencies were all accessible; tests require no external services, credentials, databases, or network resources. | N/A | — |
+
+**No access issues identified.**
 
 ### 1.6 Recommended Next Steps
 
-1. **[Medium]** Confirm the scope interpretation (analysis-only vs. authorize cleanup / lifting C-001). The default is analysis-only.
-2. **[Medium]** Review `docs/dead-code-analysis.md` — spot-check the reference-verification matrix citations against `server.js`.
-3. **[Medium]** Review `docs/testing-strategy.md` — confirm the five classes, P0→P2 ordering, and constraint annotations.
-4. **[Medium]** Approve and merge the PR; re-confirm the four baseline files remain byte-identical post-merge.
-5. **[Low]** *(Future, only if C-001 is ever lifted — separate engagement)* Wire `"test": "node --test"`, implement the P0/P1 recommended tests, and optionally repoint the dangling `main` field.
+1. **[High]** Perform human code review & sign-off of the autonomously generated test suite (8 files, ~804 lines); independently run `npm install && npm test && npm run test:coverage` to confirm 32/32 pass and 100% coverage.
+2. **[Medium]** Run a one-time runtime-parity check on the AAP-target **Node v22.x** (validation ran on v20.20.2; both are supported by Jest 30.4.2 + supertest 7.2.2).
+3. **[Low]** Approve the PR, merge `blitzy-12d03d26-2843-485b-81c7-0a98f23d9e28` into the target branch, and delete the feature branch.
+4. **[Low]** _(Optional, out of AAP scope)_ Add a CI workflow running `npm ci && npm test` on push/PR to catch future regressions.
+5. **[Low]** _(Optional, report-only)_ Resolve the dangling `package.json` `"main": "index.js"` reference if the package is ever published or imported.
 
 ---
 
@@ -75,103 +73,112 @@ There are **no critical (release-blocking) issues**. The code compiles, runs, an
 ### 2.1 Completed Work Detail
 
 | Component | Hours | Description |
-|-----------|-------|-------------|
-| Repository discovery & symbol-level reference verification | 2.0 | Read all four baseline files; traced every symbol declaration→usage; built the 9-element reference-verification matrix; confirmed the empty dependency tree via the lockfile; extracted the C-001/C-005/C-006 constraints. [AAP: OBJ-1 reference verification] |
-| `docs/dead-code-analysis.md` authoring (OBJ-1) | 3.0 | 158-line report: overview, methodology (incl. the ESLint `args:"after-used"` nuance), High/Medium/Low taxonomy, six-category findings table, auditable reference matrix, two detailed findings, summary. [AAP: OBJ-1] |
-| `docs/testing-strategy.md` authoring (OBJ-2) | 4.0 | 307-line strategy: risk model (impact × likelihood), test-pyramid adaptation, six risk-ranked P0→P2 recommendations, three validated `node:test` code snippets, five-class cross-check, constraint-compatibility note, behavioral-invariant list. [AAP: OBJ-2] |
-| Autonomous validation (5 gates) | 2.5 | Dependencies, compile/static (`node --check`, JSON validity, fence balance, embedded-snippet checks), tests (6/6 ephemeral `node:test`), runtime probe, and baseline-integrity hashing; plus 18 completeness checks per document. [Path-to-production] |
-| Fix & correction cycles | 1.5 | Three commits: unreachable-code evidence correction (`cdadff5`), two factual-accuracy fixes (`242e91a`), and the ECONNRESET-claim correction backed by an ~1,800-request empirical investigation (`b88a16b`). [AAP: honest-result mandate] |
-| **Total Completed** | **13.0** | All values trace to AAP deliverables or path-to-production validation. |
+|-----------|------:|-------------|
+| Test framework selection & version research | 2.0 | Jest-vs-Mocha evaluation; Node compatibility validation; npm-registry version check; proof-of-concept install/run (maps to AAP R1). |
+| Jest configuration — `jest.config.js` | 1.5 | `testEnvironment: node`, `collectCoverageFrom: ['server.js']`, `coverageThreshold` global 100, `forceExit`, `maxWorkers: 1`, custom `testSequencer` registration (R2). |
+| Dependency manifests — `package.json` + `package-lock.json` | 1.5 | Additive devDeps (`jest@30.4.2`, `supertest@7.2.2`), `test`/`test:coverage` scripts, lockfile regeneration, proactive `js-yaml@4.2.0` security override (R3, R4). |
+| Repository housekeeping — `.gitignore` | 0.5 | Ignore `node_modules/` and `coverage/` (R5). |
+| Shared constants — `test/helpers/constants.js` | 1.0 | Single source of truth: `HOST`, `PORT`, `EXPECTED_BODY`, `EXPECTED_BYTES`, `CONTENT_TYPE`, `READY_LOG`, `SERVER_PATH` (R6). |
+| Black-box harness — `test/helpers/server-harness.js` | 5.0 | 234-line Node-core harness: `startServer` (spawn + stdout readiness), `stopServer` (idempotent SIGTERM + await exit), `waitForPort`, `isPortFree`, `httpRequest` (`agent: false`) (R7). |
+| Custom test sequencer — `test/testSequencer.js` | 2.0 | Extends `@jest/test-sequencer`; orders `lifecycle` → `contract` with deterministic tie-break to prevent port-3000 contention (R8). |
+| In-process contract suite — `test/server.contract.test.js` | 7.0 | 282 lines / 29 tests: full contract, standard headers, 5 verbs + HEAD, 8 extension methods, 3 unsupported tokens (→400 boundary), 3 paths, 3 bodies, statelessness, in-process `EADDRINUSE` (R9). |
+| Black-box lifecycle suite — `test/server.lifecycle.test.js` | 3.0 | 140 lines / 3 tests: startup bind+serve+readiness-log-once, SIGTERM termination + port release, `EADDRINUSE` (R10). |
+| Coverage to 100% + determinism validation | 2.0 | Achieved & gated 100% coverage; verified determinism across repeated runs; full-suite debug. |
+| QA edge-case remediation (Issue 1) | 1.5 | Arbitrary/custom HTTP method coverage; discovery/documentation of Node llhttp protocol-level 400 boundary. |
+| **Total Completed** | **27.0** | All work performed autonomously by Blitzy agents (0.0 manual hours required). |
 
 ### 2.2 Remaining Work Detail
 
 | Category | Hours | Priority |
-|----------|-------|----------|
-| Stakeholder review & acceptance of both deliverables (read 465 lines; spot-check evidence vs. `server.js`; approve & merge; re-verify baseline) | 1.5 | Medium |
-| Resolve the analysis-only vs. execute-cleanup ambiguity (product/owner decision) | 0.5 | Medium |
-| **Total Remaining** | **2.0** | — |
+|----------|------:|----------|
+| Human code review & sign-off of the test suite (8 files / ~804 lines; re-run install/test/coverage) | 2.0 | High |
+| Runtime parity verification on Node v22.x (validated on v20.20.2; confirm 32/32 + 100% on v22) | 0.5 | Medium |
+| PR approval, merge to target branch & feature-branch cleanup | 0.5 | Low |
+| **Total Remaining** | **3.0** | — |
 
-> **Out-of-scope (0 h charged):** Implementing committed tests, wiring the `test` script, or correcting the `main` field are all forbidden under C-001/C-005/C-006 and are listed only as future, separate-engagement possibilities. They are deliberately excluded from the hour totals.
+### 2.3 Hours Reconciliation
 
-### 2.3 Total & Reconciliation
+| Bucket | Hours |
+|--------|------:|
+| Completed (Section 2.1) | 27.0 |
+| Remaining (Section 2.2) | 3.0 |
+| **Total Project Hours** | **30.0** |
+| **Percent Complete** | 27.0 / 30.0 = **90.0%** |
 
-| Check | Value | Status |
-|-------|-------|--------|
-| Section 2.1 completed sum | 13.0 h | ✅ matches §1.2 Completed |
-| Section 2.2 remaining sum | 2.0 h | ✅ matches §1.2 Remaining and §7 pie "Remaining Work" |
-| 2.1 + 2.2 | 15.0 h | ✅ equals §1.2 Total Hours |
-| Completion % | 13.0 / 15.0 = 86.7% | ✅ used in §1.2, §7, §8 |
+> _Out-of-scope items intentionally excluded from the hours universe (per AAP 0.8.2): `server.js`/`README.md` edits, `index.js` creation, `docs/*` edits, runtime dependencies, CI/CD, and containerization._
 
 ---
 
 ## 3. Test Results
 
-All tests below originate from Blitzy's autonomous validation logs for this project and were independently reproduced during this assessment. The repository intentionally commits **no** test suite (the `npm test` script is the stock placeholder); the documented recommendations were implemented as an **ephemeral, zero-dependency `node:test` suite**, executed, and then removed — leaving the working tree clean.
+All results below originate from Blitzy's autonomous validation runs and were independently re-verified for this guide (`npm test` and `npm run test:coverage`).
 
-**Functional tests (`node:test`, ephemeral)**
+| Test Category | Framework | Total Tests | Passed | Failed | Coverage % | Notes |
+|---------------|-----------|------------:|-------:|-------:|-----------:|-------|
+| Unit / API Contract (in-process) | Jest 30.4.2 + supertest 7.2.2 | 3 | 3 | 0 | 100% (server.js) | `GET /` status+headers+body (14 bytes); standard `Date`/`Connection` headers; readiness log emitted once. |
+| Edge Cases & Determinism (in-process) | Jest + supertest + `node:http` | 25 | 25 | 0 | 100% (server.js) | 5 verbs + HEAD; 8 extension methods (M-SEARCH/PROPFIND/MKCOL/REPORT/PURGE/NOTIFY/SEARCH/MKCALENDAR) → 200; 3 unsupported tokens (BREW/FOO/CUSTOM) → protocol-level 400; 3 paths; 3 bodies (empty/~1MB/JSON); 5 sequential + 10 concurrent. |
+| Error Handling — `EADDRINUSE` (in-process) | Jest + `node:net` | 1 | 1 | 0 | 100% (server.js) | Second listener on the occupied port fails with `EADDRINUSE`. |
+| Integration / Lifecycle (black-box spawn) | Jest + `node:child_process` + `node:net` | 2 | 2 | 0 | n/a (out-of-process) | Spawned `node server.js` binds + serves + logs readiness once; SIGTERM terminates and releases port 3000 (re-bindable). |
+| Error Handling — `EADDRINUSE` (black-box) | Jest + `node:http` | 1 | 1 | 0 | n/a (out-of-process) | While the spawned server holds port 3000, a second listener fails with `EADDRINUSE`. |
+| **TOTAL** | **Jest 30.4.2** | **32** | **32** | **0** | **100% (server.js)** | 2 suites; deterministic across multiple runs; `coverageThreshold` gate exits 0. |
 
-| Test Category | Framework | Total | Passed | Failed | Coverage % | Notes |
-|---------------|-----------|-------|--------|--------|------------|-------|
-| API scenario (P0) | `node:test` (built-in) | 1 | 1 | 0 | 100%¹ | `GET /` → `200` / `text/plain` / `Hello, World!\n` / 14 bytes |
-| Edge-case determinism (P0) | `node:test` | 4 | 4 | 0 | n/a | POST / PUT / DELETE (2 KB body) / OPTIONS → identical response |
-| Failure-mode (P1) | `node:test` | 1 | 1 | 0 | n/a | Second listener on `127.0.0.1:3000` → `EADDRINUSE` |
-| **Total functional** | | **6** | **6** | **0** | — | **100% pass** |
+**Coverage detail (`npm run test:coverage`):**
 
-**Static & structural validation**
-
-| Check | Tool | Total | Passed | Failed | Notes |
-|-------|------|-------|--------|--------|-------|
-| Syntax / "compile" | `node --check server.js` | 1 | 1 | 0 | Exit 0 (the project's only compile step; no transpile) |
-| Embedded snippet validity | `node --check` | 3 | 3 | 0 | All `node:test` examples in `testing-strategy.md` parse |
-| Manifest/lockfile JSON validity | JSON parse | 2 | 2 | 0 | `package.json`, `package-lock.json` valid |
-| Markdown structure / fence balance | structural | 2 | 2 | 0 | Both docs valid, balanced code fences |
-| AAP completeness checks | checklist | 36 | 36 | 0 | 18 per document × 2 documents |
-
-> ¹ **Coverage clarification:** Committed automated coverage is **0% by design** (no committed suite under C-001/C-005/C-006). When the documented recommendations are run via `node --test --experimental-test-coverage`, they exercise **100% of `server.js`'s single reachable code path** (the handler is branchless), as confirmed during validation.
+| File | % Stmts | % Branch | % Funcs | % Lines | Uncovered |
+|------|--------:|---------:|--------:|--------:|-----------|
+| `server.js` | 100 | 100 | 100 | 100 | — |
+| **All files** | **100** | **100** | **100** | **100** | — |
 
 ---
 
 ## 4. Runtime Validation & UI Verification
 
-**Runtime health** — independently reproduced on Node v20.20.2:
+**Runtime health** (verified by launching `node server.js` and issuing live HTTP requests):
 
-- ✅ **Operational** — `node server.js` starts cleanly; stdout is exactly `Server running at http://127.0.0.1:3000/`; stderr empty.
-- ✅ **Operational** — `GET /` returns `200`, `Content-Type: text/plain`, body `Hello, World!\n` (exactly 14 bytes).
-- ✅ **Operational** — Determinism: POST / PUT / DELETE (2 KB body) / OPTIONS against arbitrary paths all return the identical response.
-- ✅ **Operational** — Binds exactly `127.0.0.1:3000` (verified LISTEN state); clean shutdown.
-- ✅ **Operational** — Sole failure mode behaves as documented: a second instance fails with `Error: listen EADDRINUSE: address already in use 127.0.0.1:3000`.
+- ✅ **Operational** — Server starts and logs exactly `Server running at http://127.0.0.1:3000/`.
+- ✅ **Operational** — `GET /` returns `200`, `Content-Type: text/plain`, body `Hello, World!\n` (exactly **14 bytes**).
+- ✅ **Operational** — Contract is identical across methods (GET/POST/PUT/DELETE/PATCH/OPTIONS + extension methods), arbitrary/encoded/deep paths, query strings, and empty/large/JSON bodies (statelessness confirmed).
+- ✅ **Operational** — Graceful shutdown: SIGTERM terminates the process and **releases port 3000** (verified free afterward; a fresh listener can re-bind).
+- ✅ **Operational** — Error path: a second listener on the occupied port deterministically raises `EADDRINUSE`.
+- ✅ **Operational** — Dependency install is clean and idempotent (`npm install` → up to date, **0 vulnerabilities**); all 7 JS files pass `node --check`.
 
-**API integration**
+**API integration outcomes:**
 
-- ✅ **Operational** — The externally observable HTTP response contract (the value the backprop consumer relies on) is verified end-to-end and matches the documented invariants C-002/C-003/C-004.
+- ✅ **Operational** — supertest drives the in-process server over loopback HTTP; the raw `node:http` client (`agent: false`) exercises non-standard method tokens a client like `curl` would send.
+- ✅ **Operational** — Documented protocol boundary: unsupported method tokens are rejected by Node's llhttp parser with a `400` **before** the handler runs (a Node runtime behavior, not a `server.js` defect).
 
-**UI verification**
+**UI verification:**
 
-- ➖ **Not applicable** — The system is a headless loopback HTTP endpoint returning `text/plain`; there is no UI surface to verify.
+- ⚠ **Not applicable** — `server.js` is a headless HTTP server with no web UI, frontend assets, or rendered pages. There is no user interface to verify; runtime validation is exercised entirely at the HTTP layer above.
 
 ---
 
 ## 5. Compliance & Quality Review
 
-Cross-mapping AAP deliverables and governing constraints to their validation status. Fixes applied during autonomous validation are noted inline.
+Cross-mapping of AAP deliverables and constraints to quality/compliance benchmarks. "Fix applied" denotes work performed during autonomous validation.
 
-| Benchmark / Requirement | Status | Progress | Evidence / Notes |
-|--------------------------|--------|----------|------------------|
-| OBJ-1 — all six dead-code categories covered | ✅ Pass | 100% | `dead-code-analysis.md` §4.1, §7 |
-| OBJ-1 — report fields (path, evidence, confidence, action) | ✅ Pass | 100% | §4.1 table columns |
-| OBJ-1 — confidence taxonomy (High/Med/Low) | ✅ Pass | 100% | §3 |
-| OBJ-1 — references verified before flagging | ✅ Pass | 100% | §2.1 methodology + §4.2 matrix |
-| OBJ-1 — two findings reported correctly | ✅ Pass | 100% | `req`→KEEP (§5); dangling `main`→report-only (§6) |
-| OBJ-2 — all five recommendation classes | ✅ Pass | 100% | `testing-strategy.md` §3, §4 cross-check |
-| OBJ-2 — risk-based prioritization (P0→P2) | ✅ Pass | 100% | §2 risk model, §3.1 summary table |
-| OBJ-2 — per-recommendation constraint annotation | ✅ Pass | 100% | §3.1, §5 |
-| C-001 — baseline byte-identical | ✅ Pass | 100% | All 4 blob hashes match `f4ba68e` |
-| C-005 / C-006 — zero dependencies / no install | ✅ Pass | 100% | `npm install` no-op; no `node_modules`; 0 vulnerabilities |
-| C-002 / C-003 / C-004 — behavioral invariants preserved | ✅ Pass | 100% | Runtime probe; `server.js` untouched |
-| Honest-result mandate | ✅ Pass | 100% | True "zero removable dead code"; unverified ECONNRESET claim removed (`b88a16b`) |
-| Zero-placeholder / production-ready docs | ✅ Pass | 100% | No TODO/stub/placeholder content; snippets are valid and labeled "recommended, not implemented" |
-| Cross-references between deliverables | ✅ Pass | 100% | Each doc links the other |
-| Scope-ambiguity flagged for confirmation | ⚠ Partial | Flagged | Default analysis-only; human confirmation outstanding (the 0.5 h remaining decision) |
+| Deliverable / Benchmark | Requirement (AAP) | Status | Evidence / Notes |
+|-------------------------|-------------------|--------|------------------|
+| `jest.config.js` | Node env, coverage from `server.js`, 100% threshold, forceExit, serial, sequencer | ✅ Pass | Matches spec exactly; coverage gate exits 0. |
+| `test/testSequencer.js` | Order lifecycle before contract | ✅ Pass | `npx jest --listTests` confirms order. |
+| `test/helpers/constants.js` | Shared contract constants | ✅ Pass | 7 exports mirror `server.js` values. |
+| `test/helpers/server-harness.js` | Spawn/readiness/stop/port/HTTP helpers | ✅ Pass | Node-core only; sockets/children cleaned up. |
+| `test/server.contract.test.js` | In-process contract + edge cases | ✅ Pass | 29 tests; full-contract assertion density. |
+| `test/server.lifecycle.test.js` | Black-box startup/shutdown + `EADDRINUSE` | ✅ Pass | 3 tests; per-test port release. |
+| `package.json` (additive) | devDeps + `test`/`test:coverage` scripts | ✅ Pass | Placeholder script replaced; deps pinned. |
+| `package-lock.json` | Regenerated by `npm install` | ✅ Pass | lockfileVersion 3, in sync. |
+| `.gitignore` | Ignore `node_modules/`, `coverage/` | ✅ Pass | Present. |
+| 5 mandated test classes | Unit / Integration / API / Edge / Coverage | ✅ Pass | All present, prioritized P0→P2. |
+| Coverage target | 100% statements/functions/lines | ✅ Pass | 100% across all metrics. |
+| **C-001 source immutability** | `server.js` + `README.md` byte-identical | ✅ Pass | Confirmed unchanged since original upload. |
+| Repository conventions | CommonJS, 2-space, single-quote, `const`, arrow fns | ✅ Pass | Mirrored in all test code. |
+| Test isolation/determinism | Serial, `agent: false`, explicit teardown | ✅ Pass | Deterministic across multiple runs. |
+| Dependency security | No known vulnerabilities | ✅ Pass | **Fix applied:** proactive `js-yaml@4.2.0` override → `npm audit` 0 vulnerabilities. |
+| Static/syntax validation | Source parses cleanly | ✅ Pass | `node --check` 7/7 JS files. |
+| `package.json` `"main"` | Dangling `index.js` reference | ⚠ Observation | Report-only / out of scope (C-001); non-blocking. |
+| Runtime parity | AAP referenced Node v22.x | ⚠ Outstanding | Validated on v20.20.2 (supported); v22 confirmation recommended (Section 2.2). |
+
+**Outstanding compliance items:** none blocking. The two ⚠ rows are non-blocking (one report-only by design, one a recommended verification).
 
 ---
 
@@ -179,215 +186,250 @@ Cross-mapping AAP deliverables and governing constraints to their validation sta
 
 | Risk | Category | Severity | Probability | Mitigation | Status |
 |------|----------|----------|-------------|------------|--------|
-| Dead-code false verdict (mis-flag used/unused) | Technical | Low | Low | Manual symbol-level verification + auditable 9-element matrix; tiny, branchless, export-less module makes verification exhaustive | Mitigated |
-| Documentation drift (line citations stale if baseline edited) | Technical | Low | Low | C-001 freezes the baseline; docs cite exact line numbers | Accepted |
-| 0% committed automated coverage | Technical | Low | N/A | Intentional under C-001/C-005/C-006; zero-dependency test path documented; 6/6 ephemeral tests pass | Accepted (by design) |
-| No authentication / input validation on server | Security | Low | Low | Loopback-only `127.0.0.1`, static text, branchless, no request parsing; docs add zero runtime footprint | Mitigated (N/A to fixture) |
-| Vulnerable dependencies | Security | None | None | Zero dependencies; `npm audit` = 0 vulnerabilities | Mitigated |
-| `EADDRINUSE` is the sole, unhandled failure mode | Operational | Low | Low | Documented in `testing-strategy.md` §3.5; intentional fixture trait | Documented / Accepted |
-| No monitoring / health-check endpoint | Operational | Low | N/A | Startup log line is the readiness signal; out of AAP scope | Accepted |
-| `package.json` `main: "index.js"` dangling reference | Operational | Low | Low | Reported in `dead-code-analysis.md` §6; unfixable under C-001; runtime uses `node server.js` | Reported / Accepted |
-| External backprop consumer depends on exact response contract | Integration | Medium | Low | Contract pinned by C-002/C-003/C-004, frozen by C-001, documented as the P0 test target | Mitigated by immutability |
-| Analysis-only vs. execute-cleanup ambiguity | Integration | Low | Medium | Flagged in both docs; defaulted to analysis-only per the prompt's "provide a report"; needs human confirmation | Open (human decision) |
-| No CI/CD or deployment automation | Integration | Low | N/A | Documentation deliverable — nothing to deploy; out of scope | Accepted |
+| Hardcoded port 3000 contention — both suites fail with `EADDRINUSE` if 3000 is already bound; port is not overridable (`server.js` immutable) | Technical | Medium | Low | Custom sequencer (lifecycle→contract); serial execution; per-test child teardown in `finally`; TCP port probes | Mitigated |
+| `forceExit: true` could mask unrelated async open handles (required because `server.js` never `.close()`s) | Technical | Low | Low | Harness destroys every probe socket and SIGTERM-kills every child; no leak symptoms across repeated runs | Mitigated |
+| Runtime version drift — validated on Node v20.20.2, AAP referenced v22.x; no `engines`/`.nvmrc` pin | Technical | Low | Low | Jest 30.4.2 + supertest 7.2.2 declare Node 22 support; one-time v22 confirmation scheduled (Section 2.2) | Open (low) |
+| `server.js` exposes no `module.exports` — prevents true isolated unit testing | Technical | Low | N/A | Hybrid in-process + black-box strategy reaches 100% coverage without a source change; documented | Accepted (by design) |
+| Dev-dependency supply chain — Jest pulls ~333 transitive packages; CVEs can emerge over time | Security | Low | Low | `npm audit` 0 vulnerabilities now; `js-yaml@4.2.0` override; exact pins; `node_modules` gitignored; periodic audit advised | Mitigated |
+| No production attack surface — loopback-only, no auth/secrets/data; tests add no runtime surface | Security | Negligible | N/A | Nothing to secure; stateless static responder on `127.0.0.1` | N/A |
+| No CI/CD wiring — tests are not run by any pipeline, so future regressions aren't auto-caught | Operational | Low | Medium (over time) | Out of AAP scope; recommended future enhancement (GitHub Actions `npm ci && npm test`) | Deferred (out of scope) |
+| Fresh-clone setup — `node_modules` gitignored, so `npm install` must precede `npm test` | Integration | Low | Low | Documented prominently in the Development Guide (Section 9); standard Node workflow | Mitigated |
 
-**Overall risk posture: LOW.** The only genuinely open item is the scope ambiguity, which is low-impact and already captured as the 0.5 h remaining decision.
+**Overall risk posture: LOW.** No High/Critical risks; nothing blocks release. The most material items (port contention, runtime parity) are already mitigated or covered by the 3.0h of remaining path-to-production work. Zero security vulnerabilities at present.
 
 ---
 
 ## 7. Visual Project Status
 
-**Project hours breakdown** (Completed = Dark Blue `#5B39F3`, Remaining = White `#FFFFFF`):
+**Project hours — completed vs remaining** (Completed = Dark Blue `#5B39F3`, Remaining = White `#FFFFFF`):
 
 ```mermaid
-%%{init: {"theme":"base","themeVariables":{"pie1":"#5B39F3","pie2":"#FFFFFF","pieStrokeColor":"#B23AF2","pieStrokeWidth":"2px","pieOuterStrokeWidth":"2px","pieSectionTextColor":"#B23AF2","pieLegendTextColor":"#222222"}}}%%
-pie showData title Project Hours — 86.7% Complete
-    "Completed Work" : 13
-    "Remaining Work" : 2
+%%{init: {'theme':'base','themeVariables':{'pie1':'#5B39F3','pie2':'#FFFFFF','pieStrokeColor':'#B23AF2','pieStrokeWidth':'2px','pieOuterStrokeColor':'#B23AF2','pieOuterStrokeWidth':'2px','pieTitleTextColor':'#B23AF2','pieSectionTextColor':'#000000','pieLegendTextColor':'#000000'}}}%%
+pie showData
+    title Project Hours Breakdown (Total 30.0h — 90.0% Complete)
+    "Completed Work" : 27
+    "Remaining Work" : 3
 ```
 
-**Remaining hours by category** (from Section 2.2; sums to the 2.0 h remaining):
+**Remaining work by category** (hours, from Section 2.2 — sums to 3.0h):
 
 ```mermaid
-%%{init: {"theme":"base","themeVariables":{"pie1":"#B23AF2","pie2":"#A8FDD9","pieStrokeColor":"#5B39F3","pieStrokeWidth":"2px","pieSectionTextColor":"#222222","pieLegendTextColor":"#222222"}}}%%
-pie showData title Remaining Work by Category (2.0h)
-    "Review & Acceptance" : 1.5
-    "Scope-Ambiguity Decision" : 0.5
+xychart-beta
+    title "Remaining Hours by Category"
+    x-axis ["Code Review", "Node v22 Verify", "PR Merge"]
+    y-axis "Hours" 0 --> 3
+    bar [2.0, 0.5, 0.5]
 ```
 
-> **Integrity check:** "Remaining Work" = **2.0 h** in the pie above equals the Section 1.2 Remaining Hours and the Section 2.2 total. Priority distribution of remaining work: 100% Medium, 0% High (no blocking tasks), with optional Low-priority future items excluded from totals.
+| Category | Hours | Priority | % of Remaining |
+|----------|------:|----------|---------------:|
+| Human code review & sign-off | 2.0 | High | 66.7% |
+| Node v22.x parity verification | 0.5 | Medium | 16.7% |
+| PR approval, merge & cleanup | 0.5 | Low | 16.7% |
+| **Total Remaining** | **3.0** | — | 100% |
+
+> Integrity: pie "Remaining Work" (3) = Section 1.2 Remaining Hours (3.0) = Section 2.2 total (3.0). Pie "Completed Work" (27) = Section 1.2 Completed Hours (27.0) = Section 2.1 total (27.0).
 
 ---
 
 ## 8. Summary & Recommendations
 
-**Achievements.** Both AAP objectives are fully delivered as additive documentation. `docs/dead-code-analysis.md` answers OBJ-1 with an evidence-backed, reference-verified report concluding **zero removable dead code**, surfacing the two real, non-removable observations honestly. `docs/testing-strategy.md` answers OBJ-2 with a risk-ranked (P0→P2), zero-dependency-feasible testing strategy spanning all five mandated classes. Throughout, the protected baseline remained byte-identical to `f4ba68e`, and the zero-dependency posture and behavioral invariants were preserved and verified.
+**Achievements.** This engagement delivered the project's first automated test suite from a zero-coverage baseline: **32 passing tests across 2 suites with 100% coverage** of `server.js`, enforced by a coverage-threshold gate. A hybrid in-process + black-box architecture, a reusable Node-core harness, and a custom test sequencer together verify the complete behavioral contract, the real process lifecycle, edge cases, and the `EADDRINUSE` error path — all while keeping `server.js` byte-identical (constraint C-001) and adding zero runtime dependencies.
 
-**Remaining gaps.** No autonomous AAP work remains. The outstanding 2.0 hours are human-only, path-to-production activities: stakeholder review/acceptance (1.5 h) and a scope-confirmation decision (0.5 h). Neither is blocking; neither can be performed autonomously under C-001.
+**Remaining gaps & critical path to production.** The project is **90.0% complete** (27.0 of 30.0 hours). The remaining 3.0 hours is entirely the human-in-the-loop gate: (1) code review & sign-off of the ~804-line suite, (2) a runtime-parity confirmation on Node v22.x, and (3) PR approval & merge. None of these are engineering defects; they are the standard path-to-production steps an autonomous agent cannot complete on its own behalf.
 
-**Critical path to production.** Confirm scope interpretation → review both documents → approve & merge → re-verify baseline integrity. There is no build, deploy, or dependency step to manage.
+**Success metrics.**
 
-**Success metrics (all met).** 100% C-001 baseline integrity; zero dependencies / zero vulnerabilities; `node --check` and runtime contract pass; 6/6 documented test recommendations pass; 36/36 completeness checks pass; one accuracy defect found and fixed.
+| Metric | Target | Actual | Status |
+|--------|--------|--------|--------|
+| Tests passing | All | 32 / 32 | ✅ |
+| `server.js` coverage | 100% | 100% | ✅ |
+| Source immutability (C-001) | Byte-identical | Byte-identical | ✅ |
+| Dependency vulnerabilities | 0 | 0 | ✅ |
+| Mandated test classes | 5 | 5 (+ error handling) | ✅ |
+| Completion (AAP-scoped) | — | 90.0% | ◐ pending human review |
 
-**Production-readiness assessment.** The deliverables are **production-ready** at **86.7% overall completion** (13.0 of 15.0 hours). The residual 13.3% is human review and a low-impact decision — not engineering work. Recommendation: **accept and merge** after the brief review, treating the analysis-only interpretation as confirmed unless the owner explicitly authorizes a separate, C-001-lifting cleanup engagement.
+**Production readiness.** The autonomous deliverables are **production-ready as committed** — clean install, 100% green tests, 100% coverage, validated runtime, and zero outstanding errors. Recommended sequence: human review & sign-off → Node v22 parity check → merge. Optionally, wire CI (`npm ci && npm test`) to guard against future regressions.
 
 ---
 
 ## 9. Development Guide
 
-All commands below were tested on **Node.js v20.20.2 / Windows PowerShell** against this repository, with the working tree remaining clean and no baseline file modified.
+All commands below were executed and verified on this environment (Node **v20.20.2**, npm **10.8.2**, Windows). Run every command **from the repository root** (relative `require('../server.js')` and `collectCoverageFrom: ['server.js']` resolve from there).
 
 ### 9.1 System Prerequisites
 
-- **Node.js ≥ 20** (verified on v20.20.2). The strategy's recommended test path uses built-ins (`node:test`, `node:assert`, global `fetch`, `--experimental-test-coverage`) available in Node ≥ 20. `package.json` declares no `engines` field, so any modern Node ≥ 20 is suitable.
-- **npm** (bundled; verified 10.8.2) — optional, only for the no-op install.
-- **OS/hardware:** none specific — a loopback HTTP fixture with no external services, database, or build step.
+- **Node.js** — v20.x verified; **v22.x is the AAP target** (both supported by the stack). Confirm with:
+  ```bash
+  node --version
+  npm --version
+  ```
+- **No** environment variables, services, databases, or secrets are required.
+- **Git** (to clone). Nothing else beyond Node + npm.
 
 ### 9.2 Environment Setup
 
-- No environment variables are required. Host (`127.0.0.1`) and port (`3000`) are hard-coded in `server.js` (constraints C-002/C-003).
-- No `.env` file, no external services, no database, no message queue.
-
 ```bash
-# Check out the branch and enter the repo
-git checkout blitzy-c78fadc3-1afa-4210-a77f-762946afbe89
-cd hao-backprop-test
+# Clone and enter the repository
+git clone <repository-url>
+cd hello_world   # repository root — all commands run from here
 ```
+
+There is nothing to configure: the server uses a hardcoded host/port (`127.0.0.1:3000`) and the tests need no env files.
 
 ### 9.3 Dependency Installation
 
 ```bash
-# Optional — the project has zero dependencies; this is a clean no-op.
+# Installs jest@30.4.2, supertest@7.2.2 and ~333 transitive packages.
+# node_modules/ is gitignored, so this is REQUIRED after a fresh clone.
 npm install
-# Expected: "up to date, audited 1 package ..." / "found 0 vulnerabilities"
-# No node_modules directory is created. The project runs WITHOUT install (C-006).
+# Expected tail: "found 0 vulnerabilities"
+
+# Deterministic, CI-equivalent install (installs exactly from package-lock.json):
+npm ci
 ```
 
-### 9.4 Application Startup
+### 9.4 Running the Test Suite
 
 ```bash
-# Canonical launch. There is NO "start" script, and the package.json "main"
-# field points to a non-existent index.js — always launch via server.js.
+# Full suite (resolves to: jest --runInBand)
+npm test
+# Expected: "Test Suites: 2 passed, 2 total"  /  "Tests: 32 passed, 32 total"
+
+# With coverage (resolves to: jest --coverage --runInBand)
+npm run test:coverage
+# Expected: server.js + All files 100% Stmts/Branch/Funcs/Lines; exit 0
+
+# Confirm suite ordering (lifecycle must list BEFORE contract)
+npx jest --listTests
+
+# Run a single test by name
+npx jest test/server.contract.test.js -t "GET / returns 200"
+
+# Debug
+node --inspect-brk node_modules/.bin/jest --runInBand
+```
+
+> **Do not use `--watch` in automation** — it hangs non-interactively. The configured scripts use `--runInBand` and never watch.
+
+### 9.5 Running the Server
+
+```bash
+# Start the server (foreground)
 node server.js
-# Expected stdout: Server running at http://127.0.0.1:3000/
+# Logs exactly: Server running at http://127.0.0.1:3000/
 ```
 
-```powershell
-# Windows PowerShell: run in the background and capture the PID you spawned
-$p = Start-Process -FilePath node -ArgumentList "server.js" -PassThru -NoNewWindow
-# ... later, stop ONLY that process:
-Stop-Process -Id $p.Id -Force
-```
-
-### 9.5 Verification Steps
+In another terminal:
 
 ```bash
-# 1) Syntax/"compile" check (the only build step; no transpile)
-node --check server.js          # exit 0, no output = success
-
-# 2) Probe the running server (curl)
+# Verify the contract over live HTTP
 curl -i http://127.0.0.1:3000/
-# Expected: HTTP/1.1 200 OK · Content-Type: text/plain · body "Hello, World!\n" (14 bytes)
+# HTTP/1.1 200 OK
+# Content-Type: text/plain
+# (body) Hello, World!
+
+# PowerShell equivalent
+# Invoke-WebRequest -Uri http://127.0.0.1:3000/ -UseBasicParsing
 ```
 
-```powershell
-# PowerShell equivalent probe
-$r = Invoke-WebRequest -Uri http://127.0.0.1:3000/ -UseBasicParsing
-$r.StatusCode                                   # 200
-$r.Headers['Content-Type']                      # text/plain
-[Text.Encoding]::UTF8.GetByteCount($r.Content)  # 14
-```
+Stop the server with **Ctrl+C**, or send SIGTERM to the `node` PID. The process exits cleanly and **releases port 3000**.
 
-### 9.6 Example Usage
+### 9.6 Verification Checklist
 
-```bash
-# Every method/path/body returns the identical response (branchless handler)
-curl -X POST --data "anything" http://127.0.0.1:3000/any/path
-# => Hello, World!
-
-# Recommended (NOT committed) zero-dependency test path:
-#   author a node:test file, then run:
-node --test
-node --test --experimental-test-coverage   # adds a built-in coverage report
-```
+- `node --version` prints a v20.x (or v22.x) version.
+- `npm install` ends with `found 0 vulnerabilities`.
+- `npm test` → `2 passed` suites, `32 passed` tests, exit 0.
+- `npm run test:coverage` → `server.js` 100% across all metrics, exit 0.
+- `node server.js` prints the readiness line; `GET /` returns `200` + `text/plain` + `Hello, World!\n` (14 bytes).
 
 ### 9.7 Troubleshooting
 
-- **`Error: listen EADDRINUSE: address already in use 127.0.0.1:3000`** — Port 3000 is occupied (this is the server's only failure mode; it has no error handler). Stop the process holding the port, then restart. On Windows: `Get-NetTCPConnection -LocalPort 3000 -State Listen`.
-- **`npm test` prints "Error: no test specified" and exits 1** — Expected. This is the stock npm placeholder, intentionally left in place under C-001. It is not a failure. Use the `node --test` path above instead.
-- **`main: "index.js"` looks wrong** — It is a known, reported dangling reference (`dead-code-analysis.md` §6); it does not affect runtime. Always launch with `node server.js`.
-- **`npm install` seems to do nothing** — Correct; the project has zero dependencies and is designed to run without an install step.
+| Symptom | Cause | Resolution |
+|---------|-------|------------|
+| `Cannot find module 'jest'` / `'supertest'` / `'../server.js'` | `npm install` not run, or not in repo root (`node_modules` is gitignored) | `cd` to the repository root and run `npm install`. |
+| `EADDRINUSE` on port 3000 | A stray `node server.js` (or another process) holds port 3000; the port is hardcoded and not overridable (C-001) | Stop the other process. The suites serialize + sequence to avoid self-contention. |
+| `Force exiting Jest …` message | Expected & benign — `server.js` never calls `.close()`, so `forceExit: true` ends the run | No action; this is by design. |
+| Tests appear to hang | A `--watch` invocation was used | Use the provided scripts (`npm test`); never `--watch` in automation. |
 
 ---
 
 ## 10. Appendices
 
-### A. Command Reference
+### Appendix A — Command Reference
 
-| Command | Purpose | Expected Result |
-|---------|---------|-----------------|
-| `node --version` | Confirm runtime | `v20.20.2` (any ≥ 20 acceptable) |
-| `npm install` | Dependency install (optional) | No-op; "found 0 vulnerabilities"; no `node_modules` |
-| `node --check server.js` | Syntax/"compile" check | Exit 0, no output |
-| `node server.js` | Start the server | `Server running at http://127.0.0.1:3000/` |
-| `npm test` | Placeholder script | Prints "Error: no test specified"; exit 1 (by design) |
-| `node --test` | Recommended test runner (zero-dep) | Runs any authored `node:test` files |
-| `node --test --experimental-test-coverage` | Tests + built-in coverage | TAP output + coverage table |
-| `curl -i http://127.0.0.1:3000/` | Probe the contract | `200` / `text/plain` / `Hello, World!\n` |
+| Command | Purpose |
+|---------|---------|
+| `npm install` | Install devDependencies (jest, supertest) + transitive packages |
+| `npm ci` | Deterministic install from `package-lock.json` |
+| `npm test` | Run the full suite (`jest --runInBand`) — 32 tests |
+| `npm run test:coverage` | Run with coverage (`jest --coverage --runInBand`) — 100% |
+| `npx jest --listTests` | Print suites in execution order (lifecycle → contract) |
+| `npx jest <file> -t "<name>"` | Run a single test by name |
+| `node --inspect-brk node_modules/.bin/jest --runInBand` | Debug the suite |
+| `node server.js` | Start the HTTP server on `127.0.0.1:3000` |
+| `node --check <file.js>` | Syntax-check a JS file |
+| `npm audit` | Report dependency vulnerabilities (currently 0) |
 
-### B. Port Reference
+### Appendix B — Port Reference
 
-| Port | Bind Address | Purpose | Configurable? |
-|------|--------------|---------|---------------|
-| 3000 | 127.0.0.1 (loopback only) | HTTP server | No — hard-coded in `server.js` (C-003); changing it would edit a protected file |
+| Port | Bound by | Host | Notes |
+|------|----------|------|-------|
+| 3000 | `server.js` | `127.0.0.1` (loopback) | Hardcoded & not configurable (C-001). Tests serialize to avoid contention; release the port before re-running. |
 
-### C. Key File Locations
+### Appendix C — Key File Locations
 
-| Path | Role | Status |
-|------|------|--------|
-| `server.js` | Sole runtime executable (14 lines) | Baseline — REFERENCE (immutable, C-001) |
-| `package.json` | npm manifest | Baseline — REFERENCE (immutable) |
-| `package-lock.json` | Lockfile v3 (empty dependency tree) | Baseline — REFERENCE (immutable) |
-| `README.md` | Title + "Do not touch!" governance directive | Baseline — REFERENCE (immutable) |
-| `docs/dead-code-analysis.md` | OBJ-1 deliverable (158 lines) | **New — created** |
-| `docs/testing-strategy.md` | OBJ-2 deliverable (307 lines) | **New — created** |
+| Path | Role |
+|------|------|
+| `server.js` | Subject under test (immutable, 14 lines, no exports) |
+| `jest.config.js` | Jest configuration + coverage gate + sequencer registration |
+| `test/testSequencer.js` | Custom sequencer (lifecycle → contract) |
+| `test/helpers/constants.js` | Shared behavioral-contract constants |
+| `test/helpers/server-harness.js` | Spawn / readiness / teardown / port-probe / HTTP helpers |
+| `test/server.contract.test.js` | In-process contract + edge-case suite (29 tests) |
+| `test/server.lifecycle.test.js` | Black-box spawn lifecycle suite (3 tests) |
+| `package.json` / `package-lock.json` | Manifests (additive devDeps + scripts; regenerated lock) |
+| `.gitignore` | Ignores `node_modules/`, `coverage/` |
+| `docs/testing-strategy.md`, `docs/dead-code-analysis.md` | Reference inputs (not modified) |
 
-### D. Technology Versions
+### Appendix D — Technology Versions
 
-| Technology | Version | Notes |
-|------------|---------|-------|
-| Node.js | v20.20.2 | Provides `http`, `node:test`, `node:assert`, global `fetch` |
-| npm | 10.8.2 | Bundled with Node 20 |
-| Runtime dependencies | 0 | None declared or locked |
-| Dev dependencies | 0 | None declared or locked |
-| package-lock | lockfile v3 | Single root `""` entry |
+| Component | Version | Notes |
+|-----------|---------|-------|
+| Node.js | v20.20.2 (validated) | AAP target v22.x; both supported (no `engines` pin) |
+| npm | 10.8.2 | — |
+| jest | 30.4.2 | Pinned (exact) |
+| supertest | 7.2.2 | Pinned (exact) |
+| js-yaml | 4.2.0 | `overrides` entry (security) |
+| package-lock | lockfileVersion 3 | ~333 packages |
 
-### E. Environment Variable Reference
+### Appendix E — Environment Variable Reference
 
-| Variable | Required | Default | Notes |
-|----------|----------|---------|-------|
-| *(none)* | — | — | The application reads no environment variables; host and port are hard-coded |
+| Variable | Required? | Purpose |
+|----------|-----------|---------|
+| _None_ | — | The server and test suite require **no** environment variables, secrets, or service configuration. |
 
-### F. Developer Tools Guide
+### Appendix F — Developer Tools Guide
 
-| Tool | Use | Constraint Interaction |
-|------|-----|------------------------|
-| `node --check` | Syntax validation | Built-in; zero dependency |
-| `node:test` + `node:assert` | Recommended test framework | Built-in; honors C-005/C-006 (no install) |
-| `--experimental-test-coverage` | Coverage measurement | Built-in; `c8`/`nyc`/Jest are excluded by C-005 |
-| ESLint `no-unused-vars` / `no-unreachable` | Optional dead-code corroboration | Not run — would require an install (C-005); manual verification used instead |
-| `git hash-object` / `git rev-parse` | Baseline-integrity verification | Confirms the four baseline files match `f4ba68e` |
+- **Test runner:** Jest (`jest --runInBand`, serialized; `maxWorkers: 1`; `forceExit`).
+- **HTTP assertions:** supertest against the in-process loopback server; raw `node:http` (`agent: false`) for non-standard method tokens.
+- **Coverage:** Jest's built-in V8/Istanbul coverage, scoped to `server.js`, gated at 100% via `coverageThreshold.global`.
+- **Sequencer:** custom class extending `@jest/test-sequencer`, registered through `jest.config.js`.
+- **Black-box harness:** Node-core `child_process.spawn` + `node:net` TCP probes + stdout readiness parsing (no fixed sleeps).
 
-### G. Glossary
+### Appendix G — Glossary
 
 | Term | Definition |
 |------|------------|
-| **AAP** | Agent Action Plan — the governing specification for this engagement |
-| **OBJ-1 / OBJ-2** | The two co-equal objectives: dead-code report / testing strategy |
-| **C-001** | Source-immutability constraint from the `README.md` "Do not touch!" directive |
-| **C-005 / C-006** | Zero-dependency / no-install-step constraints |
-| **C-002 / C-003 / C-004** | Behavioral invariants: host `127.0.0.1`, port `3000`, response body `Hello, World!\n` |
-| **Branchless handler** | A request handler with no conditional paths — produces a deterministic response |
-| **Dangling reference** | A manifest field (`main: "index.js"`) pointing at a non-existent file |
-| **P0 / P1 / P2** | Test priority bands by business impact × failure likelihood (P0 highest) |
-| **EADDRINUSE** | OS error when binding an already-occupied port — the server's sole failure mode |
+| In-process suite | Tests that `require('../server.js')` in the Jest process so the module is instrumented for coverage. |
+| Black-box suite | Tests that spawn `node server.js` as a separate OS process and observe it externally. |
+| `EADDRINUSE` | OS error when binding a port already in use — the server's only reachable failure mode. |
+| Readiness log | The line `Server running at http://127.0.0.1:3000/` emitted by the `listen` callback; used for deterministic readiness detection. |
+| C-001 | Constraint requiring `server.js` (and `README.md`) to remain byte-identical. |
+| `forceExit` | Jest option that terminates the run even with open handles — required because `server.js` never closes its listener. |
+| llhttp | Node's HTTP parser; rejects unrecognized method tokens with a protocol-level `400` before the handler runs. |
+| Extension method | A non-standard but parser-recognized HTTP method (e.g., PROPFIND, M-SEARCH) routed to the handler like any verb. |
+
+---
+
+*Generated by the Blitzy Platform • Completion measured strictly over AAP-scoped + path-to-production work • Completed = `#5B39F3`, Remaining = `#FFFFFF`.*
