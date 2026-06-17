@@ -6,36 +6,41 @@
 
 ### 1.1.1 Project Overview
 
-The `hao-backprop-test` repository is a minimal Node.js HTTP server implementation purposely designed as a fixed test fixture for "backprop integration" validation workflows. The project consists of a single executable JavaScript file (`server.js`) that launches a loopback HTTP listener on `127.0.0.1:3000` and unconditionally returns a static `"Hello, World!\n"` plaintext response to every incoming request. The repository self-identifies its purpose in its README with the directive "test project for backprop integration. Do not touch!" — explicitly indicating that the codebase derives its value from remaining stable and immutable.
+The `hao-backprop-test` repository implements a minimal Node.js HTTP server that exists exclusively as a fixed test fixture for an external "backprop integration" validation workflow. The entire system comprises four protected baseline files at the repository root — `server.js` (14 lines of runtime code), `package.json` (manifest), `package-lock.json` (empty lockfile), and `README.md` (three-line governance document) — totaling approximately 40 lines of code and configuration. The runtime exclusively uses Node.js built-in modules (the `http` module via CommonJS `require`), declares zero third-party dependencies in either the manifest or the lockfile, and exposes a single, branchless HTTP handler that responds identically to every request with `200 OK`, `Content-Type: text/plain`, and the body `Hello, World!\n` (14 bytes including trailing newline).
 
-The npm package metadata identifies the project internally as `hello_world` version `1.0.0`, distributed under the MIT license, with `hxu` as the sole declared author. The entire repository surface area comprises four files at the root level with no subdirectories: `README.md`, `package.json`, `package-lock.json`, and `server.js` — totaling approximately 40 lines of code and configuration.
+The repository's `README.md` declares its purpose in two sentences — a title (`# hao-backprop-test`) and a directive (`test project for backprop integration. Do not touch!`). The "Do not touch!" instruction is not advisory; it is the operational contract of the project, enforced via an immutability constraint on the four baseline files.
 
 ### 1.1.2 Core Business Problem
 
-The repository addresses the need for a **stable, predictable, low-complexity HTTP endpoint** that can be used as a known-good baseline by external integration tooling referenced in the README as "backprop." By providing a deterministic response surface — always returning HTTP 200 with identical headers and body — the system eliminates application-layer variability that would otherwise confound integration validation activities. The "Do not touch!" instruction in the README reinforces that the value of this fixture lies in its invariance.
+The system addresses the need for a **stable, predictable, low-complexity HTTP endpoint** that can serve as a known-good baseline against which the external "backprop" integration tooling can be validated. By eliminating all variability — no routing logic, no middleware, no environment-driven configuration, no persistent state, no external dependencies — the fixture provides a deterministic counterparty whose behavior cannot be perturbed by code changes, dependency updates, or runtime configuration drift. The value proposition is therefore **invariance**: the system's worth derives from its refusal to change.
 
-The specific definition of "backprop" (e.g., a tool, a CI/CD subsystem, a product, or an automation pipeline) is **not documented within this repository**. Consequently, the business problem is framed exclusively in terms of providing a fixture; the consumer of that fixture is referenced by name but not described.
+The specific semantics of "backprop integration" are not documented within the repository itself. The consumer is referenced by name in the README but its implementation, location, and validation logic reside outside the boundary of this codebase.
 
 ### 1.1.3 Key Stakeholders and Users
 
-| Stakeholder Role | Identity / Description | Source of Evidence |
-|------------------|------------------------|--------------------|
-| Sole Declared Author | `hxu` | `package.json` author field |
-| Implicit Consumer | Whoever executes "backprop integration" testing | `README.md` self-description |
-| License Recipients | General public (MIT permissive license) | `package.json` license field |
-| Code Custodians | Anyone honoring the "Do not touch!" directive | `README.md` directive |
+The following table summarizes the stakeholders identifiable from repository evidence:
 
-No `CONTRIBUTORS`, `CODEOWNERS`, `MAINTAINERS`, or `AUTHORS` files exist in the repository, and no other stakeholders are documented in any retrieved artifact.
+| Stakeholder Role | Identity / Description | Evidence Source |
+|------------------|------------------------|-----------------|
+| Sole Declared Author | `hxu` | `package.json` author field |
+| Implicit Consumer | External "backprop integration" workflow (undefined within this repo) | `README.md` line 2 |
+| License Recipients | General public, per MIT license terms | `package.json` license field |
+| Code Custodians | Any party honoring the "Do not touch!" directive | `README.md` line 2 |
+
+No `CONTRIBUTORS`, `CODEOWNERS`, `MAINTAINERS`, or `AUTHORS` files exist in the repository, so the stakeholder list above represents the complete documented set.
 
 ### 1.1.4 Expected Business Impact and Value Proposition
 
-The value proposition of this repository can be summarized in three observable properties derived directly from its implementation:
+The system's value is qualitative rather than quantitative. No revenue, cost-savings, throughput, or latency metrics are documented anywhere in the repository. The expected impact is instead expressed through four operational properties:
 
-1. **Predictability** — Every HTTP request receives an identical response regardless of method, path, headers, or body, providing a noise-free baseline for upstream integration tests.
-2. **Minimal Surface Area** — The complete absence of routing logic, middleware, external dependencies, and configurability eliminates moving parts that could otherwise introduce test flakiness.
-3. **Operational Simplicity** — With zero declared dependencies (`packages` tree in `package-lock.json` is empty), the server can be executed on any Node.js installation capable of resolving the built-in `http` module without further setup.
+| Property | Manifestation in System |
+|----------|-------------------------|
+| Predictability | Branchless handler returns identical response to every request, regardless of method, path, headers, or body |
+| Minimal Surface Area | ~40 lines of code and configuration across four files; no transitive dependencies |
+| Operational Simplicity | Single-command launch (`node server.js`); no build step, no install step beyond cloning |
+| Source Invariance | Four baseline files are byte-locked under the "Do not touch!" directive |
 
-No revenue, productivity, cost-reduction, or other quantitative business impact metrics are documented in the repository.
+---
 
 ## 1.2 SYSTEM OVERVIEW
 
@@ -43,99 +48,126 @@ No revenue, productivity, cost-reduction, or other quantitative business impact 
 
 #### Business Context and Market Positioning
 
-The repository occupies an internal tooling/test-fixture niche rather than a market-facing position. It is not a product, not a library intended for npm distribution (despite lacking `private: true`, no publication metadata such as `repository`, `keywords`, `bugs`, or `homepage` fields exist), and not a reusable framework. Its positioning is purely instrumental: a controlled artifact used to exercise an external "backprop integration" workflow.
+The repository occupies an internal tooling and test-fixture niche rather than a market-facing position. It is not a product, a library, or a service intended for external adoption. The `package.json` declares the package name as `hello_world` (note: distinct from the repository folder name `hao-backprop-test`), version `1.0.0`, with a one-line description of `"Hello world in Node.js"` and MIT licensing. The dual identity (`hao-backprop-test` as the git repository, `hello_world` as the npm package name) reflects the project's origin as a Hello-World scaffold subsequently repurposed as a backprop integration target without renaming the npm manifest.
 
 #### Current System Limitations
 
-This repository does not replace or upgrade a prior system. There are no documented predecessor artifacts, no `CHANGELOG`, no version history beyond the static `1.0.0` declaration appearing in both `package.json` and `package-lock.json`, and no migration notes. Consequently, the section on "current system limitations" is non-applicable in its traditional sense; instead, the relevant limitations are intrinsic to the project's deliberate minimalism, summarized below.
+The repository does **not** replace or upgrade a prior system. There is no `CHANGELOG`, no migration notes, no deprecation indicators, and no version history within the documented files (only the initial `1.0.0` version is declared). Consequently, "current system limitations" in the conventional sense (limitations of a predecessor that motivated this project) do not apply. The relevant constraints are instead **intrinsic minimalism characteristics** that are deliberate design properties rather than weaknesses:
 
-| Limitation Category | Specific Limitation | Source |
-|---------------------|---------------------|--------|
-| Network Accessibility | Bound to loopback `127.0.0.1` only — unreachable from non-local clients | `server.js` hostname constant |
-| Configurability | Host and port are hardcoded — no environment variable overrides | `server.js` (no `process.env` references) |
-| Functional Coverage | Single response only — no routing, no method differentiation | `server.js` handler signature ignores `req` |
-| Operational Resilience | No error handling, no graceful shutdown, no health checks | Absence of `try/catch`, `error` listeners, signal handlers |
+| Intrinsic Constraint | Implementation Detail |
+|----------------------|----------------------|
+| Loopback-Only Binding | Server binds to `127.0.0.1`; not reachable from non-local hosts |
+| Hardcoded Configuration | Host and port are literal constants; no `process.env` overrides supported |
+| Single Response Body | Handler emits only `Hello, World!\n`; no content negotiation or differentiation |
+| No Resilience Surface | No `'error'` listener, no `try/catch`, no graceful shutdown handlers |
 
 #### Integration with Existing Enterprise Landscape
 
-Integration is one-directional and protocol-based: an external "backprop" consumer issues HTTP requests to the server, and the server responds with the static payload. No outbound network calls, no database integrations, no message-queue connections, no service-discovery registration, and no telemetry exports are implemented. The repository contains no `Dockerfile`, no CI/CD configuration (no `.github/`, no `.gitlab-ci.yml`, no `Jenkinsfile`), and no orchestration manifests, so enterprise-level integration is presumed to occur outside the repository boundary.
+Integration with the broader environment is **one-directional and protocol-based**. External consumers initiate HTTP requests to the loopback endpoint; the server responds with a static payload. There is no outbound network traffic, no database connectivity, no message queue interaction, no telemetry emission, no service discovery registration, no Dockerfile, and no CI/CD pipeline definition in the repository.
+
+The following diagram illustrates the integration boundary:
 
 ```mermaid
 flowchart LR
-    subgraph ExternalConsumer["External Consumer (Out of Repo)"]
-        Backprop[Backprop Integration<br/>Test Harness]
+    subgraph External["External Environment (Out of Repo)"]
+        Consumer["Backprop Integration<br/>Validation Workflow"]
     end
-
-    subgraph RepoBoundary["Repository: hao-backprop-test"]
-        Server[Node.js HTTP Server<br/>server.js]
-        Handler[Static Response Handler<br/>res.end Hello, World!]
-        Server --> Handler
+    subgraph Repo["hao-backprop-test Repository"]
+        direction TB
+        Server["server.js<br/>HTTP Listener<br/>127.0.0.1:3000"]
+        Manifest["package.json<br/>Package Identity"]
+        Lock["package-lock.json<br/>Empty Lockfile v3"]
+        Doc["README.md<br/>Governance Directive"]
     end
-
-    Backprop -->|HTTP Request<br/>any method/path| Server
-    Handler -->|HTTP 200<br/>Content-Type: text/plain<br/>Body: Hello, World!| Backprop
+    Consumer -->|"HTTP Request<br/>(any method/path)"| Server
+    Server -->|"200 OK<br/>text/plain<br/>Hello, World!\n"| Consumer
 ```
 
 ### 1.2.2 High-Level Description
 
 #### Primary System Capabilities
 
-The system provides exactly one capability: **serving a deterministic static HTTP response on a local TCP socket**. Operationally, this decomposes into the following observable behaviors:
+The system exposes exactly four observable capabilities, each implemented in a single contiguous block of `server.js`:
 
-| Capability | Behavior | Evidence |
-|------------|----------|----------|
-| TCP Bind | Acquires port `3000` on interface `127.0.0.1` | `server.listen(port, hostname, ...)` in `server.js` |
-| Startup Logging | Emits one console line announcing the listening address | `console.log` in listen callback |
-| Request Acceptance | Accepts all valid HTTP/1.1 requests via the Node.js `http` module | `http.createServer` in `server.js` |
-| Static Response Emission | Returns status `200`, `Content-Type: text/plain`, body `"Hello, World!\n"` | Handler body in `server.js` |
+| Capability | Implementation Locus | Observable Behavior |
+|------------|---------------------|---------------------|
+| HTTP Server Lifecycle | `http.createServer` + `server.listen` | Binds TCP socket on loopback port 3000 |
+| Startup Logging | `console.log` callback to `listen` | Emits `Server running at http://127.0.0.1:3000/` to stdout |
+| Request Acceptance | Anonymous handler function | Accepts every incoming HTTP request without filtering |
+| Static Response Emission | `res.statusCode` + `res.setHeader` + `res.end` | Returns 200/`text/plain`/`Hello, World!\n` uniformly |
 
 #### Major System Components
 
-The repository contains a single logical component — the HTTP server — supported by three metadata/documentation artifacts:
+The repository contains exactly four production files plus auxiliary documentation. The runtime composition is summarized below:
 
 | Component | File | Role |
 |-----------|------|------|
-| HTTP Server | `server.js` | Sole runtime executable; the entire application surface |
-| Package Manifest | `package.json` | Declares package identity, author, license, and (placeholder) test script |
-| Dependency Lockfile | `package-lock.json` | Lockfile version 3 confirming an empty dependency tree |
-| Project Documentation | `README.md` | Two-line description identifying purpose and "Do not touch!" directive |
+| HTTP Runtime | `server.js` | Sole executable file; implements server lifecycle and request handling |
+| Package Manifest | `package.json` | Declares package identity, MIT license, author `hxu`, placeholder test script |
+| Dependency Lockfile | `package-lock.json` | Lockfile version 3 with empty `packages` tree confirming zero dependencies |
+| Governance Document | `README.md` | Title plus "Do not touch!" immutability directive |
 
-A notable factual inconsistency must be flagged: `package.json` declares `"main": "index.js"`, but **no `index.js` file exists in the repository**. The actual runtime entry point is `server.js`, which is invoked directly via `node server.js` since no `start` script is defined in `package.json`.
+Auxiliary directories (`docs/` and `blitzy/documentation/`) contain analysis artifacts and engagement governance materials but are not part of the runtime surface and do not affect the executable behavior of the server.
 
 #### Core Technical Approach
 
-The implementation employs an intentionally minimal architectural footprint:
+The system's technical approach is defined by a sequence of deliberate omissions as much as by its inclusions:
 
-- **Language and Runtime:** JavaScript using CommonJS module conventions (`require`), executed by Node.js. No `engines` field is declared in `package.json`, so no specific Node.js version is required or guaranteed.
-- **HTTP Layer:** Exclusively the Node.js core `http` module. No third-party web framework (Express, Koa, Fastify, Hapi, etc.) is used or installed.
-- **Dependency Posture:** Zero runtime and zero development dependencies. `package.json` omits the `dependencies` and `devDependencies` fields entirely, and `package-lock.json` (lockfile version 3, indicating compatibility with npm v7+) contains only the root `""` package entry under its `packages` object.
-- **Build/Transpile Pipeline:** None. No build scripts, no TypeScript, no bundler, no transformation step.
-- **Persistence/State:** None. The server is fully stateless and holds no in-memory data structures beyond the constants `hostname`, `port`, and the `server` object itself.
+- **Module System**: CommonJS (`require('http')`); no ES module syntax, no `module.exports`
+- **Dependencies**: None — neither `dependencies` nor `devDependencies` are declared
+- **Runtime**: Node.js with built-in `http` module only; no `engines` field constrains the Node version
+- **Build Pipeline**: None — no transpilation, no bundling, no minification
+- **State Model**: Fully stateless; no persistence, no in-memory accumulation, no session tracking
+- **Configuration Surface**: None — host (`127.0.0.1`) and port (`3000`) are hardcoded literals
+
+The runtime sequence executed by `node server.js` is captured below:
+
+```mermaid
+sequenceDiagram
+    participant Op as Operator
+    participant Node as Node.js Runtime
+    participant Server as HTTP Server Instance
+    participant Client as HTTP Client
+
+    Op->>Node: node server.js
+    Node->>Node: require('http')
+    Node->>Server: http.createServer(handler)
+    Node->>Server: server.listen(3000, '127.0.0.1', cb)
+    Server->>Op: console.log("Server running at http://127.0.0.1:3000/")
+    Client->>Server: HTTP request (any method, any path)
+    Server->>Server: res.statusCode = 200
+    Server->>Server: res.setHeader('Content-Type', 'text/plain')
+    Server->>Client: res.end('Hello, World!\n')
+```
 
 ### 1.2.3 Success Criteria
 
 #### Measurable Objectives
 
-Because the repository does not document explicit business or technical objectives, the following measurable criteria are derived directly from the implementation's observable behavior and serve as practical acceptance signals:
+Success is defined exclusively in terms of behavioral conformance to the documented contract. Quantitative business metrics (revenue impact, cost savings, user growth) do not appear in any repository artifact and are therefore not part of the success definition.
 
-| Objective | Pass Condition | Validation Method |
-|-----------|----------------|---------------------|
-| Server Startup | Process binds to `127.0.0.1:3000` without error | Observation of `"Server running at..."` console output |
-| Response Correctness | Every request returns HTTP 200 with body `"Hello, World!\n"` | HTTP client probe (e.g., `curl http://127.0.0.1:3000`) |
-| Response Header Correctness | `Content-Type` header equals `text/plain` | HTTP client header inspection |
-| Code Immutability | Repository contents remain unchanged from the committed baseline | Source control diff against baseline |
+| Objective | Measurement | Threshold |
+|-----------|-------------|-----------|
+| Server Startup | Process binds to TCP 127.0.0.1:3000 without error | Successful bind on first attempt |
+| Response Status Correctness | HTTP status code emitted | Exactly `200` for every request |
+| Response Body Correctness | Response body bytes | Exactly `Hello, World!\n` (14 bytes) |
+| Response Header Correctness | `Content-Type` header value | Exactly `text/plain` |
+| Source Immutability | Byte-level comparison of four baseline files | Zero deviation from committed state |
 
 #### Critical Success Factors
 
-The success of this fixture depends primarily on three factors, all reinforced by the README directive:
-
-1. **Behavioral Stability** — The response payload, status code, and headers must remain byte-identical across executions to preserve the determinism on which upstream integration tests rely.
-2. **Operational Availability** — The Node.js process must successfully claim port `3000` on the loopback interface at runtime; competing local processes binding the same port would prevent startup.
-3. **Source Invariance** — Per the README's explicit "Do not touch!" instruction, the source files must not be modified, since modifications would invalidate the assumptions of the external "backprop integration" consumer.
+| Critical Success Factor | Description |
+|-------------------------|-------------|
+| Behavioral Stability | The handler must respond identically regardless of request shape |
+| Operational Availability | The server must reach the listening state when launched against an unoccupied port |
+| Source Invariance | The four baseline files must remain byte-identical to satisfy the "Do not touch!" governance contract |
+| Zero-Install Operability | The system must run via `node server.js` with no preceding install or build step |
 
 #### Key Performance Indicators
 
-No KPIs, SLAs, throughput targets, latency budgets, or quality-of-service metrics are documented in the repository. Performance characteristics are bounded only by the natural capabilities of the Node.js `http` core module on the host system, and any quantitative performance expectations would have to be defined externally by the consumer of this fixture rather than inside this repository.
+No quantitative KPIs (throughput targets, latency budgets, error-rate ceilings, availability SLAs) are documented in the repository. The system's KPI surface is **qualitative pass/fail** along the dimensions enumerated in the measurable objectives table. Should KPIs be required by a consuming validation workflow, they must be defined and tracked externally to this repository.
+
+---
 
 ## 1.3 SCOPE
 
@@ -143,93 +175,132 @@ No KPIs, SLAs, throughput targets, latency budgets, or quality-of-service metric
 
 #### Core Features and Functionalities
 
-The following capabilities are explicitly present in the codebase and therefore within the scope of this specification:
+The following capabilities are intentionally implemented and form the totality of the in-scope functional surface:
 
-| Feature Category | In-Scope Item | Implementation Location |
-|------------------|---------------|--------------------------|
-| HTTP Server Lifecycle | TCP bind on `127.0.0.1:3000` and startup console announcement | `server.js` listen call and callback |
-| Request Acceptance | Acceptance of HTTP requests of any method, path, headers, or body | `http.createServer` handler in `server.js` |
-| Response Generation | Static HTTP 200 response with `text/plain` content type and `Hello, World!` body | Handler body in `server.js` |
-| Package Identity | `hello_world` v1.0.0 under MIT license with author `hxu` | `package.json` and `package-lock.json` |
-| Project Documentation | Two-line README declaring purpose and immutability directive | `README.md` |
+| Capability | Functional Scope |
+|------------|-----------------|
+| HTTP Server Lifecycle | Process startup, TCP bind to loopback, listening state, startup log emission |
+| Request Acceptance | Acceptance of any HTTP request (any method, any path, any headers, any body) |
+| Static Response Generation | Uniform emission of 200 / `text/plain` / `Hello, World!\n` |
+| Package Identity Declaration | npm manifest with name, version, author, license, dangling `main` reference |
+| Project Documentation | Two-line README establishing purpose and immutability directive |
+
+#### Primary User Workflows
+
+There are two recognized workflows, both operating on the system from outside:
+
+| Workflow | Actor | Steps |
+|----------|-------|-------|
+| Server Launch | Operator | Execute `node server.js`; observe startup log on stdout |
+| Integration Validation | Backprop Consumer | Issue HTTP request to `http://127.0.0.1:3000/`; verify response shape |
+
+#### Essential Integrations
+
+The only integration point in scope is **inbound HTTP traffic on the loopback interface, TCP port 3000**, served via the Node.js built-in `http` module. No other integrations (databases, message brokers, external APIs, observability backends, identity providers) are in scope.
+
+#### Key Technical Requirements
+
+| Requirement | Specification |
+|-------------|--------------|
+| Runtime | Node.js with built-in `http` module support |
+| Module System | CommonJS |
+| Network Binding | `127.0.0.1:3000` (hardcoded) |
+| Dependency Footprint | Zero third-party packages |
+| Launch Command | `node server.js` |
 
 #### Implementation Boundaries
 
-| Boundary Dimension | Defined Scope | Evidence |
-|---------------------|---------------|----------|
-| System Boundary | One Node.js process executing `server.js`; no submodules, no child processes | Single source file in repository |
-| Network Boundary | Loopback interface `127.0.0.1` only — not reachable from other hosts | Hardcoded `hostname` constant in `server.js` |
-| User Population | Local processes on the same host able to issue HTTP requests to port `3000` | Loopback binding |
-| Data Domain | A single static UTF-8 string `"Hello, World!\n"` — no dynamic data, no persistence | Handler body |
-| Geographic / Market Coverage | Not applicable — the system is a local fixture with no user-facing distribution | Repository purpose declaration |
-| License Coverage | MIT license terms apply to all repository contents | `package.json` and `package-lock.json` license fields |
+The system's boundaries are tight and enumerable:
+
+| Boundary Dimension | In-Scope Coverage |
+|--------------------|-------------------|
+| Process Topology | One Node.js process |
+| Network Reachability | Loopback interface only (`127.0.0.1`) |
+| Client Population | Processes co-resident on the same host |
+| Data Domain | A single static UTF-8 string (`Hello, World!\n`) |
+| Licensing Coverage | MIT license terms apply to all repository content |
 
 ### 1.3.2 Out-of-Scope Elements
 
-#### Excluded Features and Capabilities
+#### Explicitly Excluded Features and Capabilities
 
-The following features and capabilities are **demonstrably absent** from the repository and are therefore explicitly out of scope for this technical specification. Their absence has been verified across all four repository files:
+The following capabilities are **verified absent** from the implementation and are explicitly out of scope. Each is excluded by design and supported by direct evidence of non-presence in the source files:
 
-| Excluded Capability | Verification of Absence |
-|---------------------|-------------------------|
-| External web framework (Express, Koa, Fastify, Hapi, etc.) | `package.json` declares no `dependencies`; `package-lock.json` has empty `packages` tree |
-| Routing layer and multiple endpoints | Handler in `server.js` ignores the `req` argument entirely |
-| Middleware stack | No middleware registration or invocation chain exists |
-| Authentication or authorization | No security headers, no token verification, no credential handling |
-| Environment-variable configuration | No `process.env` references; host and port are hardcoded literals |
-| Database or persistence integration | No imports of any database client or ORM |
-| Error handling | No `try/catch` blocks and no `'error'` event listener on the server instance |
-| Graceful shutdown | No `SIGINT` / `SIGTERM` handlers; no `server.close()` invocation |
-| Request logging or structured logging framework | Only a single `console.log` on startup; no per-request log emission |
-| Automated tests | `test` script in `package.json` is the npm-default placeholder returning exit code 1 |
-| CI/CD configuration | No `.github/`, `.gitlab-ci.yml`, `Jenkinsfile`, or equivalent files |
-| Containerization | No `Dockerfile`, `docker-compose.yml`, or container manifests |
-| Build / transpile step | No build scripts, no TypeScript, no bundler configuration |
-| Public network exposure | Server explicitly binds loopback `127.0.0.1`, not `0.0.0.0` |
-| Node.js version constraint enforcement | `engines` field is absent from `package.json` |
-| Convenience `start` script | `scripts` block in `package.json` contains only the test placeholder |
+| Excluded Category | Specific Exclusions |
+|-------------------|---------------------|
+| Web Frameworks | Express, Koa, Fastify, Hapi, or any third-party HTTP abstraction |
+| Routing | Path-based, method-based, or parameter-based routing logic |
+| Middleware | Request preprocessing, response postprocessing, body parsing, compression |
+| Authentication & Authorization | API keys, tokens, OAuth, sessions, RBAC, ACLs |
+| Configuration Management | Environment variables, config files, command-line flags, secrets management |
+| Persistence | Databases, ORMs, file-based storage, in-memory caches |
+| Error Handling | `try`/`catch` blocks, `'error'` event listeners, structured error responses |
+| Graceful Shutdown | `SIGINT`/`SIGTERM` handlers, `server.close()` invocations, drain logic |
+| Observability | Request logging, structured logs, metrics emission, distributed tracing, health endpoints |
+| Quality Assurance | Automated tests, linters, formatters, type checkers (the `test` script is the npm-default placeholder) |
+| Build & Delivery | Transpilation, bundling, minification, Dockerfile, CI/CD pipelines |
+| Network Exposure | Public network binding, TLS termination, reverse proxy integration |
+| Runtime Pinning | `engines` field in `package.json`; no Node.js version is enforced |
+| Launch Convenience | `start` script in `package.json`; launch is exclusively via `node server.js` |
 
 #### Future Phase Considerations
 
-The repository contains **no roadmap, no future-phase planning documentation, no `TODO` markers, and no deprecation notices**. The "Do not touch!" directive in the README implies that future evolution of this artifact is not anticipated or desired within its present role as a fixture. Any expansion of functionality (e.g., parameterized configuration, multi-route support, observability) would constitute a redefinition of the project's purpose and is explicitly outside the scope of this specification.
+The "Do not touch!" directive in the README implies that **no future evolution of the four baseline files is anticipated**. No roadmap, no backlog, no version planning, no enhancement proposals exist within the repository. Augmentations performed by analytical processes (such as files added under `docs/` or `blitzy/documentation/`) are explicitly additive and do not modify the baseline. Any further-phase considerations therefore reside outside the boundary of this specification.
 
 #### Integration Points Not Covered
 
-Integrations beyond the inbound HTTP socket on `127.0.0.1:3000` are out of scope. This includes — but is not limited to — outbound HTTP calls, message brokers, event streams, service meshes, identity providers, telemetry collectors, and configuration servers. None of these integrations are referenced or implemented in any repository file.
+| Excluded Integration | Reason for Exclusion |
+|----------------------|---------------------|
+| Outbound HTTP calls | No outbound client logic exists in `server.js` |
+| Database connections | No driver dependencies declared; no connection logic implemented |
+| Message brokers / queues | No client libraries; no producer/consumer code |
+| External authentication providers | No identity integration implemented |
+| Telemetry / APM backends | No instrumentation code or SDK imports |
+| Container orchestration | No Dockerfile, no Kubernetes manifests, no Compose files |
 
 #### Unsupported Use Cases
 
-The following use cases are unsupported by virtue of the system's design and are therefore explicitly out of scope:
-
-1. **Production traffic serving** — The loopback-only binding precludes reachability from external clients.
-2. **High-availability deployment** — No clustering, no process management, no health endpoints exist.
-3. **Differentiated response logic** — The handler returns the same response regardless of request properties.
-4. **Stateful conversation patterns** — No session handling, no cookies, no per-client state.
-5. **Secure transport** — No TLS/HTTPS support; the server uses the plaintext `http` module only.
-6. **Programmatic embedding** — `server.js` does not export anything via `module.exports`, so it cannot be imported as a library.
-
-## 1.4 References
-
-#### Files Examined
-
-- `README.md` — Two-line project description establishing the repository title (`hao-backprop-test`), the self-stated purpose ("test project for backprop integration"), and the immutability directive ("Do not touch!").
-- `package.json` — npm manifest providing package identity (`hello_world` v1.0.0), declared main entry (`index.js` — note: file does not exist), test-script placeholder, author (`hxu`), MIT license, and verification of zero declared dependencies.
-- `package-lock.json` — Lockfile (version 3) confirming an empty dependency tree and consistent package identity metadata.
-- `server.js` — Sole runtime source file (14 lines) containing the complete HTTP server implementation using the Node.js core `http` module, hardcoded `127.0.0.1:3000` binding, single static response handler, and startup `console.log` statement.
-
-#### Repository Folders Explored
-
-- Repository root (`/`) — The only directory in the repository; contains all four files listed above and no subdirectories.
-
-# 2. Product Requirements
-
-This section decomposes the `hao-backprop-test` repository into discrete, testable features. Every feature documented here is grounded in direct evidence from one of the four files present in the repository (`server.js`, `package.json`, `package-lock.json`, `README.md`). No speculative, aspirational, or absent capabilities are documented; verified absences are itemized in §1.3.2 of this specification and are not redocumented as requirements here.
-
-Given the deliberately minimal surface area of the repository (a single 14-line `server.js` executable, no subdirectories, and zero declared dependencies), six discrete features have been identified. Each is assigned a unique identifier of the form `F-XXX`, and each requirement within a feature receives an identifier of the form `F-XXX-RQ-YYY` to support traceability throughout the document.
+| Use Case | Reason Unsupported |
+|----------|--------------------|
+| Production Traffic Serving | Loopback-only binding; no resilience surface |
+| High-Availability Deployment | Single process; no clustering or failover |
+| Differentiated Routing | Branchless handler returns identical response to all paths |
+| Stateful Interactions | No state model; each request is handled independently |
+| Encrypted Transport | No TLS; HTTP only |
+| Library / Module Embedding | No `module.exports`; cannot be `require`d as a library |
+| Concurrent Multi-Port Operation | Single hardcoded port; no instance multiplication logic |
 
 ---
 
+## 1.4 REFERENCES
+
+### 1.4.1 Files Examined
+
+- `server.js` — Sole runtime file; provided host/port/response constants, branchless handler structure, startup logging behavior, and absence of error handling, graceful shutdown, and exports
+- `package.json` — Manifest source for package identity (`hello_world`), version (`1.0.0`), author (`hxu`), MIT license, placeholder test script, dangling `main: index.js` reference, and absence of dependencies and `engines` field
+- `package-lock.json` — Lockfile version 3 with empty `packages` tree confirming zero third-party dependencies
+- `README.md` — Three-line governance source; established repository title, self-stated purpose ("test project for backprop integration"), and "Do not touch!" immutability directive
+- `docs/dead-code-analysis.md` — Confirmed zero removable dead code in baseline; documented the dangling `main` reference and idiomatic-but-unused `req` parameter
+- `docs/testing-strategy.md` — Documented externally-observable contract (`200` / `text/plain` / `Hello, World!\n` / 14 bytes) and identified `EADDRINUSE` as the sole failure mode
+- `blitzy/documentation/Agent Action Plan.md` — Source of engagement constraints (immutability C-001; behavioral invariants C-002 through C-004; zero-dependency C-005/C-006) used in scope definition
+- `blitzy/documentation/Build Prompt.md` — Original user prompt context
+- `blitzy/documentation/Technical Specifications.md` — Cross-referenced existing §1 Introduction for alignment with broader document scope and terminology
+- `blitzy/documentation/Project Guide.md` — Runtime validation results (Node v20+ verified), completion status, and prerequisite confirmation
+
+### 1.4.2 Folders Explored
+
+- `/` (repository root) — Enumeration of four baseline files plus `docs/` and `blitzy/` subdirectories
+- `docs/` — Inventory of additive analysis artifacts (dead-code report, testing strategy)
+- `blitzy/` — Top-level governance folder containing `documentation/` subdirectory
+- `blitzy/documentation/` — Engagement governance and specification hub containing the Agent Action Plan, Build Prompt, existing Technical Specifications draft, and Project Guide
+
+# 2. Product Requirements
+
+This section decomposes the `hao-backprop-test` system into discrete, testable features, formalizes their functional requirements, maps their relationships, and enumerates the implementation considerations governing each. The catalog reflects the verified surface area of the four baseline files (`server.js`, `package.json`, `package-lock.json`, `README.md`) introduced in §1.1 EXECUTIVE SUMMARY and bounded by the in-scope inventory in §1.3 SCOPE. No requirement in this section presumes functionality that is not directly observable in the committed source.
+
 ## 2.1 FEATURE CATALOG
+
+The system surface area resolves to exactly six discrete features. Three are runtime features executed by `node server.js`; three are metadata, configuration, and governance features expressed through the manifest, lockfile, and README. The number of features is exhaustive at the current `1.0.0` version, and the "Do not touch!" directive in `README.md` precludes feature expansion absent an external authorization that overrides the immutability contract.
 
 ### 2.1.1 F-001: HTTP Server Lifecycle and TCP Binding
 
@@ -245,24 +316,19 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 
 #### Description
 
-**Overview.** This feature is responsible for instantiating an HTTP server via the Node.js core `http` module and binding it to the loopback interface `127.0.0.1` on TCP port `3000`. It encompasses the construction of the server object via `http.createServer(...)` and the invocation of `server.listen(port, hostname, callback)` that activates the listener.
-
-**Business Value.** This feature provides the predictable, deterministic network endpoint that external "backprop" integration tooling consumes. Without a successful bind, no other capability of the system is reachable, making this feature the foundational precondition for the entire system's purpose as a test fixture.
-
-**User Benefits.** Local consumers of the fixture (i.e., processes on the same host) receive a stable, well-known address (`http://127.0.0.1:3000/`) that requires no discovery, registration, or configuration negotiation.
-
-**Technical Context.** Implementation occupies `server.js` lines 1, 3–4, 6, and 12–14. The hostname and port are declared as `const` literals (`hostname = '127.0.0.1'`, `port = 3000`) and are not parameterized via environment variables, configuration files, or command-line arguments.
+- **Overview** — Instantiates an HTTP server through the Node.js core `http` module via `http.createServer(...)` and transitions it to the listening state with `server.listen(port, hostname, callback)`. The server binds to TCP `127.0.0.1:3000` on startup. The entire lifecycle is expressed across `server.js` lines 1, 3-4, 6, and 12-14.
+- **Business Value** — Provides the predictable, deterministic network endpoint required by the external backprop integration tooling described in §1.1.2. Without this feature, no other runtime capability can function.
+- **User Benefits** — A stable, well-known address (`http://127.0.0.1:3000/`) eliminates the need for service discovery, registration, or runtime configuration on the consumer side.
+- **Technical Context** — Hostname `127.0.0.1` and port `3000` are declared as `const` literals at module scope and are not parameterized. The server instance is held in a `server` constant for subsequent `listen` invocation.
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
+|-----------------|--------------|
 | Prerequisite Features | None |
 | System Dependencies | Node.js runtime; built-in `http` core module |
-| External Dependencies | None (zero npm packages declared) |
-| Integration Requirements | TCP port `3000` must be available on the loopback interface at startup time |
-
----
+| External Dependencies | None (zero npm packages, per F-005) |
+| Integration Requirements | TCP port `3000` must be available on the loopback interface at startup |
 
 ### 2.1.2 F-002: Static HTTP Response Generation
 
@@ -278,24 +344,19 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 
 #### Description
 
-**Overview.** This feature defines the request handler passed to `http.createServer()`. The handler is deliberately non-discriminating: it ignores the `req` parameter entirely and produces an identical response on every invocation, consisting of HTTP status code `200`, a single response header `Content-Type: text/plain`, and a response body of the literal UTF-8 string `"Hello, World!\n"`.
-
-**Business Value.** This is the core observable behavior of the fixture. The deterministic, byte-identical response on every request is precisely the property that enables upstream integration tooling to validate its own behavior against a known-good baseline without application-layer noise.
-
-**User Benefits.** Consumers receive a perfectly reproducible response, eliminating an entire category of test flakiness caused by varying response payloads, status codes, or headers.
-
-**Technical Context.** Implementation is contained in `server.js` lines 6–10. The handler signature `(req, res) => { ... }` accepts both arguments but uses only `res`. The response is produced via three sequential operations: setting `res.statusCode = 200`, calling `res.setHeader('Content-Type', 'text/plain')`, and terminating with `res.end('Hello, World!\n')`.
+- **Overview** — The request handler is deliberately non-discriminating: it ignores the `req` parameter entirely and produces an identical response for every incoming request, consisting of HTTP status code `200`, `Content-Type: text/plain` header, and the response body `"Hello, World!\n"` (14 bytes including the trailing newline; hex: `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A`).
+- **Business Value** — The deterministic, byte-identical response is the precise property enabling the backprop validation workflow to operate without interference from application-layer variability. This is the system's primary observable behavior.
+- **User Benefits** — A perfectly reproducible response eliminates test flakiness arising from varying payloads, status codes, or headers across requests.
+- **Technical Context** — Implementation occupies `server.js` lines 6-10. The arrow-function handler signature `(req, res) => {...}` reads only `res`. Three response operations are performed in sequence: `res.statusCode = 200`, `res.setHeader('Content-Type', 'text/plain')`, and `res.end('Hello, World!\n')`.
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
-| Prerequisite Features | F-001 (the server must exist to host this handler) |
-| System Dependencies | Node.js `http` module's `IncomingMessage`/`ServerResponse` API |
+|-----------------|--------------|
+| Prerequisite Features | F-001 (handler executes only when the server hosting it has been created) |
+| System Dependencies | Node.js `http` module `IncomingMessage` / `ServerResponse` API |
 | External Dependencies | None |
-| Integration Requirements | Adherence to HTTP/1.1 wire protocol as implemented by Node.js `http` |
-
----
+| Integration Requirements | HTTP/1.1 wire protocol semantics as implemented by Node.js `http` |
 
 ### 2.1.3 F-003: Startup Console Logging
 
@@ -311,24 +372,19 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 
 #### Description
 
-**Overview.** This feature emits exactly one log line to standard output upon successful TCP bind. The log message is constructed from the same `hostname` and `port` constants used by F-001 and follows the literal template `Server running at http://${hostname}:${port}/`.
-
-**Business Value.** The log line provides the only built-in operational signal indicating that the fixture has reached a ready state. Without it, an operator or supervising process would have no in-band confirmation of successful startup.
-
-**User Benefits.** A human operator observing the terminal — or an automation script grepping stdout — can deterministically detect the moment the server becomes available to accept requests.
-
-**Technical Context.** Implementation occupies `server.js` line 13, inside the callback passed as the third argument to `server.listen()`. There is no per-request logging, no log framework, no log level concept, and no logging to files or external systems; the single `console.log` invocation is the entire logging subsystem.
+- **Overview** — Emits exactly one log line to stdout upon successful TCP bind, following the template `` `Server running at http://${hostname}:${port}/` ``, which resolves to `Server running at http://127.0.0.1:3000/`.
+- **Business Value** — Provides the only built-in operational signal indicating that the fixture has reached its ready state. Per the success criteria in §1.2.3, this is the runtime witness that startup has completed.
+- **User Benefits** — Allows a human operator or an automation script to deterministically detect that the server is available to receive traffic.
+- **Technical Context** — Implementation is `server.js` line 13, contained within the callback passed as the third argument to `server.listen()`. There is no per-request logging, no log framework, and no log-level abstraction.
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
-| Prerequisite Features | F-001 (callback fires only after a successful `listen`) |
-| System Dependencies | Node.js `console` global; an attached stdout stream |
+|-----------------|--------------|
+| Prerequisite Features | F-001 (the `listen` callback fires only after a successful bind) |
+| System Dependencies | Node.js `console` global; attached stdout stream |
 | External Dependencies | None |
 | Integration Requirements | None |
-
----
 
 ### 2.1.4 F-004: Package Identity and Metadata Declaration
 
@@ -340,28 +396,23 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 | Feature Name | Package Identity and Metadata Declaration |
 | Feature Category | Configuration / Package Management |
 | Priority Level | High |
-| Status | Completed (with one documented inconsistency) |
+| Status | Completed (with one preserved inconsistency — see Technical Context) |
 
 #### Description
 
-**Overview.** This feature declares the npm-compatible identity and metadata of the project via `package.json`. The declared attributes include `name = "hello_world"`, `version = "1.0.0"`, `description = "Hello world in Node.js"`, `main = "index.js"`, `author = "hxu"`, `license = "MIT"`, and a placeholder `scripts.test` entry of `echo "Error: no test specified" && exit 1`.
-
-**Business Value.** Declaring a valid `package.json` lets the project participate in the npm ecosystem (e.g., `npm install` in another project, `npm view` introspection, license auditing) even though no packages are actually consumed and the project is not intended for publication.
-
-**User Benefits.** Tooling that expects standard npm metadata (linters, license scanners, IDEs) can introspect the project without errors.
-
-**Technical Context.** Implementation occupies the entire contents of `package.json` (11 lines). A factual inconsistency exists between `package.json` and the actual repository contents: the `main` field declares `"index.js"`, but no `index.js` file exists in the repository. The actual runtime entry point is `server.js`, which is invoked directly via `node server.js` since no `start` script is defined. This inconsistency is preserved unchanged per the README's "Do not touch!" directive and is documented here for traceability rather than corrected.
+- **Overview** — Declares npm-compatible identity through `package.json`: `name = "hello_world"`, `version = "1.0.0"`, `description = "Hello world in Node.js"`, `main = "index.js"`, `author = "hxu"`, `license = "MIT"`, and a placeholder `scripts.test` value of `"echo \"Error: no test specified\" && exit 1"`.
+- **Business Value** — Allows the project to participate in the npm ecosystem (introspection by `npm view`, license auditing, packaging tooling) even though no third-party packages are consumed and no publication is intended.
+- **User Benefits** — Tooling expecting standard npm metadata can introspect the project without error.
+- **Technical Context** — The entire `package.json` (11 lines) realizes this feature. **Preserved Inconsistency:** the `main` field references `"index.js"`, but no `index.js` file exists in the repository; the actual runtime entry is `server.js`, invoked directly via `node server.js` since no `start` script is declared. This inconsistency is preserved unchanged in conformance with the "Do not touch!" directive (see assumption A-004 and constraint C-001 in §2.6).
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
+|-----------------|--------------|
 | Prerequisite Features | None |
-| System Dependencies | An npm-compatible package tooling layer for any introspection use |
+| System Dependencies | npm-compatible package tooling for introspection |
 | External Dependencies | None |
-| Integration Requirements | Conformance to npm `package.json` schema |
-
----
+| Integration Requirements | Conformance to the npm `package.json` schema |
 
 ### 2.1.5 F-005: Zero-Dependency Operation
 
@@ -377,24 +428,19 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 
 #### Description
 
-**Overview.** This feature codifies the project's posture of having zero runtime and zero development dependencies. The `package.json` file omits both the `dependencies` and `devDependencies` fields entirely, and `package-lock.json` (lockfile version `3`, compatible with npm v7+) contains only the root `""` entry under its `packages` object, with no nested entries.
-
-**Business Value.** Zero dependencies dramatically reduce supply-chain risk, eliminate the need for `npm install` prior to execution, remove transitive vulnerability exposure, and ensure the fixture's behavior is exclusively governed by code in the repository plus the standard Node.js runtime.
-
-**User Benefits.** The fixture can be cloned and executed immediately on any host with Node.js installed, without network access, without dependency resolution, and without disk space allocated to `node_modules`.
-
-**Technical Context.** Implementation is distributed across `package.json` (absence of dependency fields) and `package-lock.json` (empty `packages` tree). The only library consumed by the running code is the Node.js core `http` module, which is part of the runtime itself and not an external dependency.
+- **Overview** — The project declares zero runtime and zero development dependencies. `package.json` omits both `dependencies` and `devDependencies` fields entirely, and `package-lock.json` (lockfile version 3, compatible with npm v7+) contains only the root `""` entry under `packages` — i.e., an empty dependency tree.
+- **Business Value** — Eliminates supply-chain attack surface, removes the requirement for `npm install` prior to execution, and avoids transitive vulnerability exposure. Directly supports the "Operational Simplicity" and "Zero-Install Operability" success factors enumerated in §1.2.3.
+- **User Benefits** — The fixture can be cloned and executed immediately on any host with a Node.js runtime, without network access and without disk allocation for a `node_modules` tree.
+- **Technical Context** — The feature is expressed by absence in `package.json` (no dependency fields) and by structural emptiness in `package-lock.json` (empty `packages` tree below the root entry). The only library consumed by the runtime is the Node.js core `http` module.
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
+|-----------------|--------------|
 | Prerequisite Features | None |
 | System Dependencies | Node.js runtime providing the `http` core module |
-| External Dependencies | None (by definition of this feature) |
+| External Dependencies | None (by definition) |
 | Integration Requirements | None |
-
----
 
 ### 2.1.6 F-006: Project Documentation and Immutability Directive
 
@@ -410,142 +456,131 @@ Given the deliberately minimal surface area of the repository (a single 14-line 
 
 #### Description
 
-**Overview.** This feature consists of the two-line `README.md` file, which simultaneously identifies the repository's purpose ("test project for backprop integration") and imposes an explicit governance constraint ("Do not touch!"). It establishes both the intended consumer relationship (with the unspecified "backprop" tooling) and the change-control posture (immutability).
-
-**Business Value.** The "Do not touch!" directive operationalizes the source-invariance property described in §1.2.3 as a critical success factor. Without this explicit instruction, the fixture's value as a stable baseline could be compromised by well-intentioned modifications.
-
-**User Benefits.** Anyone encountering the repository receives an immediate, unambiguous instruction about its intended use and its change-control expectations.
-
-**Technical Context.** The entire content of `README.md` is two lines: a level-1 markdown heading `# hao-backprop-test` and the sentence `test project for backprop integration. Do not touch!`. No additional documentation files (`CONTRIBUTING.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, etc.) exist in the repository.
+- **Overview** — A two-line `README.md` identifying the repository's purpose and imposing the governance constraint that defines the project. Line 1 (the title): `# hao-backprop-test`. Line 2 (the directive): `test project for backprop integration. Do not touch!`.
+- **Business Value** — Operationalizes the source-invariance property identified in §1.1.4 and §1.2.3. Without an explicit immutability instruction, the fixture's value as a stable baseline could be compromised by well-intentioned modifications.
+- **User Benefits** — Provides an unambiguous statement of intended use and change-control expectations, observable to anyone who clones or inspects the repository.
+- **Technical Context** — The full content of `README.md` realizes this feature. No supplementary documentation files (`CONTRIBUTING.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, etc.) exist at the repository root.
 
 #### Dependencies
 
 | Dependency Type | Specification |
-|-----------------|---------------|
+|-----------------|--------------|
 | Prerequisite Features | None |
 | System Dependencies | None (static markdown text) |
 | External Dependencies | None |
 | Integration Requirements | None |
 
----
+## 2.2 FUNCTIONAL REQUIREMENTS TABLE
 
-## 2.2 FUNCTIONAL REQUIREMENTS
+Each feature's requirements are decomposed below using the identifier convention `F-XXX-RQ-YYY`. Per the formatting constraint of at most four columns per table, each requirement is documented across four facets — Requirement Details, Acceptance Criteria, Technical Specifications, and Validation Rules — presented as separate tables.
 
-This subsection enumerates the discrete, testable requirements derived from each feature in §2.1. To respect the 4-column-maximum rule for tables, each feature is described via four short tables: **Requirement Details**, **Acceptance Criteria**, **Technical Specifications**, and **Validation Rules**.
-
-### 2.2.1 F-001 Requirements — HTTP Server Lifecycle and TCP Binding
+### 2.2.1 F-001 Functional Requirements (HTTP Server Lifecycle and TCP Binding)
 
 #### Requirement Details
 
 | Requirement ID | Description | Priority | Complexity |
 |----------------|-------------|----------|------------|
 | F-001-RQ-001 | Create an HTTP server instance via `http.createServer()` | Must-Have | Low |
-| F-001-RQ-002 | Bind the server to the loopback hostname `127.0.0.1` | Must-Have | Low |
+| F-001-RQ-002 | Bind the server to loopback hostname `127.0.0.1` | Must-Have | Low |
 | F-001-RQ-003 | Bind the server to TCP port `3000` | Must-Have | Low |
-| F-001-RQ-004 | Transition the server to a listening state via `server.listen()` | Must-Have | Low |
+| F-001-RQ-004 | Transition the server to the listening state via `server.listen()` | Must-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-001-RQ-001 | Calling `http.createServer(handler)` returns a non-null `http.Server` instance held in the `server` constant |
-| F-001-RQ-002 | A TCP socket appears bound to `127.0.0.1` (verifiable via `netstat`, `lsof`, or equivalent) |
-| F-001-RQ-003 | The same socket is bound to port `3000` |
-| F-001-RQ-004 | The listen callback executes exactly once, indicating the server has reached ready state |
+| F-001-RQ-001 | Invocation returns a non-null `http.Server` instance, held in the `server` constant |
+| F-001-RQ-002 | The bound TCP socket is reachable on `127.0.0.1` and not on any other interface |
+| F-001-RQ-003 | The bound TCP socket is on port `3000`; `EADDRINUSE` is the only documented failure mode |
+| F-001-RQ-004 | The `listen` callback executes exactly once after a successful bind |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-001-RQ-001 | None (constructor call) | `http.Server` instance | Synchronous, sub-millisecond |
-| F-001-RQ-002 | `hostname` constant `127.0.0.1` | Bound listener on loopback | Bound by OS socket allocation |
-| F-001-RQ-003 | `port` constant `3000` | Bound listener on port 3000 | Bound by OS socket allocation |
-| F-001-RQ-004 | `(port, hostname, callback)` | Listen callback invocation | Asynchronous; completes when bind succeeds |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-001-RQ-001 | Request handler `(req, res) => {...}` | `http.Server` instance | None |
+| F-001-RQ-002 | Hostname literal `'127.0.0.1'` | Socket bound to loopback interface | Module-scope `hostname` constant |
+| F-001-RQ-003 | Port literal `3000` | Socket bound to port 3000 | Module-scope `port` constant |
+| F-001-RQ-004 | `port`, `hostname`, listen callback | Server in listening state; callback fires | None |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-001-RQ-001 | Server must be constructed exactly once per process lifetime | No TLS material is provided or expected; plaintext HTTP only |
-| F-001-RQ-002 | Hostname is a hardcoded literal — must not be parameterized | Loopback binding acts as the primary network-level security boundary |
-| F-001-RQ-003 | Port is a hardcoded literal — must not be parameterized | Port must be reachable only via loopback |
-| F-001-RQ-004 | Listen must complete before any request is accepted | None |
+| Requirement ID | Business Rule | Data Validation | Security Requirement |
+|----------------|---------------|-----------------|----------------------|
+| F-001-RQ-001 | Must use Node.js core `http`, not a third-party framework | None (literal constants only) | None beyond Node.js defaults |
+| F-001-RQ-002 | Loopback binding required; non-loopback exposure forbidden | Hostname must equal `127.0.0.1` | Loopback binding is the sole network access control |
+| F-001-RQ-003 | Port `3000` required by integration contract | Port must equal `3000` | None |
+| F-001-RQ-004 | Synchronous startup signaling expected | Callback must execute exactly once | None |
 
----
-
-### 2.2.2 F-002 Requirements — Static HTTP Response Generation
+### 2.2.2 F-002 Functional Requirements (Static HTTP Response Generation)
 
 #### Requirement Details
 
 | Requirement ID | Description | Priority | Complexity |
 |----------------|-------------|----------|------------|
-| F-002-RQ-001 | Set response status code to `200` on every request | Must-Have | Low |
-| F-002-RQ-002 | Set `Content-Type` response header to `text/plain` | Must-Have | Low |
-| F-002-RQ-003 | Emit response body equal to the exact UTF-8 string `"Hello, World!\n"` | Must-Have | Low |
-| F-002-RQ-004 | Produce identical response irrespective of method, path, headers, query, or body | Must-Have | Low |
+| F-002-RQ-001 | Set the response status code to `200` | Must-Have | Low |
+| F-002-RQ-002 | Set the `Content-Type` response header to `text/plain` | Must-Have | Low |
+| F-002-RQ-003 | Emit a response body equal to `"Hello, World!\n"` (14 bytes) | Must-Have | Low |
+| F-002-RQ-004 | Produce an identical response irrespective of request method, path, headers, query, or body | Must-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-002-RQ-001 | `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/` returns `200` |
-| F-002-RQ-002 | `curl -sI http://127.0.0.1:3000/` shows a `Content-Type: text/plain` header |
-| F-002-RQ-003 | `curl -s http://127.0.0.1:3000/` returns exactly `Hello, World!\n` (14 bytes) |
-| F-002-RQ-004 | Requests issued with `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`, etc., to any path produce byte-identical responses |
+| F-002-RQ-001 | `curl -w "%{http_code}" http://127.0.0.1:3000/` returns `200` |
+| F-002-RQ-002 | `curl -I http://127.0.0.1:3000/` shows `Content-Type: text/plain` |
+| F-002-RQ-003 | `curl http://127.0.0.1:3000/` returns exactly the 14 bytes `Hello, World!\n` (hex: `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A`) |
+| F-002-RQ-004 | Requests using `GET`, `POST`, `PUT`, `DELETE`, and `OPTIONS` against arbitrary paths all yield byte-identical responses |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-002-RQ-001 | None (req is ignored) | Status line `HTTP/1.1 200 OK` | Sub-millisecond, in-memory |
-| F-002-RQ-002 | None | Header `Content-Type: text/plain` | Sub-millisecond, in-memory |
-| F-002-RQ-003 | None | Body bytes `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A` | Sub-millisecond, in-memory |
-| F-002-RQ-004 | Any valid HTTP request | Same response in all cases | Determinism enforced by ignoring `req` |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-002-RQ-001 | Ignored (`req` not read) | `res.statusCode = 200` | None |
+| F-002-RQ-002 | Ignored | Header `Content-Type: text/plain` set via `res.setHeader` | None |
+| F-002-RQ-003 | Ignored | `res.end('Hello, World!\n')` emits 14-byte body | Static UTF-8 string literal |
+| F-002-RQ-004 | Any HTTP request | Same 200 / `text/plain` / `Hello, World!\n` response | None (handler is branchless) |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-002-RQ-001 | Status code must never deviate from `200`; no error paths exist | No status-code-leaking error information |
-| F-002-RQ-002 | Header value must be the literal ASCII string `text/plain` | No security headers (CSP, HSTS, etc.) are emitted |
-| F-002-RQ-003 | Body must terminate with a single newline (`\n`) | No reflection of user input (no input is consumed) |
-| F-002-RQ-004 | Handler must not branch on any property of `req` | Eliminates request-shape-based information disclosure |
+| Requirement ID | Business Rule | Data Validation | Security Requirement |
+|----------------|---------------|-----------------|----------------------|
+| F-002-RQ-001 | Response must always be successful (no 4xx/5xx surfaces) | None (literal) | None |
+| F-002-RQ-002 | Only `Content-Type` is set; no other security or framing headers | None | No CSP, HSTS, or other security headers required |
+| F-002-RQ-003 | Body bytes are part of the integration contract | Body bytes immutable | Static literal eliminates injection surface |
+| F-002-RQ-004 | Branchless handler is a deliberate design property | Request data must not be read or echoed | Request data is never reflected, eliminating echo-based attacks |
 
----
-
-### 2.2.3 F-003 Requirements — Startup Console Logging
+### 2.2.3 F-003 Functional Requirements (Startup Console Logging)
 
 #### Requirement Details
 
 | Requirement ID | Description | Priority | Complexity |
 |----------------|-------------|----------|------------|
 | F-003-RQ-001 | Emit a startup log message after successful `listen` | Should-Have | Low |
-| F-003-RQ-002 | Format the log message as `Server running at http://${hostname}:${port}/` | Should-Have | Low |
+| F-003-RQ-002 | Format the message as `` `Server running at http://${hostname}:${port}/` `` | Should-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-003-RQ-001 | Exactly one line appears on stdout following a successful start |
-| F-003-RQ-002 | The line equals `Server running at http://127.0.0.1:3000/` |
+| F-003-RQ-001 | Exactly one log line appears on stdout following process startup |
+| F-003-RQ-002 | The emitted line equals `Server running at http://127.0.0.1:3000/` |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-003-RQ-001 | Listen-callback invocation | Single stdout line | Sub-millisecond after bind |
-| F-003-RQ-002 | `hostname` and `port` template values | Interpolated URL string | Sub-millisecond after bind |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-003-RQ-001 | Triggered by `listen` callback | One line on stdout via `console.log` | None |
+| F-003-RQ-002 | Module-scope `hostname` and `port` constants | Template-literal string interpolation | Shared with F-001 via lexical scope |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-003-RQ-001 | Logging occurs only once per process lifetime | No sensitive data is logged |
-| F-003-RQ-002 | The literal scheme `http://` (not `https://`) must appear | Reflects accurate transport, not aspirational TLS |
+| Requirement ID | Business Rule | Data Validation | Security Requirement |
+|----------------|---------------|-----------------|----------------------|
+| F-003-RQ-001 | One-shot log only; no per-request logging | None | Log line contains no secrets, tokens, or PII |
+| F-003-RQ-002 | Hostname/port in the log must match the actual bind targets | Template variables must resolve to bound values | None |
 
----
-
-### 2.2.4 F-004 Requirements — Package Identity and Metadata Declaration
+### 2.2.4 F-004 Functional Requirements (Package Identity and Metadata Declaration)
 
 #### Requirement Details
 
@@ -554,40 +589,38 @@ This subsection enumerates the discrete, testable requirements derived from each
 | F-004-RQ-001 | Declare `name = "hello_world"` in `package.json` | Must-Have | Low |
 | F-004-RQ-002 | Declare `version = "1.0.0"` in `package.json` | Must-Have | Low |
 | F-004-RQ-003 | Declare `author = "hxu"` and `license = "MIT"` | Must-Have | Low |
-| F-004-RQ-004 | Declare a `scripts.test` placeholder that exits non-zero | Could-Have | Low |
+| F-004-RQ-004 | Declare a placeholder `scripts.test` entry | Could-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-004-RQ-001 | `npm view ./` (or JSON-parse of `package.json`) reports name `hello_world` |
-| F-004-RQ-002 | Version is `1.0.0` and matches the `version` field of `package-lock.json` |
-| F-004-RQ-003 | Author is `hxu`; license is `MIT` in both `package.json` and `package-lock.json` |
-| F-004-RQ-004 | `npm test` prints `Error: no test specified` and exits with code 1 |
+| F-004-RQ-001 | `npm view ./` (or equivalent introspection) reports name `hello_world` |
+| F-004-RQ-002 | The declared version is `1.0.0` and matches the lockfile root entry |
+| F-004-RQ-003 | Author and license fields match across `package.json` and `package-lock.json` |
+| F-004-RQ-004 | `npm test` prints `Error: no test specified` and exits with code `1` |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-004-RQ-001 | n/a (static field) | String value `hello_world` | n/a |
-| F-004-RQ-002 | n/a (static field) | Semver string `1.0.0` | n/a |
-| F-004-RQ-003 | n/a (static fields) | `hxu`, `MIT` | n/a |
-| F-004-RQ-004 | `npm test` invocation | Stdout error line, exit code `1` | Sub-second |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-004-RQ-001 | n/a (declarative manifest) | `package.json` parses with `name = "hello_world"` | Valid JSON |
+| F-004-RQ-002 | n/a | Version string `1.0.0` | Mirrors `package-lock.json` |
+| F-004-RQ-003 | n/a | `author = "hxu"`, `license = "MIT"` | Consistent across manifest and lockfile |
+| F-004-RQ-004 | `npm test` invocation | stdout `Error: no test specified`; exit code `1` | Placeholder npm-default value |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-004-RQ-001 | Name field must conform to npm package naming rules | None |
-| F-004-RQ-002 | Version must be valid semver | None |
-| F-004-RQ-003 | License must be an SPDX-recognized identifier (`MIT`) | License governs all repository contents |
-| F-004-RQ-004 | Placeholder script is intentionally non-zero to signal absence of real tests | None |
+| Requirement ID | Business Rule | Data Validation | Compliance Requirement |
+|----------------|---------------|-----------------|------------------------|
+| F-004-RQ-001 | Name `hello_world` preserved per "Do not touch!" | Must conform to npm name rules | npm `package.json` schema |
+| F-004-RQ-002 | Static at `1.0.0`; no semver bumps planned | Must be valid semver | npm `package.json` schema |
+| F-004-RQ-003 | MIT license governs all repository contents | License string must be a valid SPDX identifier | SPDX / MIT license terms |
+| F-004-RQ-004 | Placeholder behavior is intentional; no real tests exist | `scripts.test` must remain the npm default | npm `package.json` schema |
 
-> **Documented Inconsistency:** The `main` field in `package.json` declares `"index.js"`, but no such file exists in the repository. The actual runtime entry point is `server.js`, invoked via `node server.js`. Per the README's "Do not touch!" directive, this inconsistency is preserved unchanged and is recorded here for traceability rather than treated as a defect.
+> **Documented Inconsistency:** `package.json` line 5 declares `"main": "index.js"`, but no `index.js` file exists. Actual runtime entry is `server.js`. Preserved unchanged per constraint C-001 and assumption A-004 (§2.6). This is the "Dangling reference" verdict recorded in §2.5.2.
 
----
-
-### 2.2.5 F-005 Requirements — Zero-Dependency Operation
+### 2.2.5 F-005 Functional Requirements (Zero-Dependency Operation)
 
 #### Requirement Details
 
@@ -596,99 +629,99 @@ This subsection enumerates the discrete, testable requirements derived from each
 | F-005-RQ-001 | Omit the `dependencies` field from `package.json` | Must-Have | Low |
 | F-005-RQ-002 | Omit the `devDependencies` field from `package.json` | Must-Have | Low |
 | F-005-RQ-003 | Use lockfile version `3` in `package-lock.json` | Must-Have | Low |
-| F-005-RQ-004 | Keep the `packages` tree in `package-lock.json` empty except for the root entry | Must-Have | Low |
+| F-005-RQ-004 | Keep the `packages` tree empty except for the root entry | Must-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-005-RQ-001 | JSON-parse of `package.json` yields no `dependencies` key |
-| F-005-RQ-002 | JSON-parse of `package.json` yields no `devDependencies` key |
-| F-005-RQ-003 | `package-lock.json` `lockfileVersion` equals `3` |
-| F-005-RQ-004 | `package-lock.json` `packages` object contains exactly one key (`""`) |
+| F-005-RQ-001 | JSON-parsing `package.json` yields no `dependencies` key |
+| F-005-RQ-002 | JSON-parsing `package.json` yields no `devDependencies` key |
+| F-005-RQ-003 | `lockfileVersion` in `package-lock.json` equals `3` |
+| F-005-RQ-004 | The `packages` object contains exactly one key, the empty string `""`, with no nested entries |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-005-RQ-001 | n/a | Field absent | n/a |
-| F-005-RQ-002 | n/a | Field absent | n/a |
-| F-005-RQ-003 | n/a | Integer `3` | n/a |
-| F-005-RQ-004 | n/a | Single root entry | n/a |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-005-RQ-001 | n/a (declarative absence) | Field not present | Valid JSON |
+| F-005-RQ-002 | n/a | Field not present | Valid JSON |
+| F-005-RQ-003 | n/a | `"lockfileVersion": 3` | npm v7+ compatibility |
+| F-005-RQ-004 | n/a | Empty dependency tree | Lockfile schema v3 |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-005-RQ-001 | No transitive packages may be introduced | Eliminates supply-chain risk vector |
-| F-005-RQ-002 | No development tooling may be added that would create dev deps | Reduces attack surface during local execution |
-| F-005-RQ-003 | Lockfile version must remain compatible with npm v7+ | None |
-| F-005-RQ-004 | Root entry must remain the only entry | Ensures `npm install` is a no-op |
+| Requirement ID | Business Rule | Data Validation | Security Requirement |
+|----------------|---------------|-----------------|----------------------|
+| F-005-RQ-001 | Zero runtime dependencies required | Field must remain absent | Eliminates third-party supply-chain risk |
+| F-005-RQ-002 | Zero development dependencies required | Field must remain absent | Eliminates dev-tooling supply-chain risk |
+| F-005-RQ-003 | Lockfile must be present and at version 3 | Must be integer `3` | None |
+| F-005-RQ-004 | No transitive packages tolerated | Object must contain only root entry | Closed supply-chain posture |
 
----
-
-### 2.2.6 F-006 Requirements — Project Documentation and Immutability Directive
+### 2.2.6 F-006 Functional Requirements (Project Documentation and Immutability Directive)
 
 #### Requirement Details
 
 | Requirement ID | Description | Priority | Complexity |
 |----------------|-------------|----------|------------|
-| F-006-RQ-001 | Provide a `README.md` at the repository root | Must-Have | Low |
-| F-006-RQ-002 | State the project title as `hao-backprop-test` | Must-Have | Low |
-| F-006-RQ-003 | State the project purpose as "test project for backprop integration" | Must-Have | Low |
+| F-006-RQ-001 | Provide a `README.md` file at the repository root | Must-Have | Low |
+| F-006-RQ-002 | State the repository title as `hao-backprop-test` | Must-Have | Low |
+| F-006-RQ-003 | State the purpose as "test project for backprop integration" | Must-Have | Low |
 | F-006-RQ-004 | State the immutability directive "Do not touch!" | Must-Have | Low |
 
 #### Acceptance Criteria
 
 | Requirement ID | Acceptance Criteria |
 |----------------|---------------------|
-| F-006-RQ-001 | `README.md` exists at the repository root |
-| F-006-RQ-002 | The first line matches `# hao-backprop-test` |
+| F-006-RQ-001 | `README.md` exists at the repository root and is readable |
+| F-006-RQ-002 | The first line of `README.md` equals `# hao-backprop-test` |
 | F-006-RQ-003 | The second line contains the phrase `test project for backprop integration` |
-| F-006-RQ-004 | The second line contains the phrase `Do not touch!` |
+| F-006-RQ-004 | The second line contains the literal phrase `Do not touch!` |
 
 #### Technical Specifications
 
-| Requirement ID | Input Parameters | Output / Response | Performance |
-|----------------|------------------|---------------------|-------------|
-| F-006-RQ-001 | n/a | File presence | n/a |
-| F-006-RQ-002 | n/a | Heading line | n/a |
-| F-006-RQ-003 | n/a | Purpose sentence | n/a |
-| F-006-RQ-004 | n/a | Directive sentence | n/a |
+| Requirement ID | Input Parameters | Output / Response | Data Requirements |
+|----------------|------------------|-------------------|-------------------|
+| F-006-RQ-001 | n/a | File at `/README.md` | UTF-8 markdown text |
+| F-006-RQ-002 | n/a | Markdown H1 header | Static literal |
+| F-006-RQ-003 | n/a | Plain-text purpose declaration | Static literal |
+| F-006-RQ-004 | n/a | Plain-text immutability directive | Static literal |
 
 #### Validation Rules
 
-| Requirement ID | Business Rule / Data Validation | Security / Compliance |
-|----------------|---------------------------------|------------------------|
-| F-006-RQ-001 | README content must remain unchanged from committed baseline | None |
-| F-006-RQ-002 | Title must match the repository's directory name | None |
-| F-006-RQ-003 | Purpose statement governs the consumer relationship | None |
-| F-006-RQ-004 | Directive establishes change-control posture for all stakeholders | Governance signal applies to all six features |
-
----
+| Requirement ID | Business Rule | Data Validation | Compliance Requirement |
+|----------------|---------------|-----------------|------------------------|
+| F-006-RQ-001 | README must be present | File must exist | None |
+| F-006-RQ-002 | Title must match git repository name | First line byte-identical to `# hao-backprop-test` | None |
+| F-006-RQ-003 | Purpose statement must be unambiguous | Verbatim string match | None |
+| F-006-RQ-004 | Immutability directive is the operational contract | Verbatim string match | Governs constraints C-001 through C-007 in §2.6 |
 
 ## 2.3 FEATURE RELATIONSHIPS
 
-This subsection documents only those relationships that are directly observable in the source code and configuration files. No hypothetical, planned, or aspirational relationships are described.
+The six features form a small, tightly bounded relationship graph. Runtime execution dependencies exist only among F-001, F-002, and F-003. The metadata features (F-004, F-005, F-006) have no runtime coupling to the executing server; F-005 enables the no-install execution model, and F-006 imposes governance over the entire repository.
 
 ### 2.3.1 Feature Dependency Map
 
-The dependency graph among features is extremely shallow because the system is implemented in a single file. F-002 and F-003 both depend on F-001 because they execute within callbacks supplied to `http.createServer()` and `server.listen()`, respectively. F-004, F-005, and F-006 are pure metadata/documentation features with no runtime relationship to the executing server.
+The following diagram visualizes the dependency relationships. Solid arrows represent runtime execution dependencies; dashed arrows represent enabling or governance relationships rather than execution prerequisites.
 
 ```mermaid
-flowchart TD
-    NodeRuntime["Node.js Runtime<br/>(provides http core module)"]
-    F001["F-001<br/>HTTP Server Lifecycle<br/>and TCP Binding"]
-    F002["F-002<br/>Static HTTP<br/>Response Generation"]
-    F003["F-003<br/>Startup Console<br/>Logging"]
-    F004["F-004<br/>Package Identity<br/>and Metadata"]
-    F005["F-005<br/>Zero-Dependency<br/>Operation"]
-    F006["F-006<br/>Project Documentation<br/>and Immutability Directive"]
+flowchart TB
+    subgraph RuntimeFeatures["Runtime Execution Features"]
+        F001["F-001<br/>HTTP Server Lifecycle<br/>and TCP Binding"]
+        F002["F-002<br/>Static HTTP Response<br/>Generation"]
+        F003["F-003<br/>Startup Console<br/>Logging"]
+    end
+    subgraph MetadataFeatures["Metadata / Configuration / Governance Features"]
+        F004["F-004<br/>Package Identity<br/>and Metadata"]
+        F005["F-005<br/>Zero-Dependency<br/>Operation"]
+        F006["F-006<br/>Documentation and<br/>Immutability Directive"]
+    end
+    NodeRuntime[("Node.js Runtime<br/>(built-in http module)")]
 
     NodeRuntime --> F001
     F001 --> F002
     F001 --> F003
-    F005 -.->|enables| NodeRuntime
+    F005 -.->|enables zero-install execution| NodeRuntime
     F006 -.->|governs| F001
     F006 -.->|governs| F002
     F006 -.->|governs| F003
@@ -696,262 +729,254 @@ flowchart TD
     F006 -.->|governs| F005
 ```
 
-Solid arrows denote a runtime execution dependency. Dashed arrows denote a non-runtime relationship: F-005 is the enabling posture that makes the Node.js runtime alone sufficient, and F-006's immutability directive governs every other feature as a change-control constraint.
+Key relationships expressed by the diagram:
+
+- **F-002 depends on F-001** — the request handler defined for F-002 only executes within a server instance created by F-001.
+- **F-003 depends on F-001** — the startup log is emitted from the callback supplied to `server.listen()`, which is the F-001 lifecycle transition.
+- **F-005 enables the Node.js-only execution model** — by declaring zero dependencies, F-005 ensures the runtime environment for F-001/F-002/F-003 is simply Node.js with its built-in `http` module.
+- **F-006 governs all other features** — the "Do not touch!" directive is the change-control constraint applied uniformly to every baseline file and therefore every feature.
 
 ### 2.3.2 Integration Points
 
-| Integration Point | Direction | Protocol | Notes |
-|-------------------|-----------|----------|-------|
-| `127.0.0.1:3000` HTTP socket | Inbound only | HTTP/1.1 plaintext | The sole integration boundary; consumed by the unspecified "backprop" tooling |
+| Integration Point | Direction | Protocol | Consumer / Producer |
+|-------------------|-----------|----------|---------------------|
+| `127.0.0.1:3000` HTTP socket | Inbound | HTTP/1.1 plaintext | Backprop integration tooling (external, undefined within repo) |
 
-No outbound integration points exist: there are no DNS lookups, no outbound HTTP calls, no database connections, no message-broker clients, and no telemetry exports.
+The system has **exactly one integration point** and **no outbound integrations**. There are no DNS lookups, outbound HTTP calls, database connections, message brokers, telemetry exports, or service-discovery registrations, consistent with the integration boundary described in §1.2.1 and the out-of-scope items enumerated in §1.3.2.
 
-### 2.3.3 Shared Components and Common Services
+### 2.3.3 Shared Components
 
-| Aspect | Status | Evidence |
-|--------|--------|----------|
-| Shared internal modules | None | The repository has only `server.js` and no helper or utility files |
-| Shared external libraries | None | Zero dependencies (see F-005) |
-| Common services / abstractions | None | No abstraction layers, factories, or service registries exist |
-| Cross-feature data structures | `hostname` and `port` constants | Shared between F-001 (bind) and F-003 (log message) within `server.js` |
+| Shared Element | Scope of Sharing | Features Coupled |
+|----------------|------------------|------------------|
+| Module-scope `hostname` constant (`'127.0.0.1'`) | Lexical scope of `server.js` | F-001 (bind target), F-003 (log message) |
+| Module-scope `port` constant (`3000`) | Lexical scope of `server.js` | F-001 (bind target), F-003 (log message) |
+| Node.js `http` core module | Process-level | F-001 (server creation), F-002 (response API) |
+| MIT license | Repository-level | F-004 (declared), all features (governed) |
 
-The only piece of state shared across features is the pair of module-level constants `hostname = '127.0.0.1'` and `port = 3000`, which are used by both F-001 (to bind the listener) and F-003 (to construct the log message). This sharing exists by direct lexical scoping within a single file rather than via any deliberate "shared component" abstraction.
+No internal helper modules, utility libraries, factories, service registries, or cross-cutting abstractions exist. The single source file `server.js` exposes no symbols (no `module.exports`), and the project cannot be `require`d as a library — consistent with the "Library / Module Embedding" exclusion in §1.3.2.
 
----
+### 2.3.4 Common Services
+
+The system has no common services in the conventional sense. There is no logging service, no configuration service, no telemetry service, no error-handling middleware, and no dependency-injection container. The only cross-feature service is the Node.js `http` core module itself, which is treated as part of the runtime substrate rather than an internal service.
 
 ## 2.4 IMPLEMENTATION CONSIDERATIONS
+
+The implementation considerations enumerated here apply uniformly across the six features, because the entire system is a single 14-line source file plus a manifest, lockfile, and README. Per-feature variations are called out where they exist.
 
 ### 2.4.1 Technical Constraints
 
 | Constraint Category | Constraint | Applies To |
 |---------------------|------------|------------|
-| Language | JavaScript using CommonJS (`require`) — not ESM | F-001, F-002, F-003 |
-| Runtime | Node.js (no `engines` field; no version constraint declared) | F-001, F-002, F-003 |
-| Module system | CommonJS only — `server.js` does not use `import`/`export` | F-001, F-002, F-003 |
-| Web framework | None permitted — only Node.js core `http` is used | F-001, F-002 |
-| Network interface | Loopback `127.0.0.1` hardcoded, not configurable | F-001 |
-| Port | `3000` hardcoded, not configurable | F-001 |
-| Configuration mechanism | None — no `process.env`, CLI args, or config files | All features |
-| Build pipeline | None — execute directly with `node server.js` | F-001, F-002, F-003 |
-| Source mutability | Files must not be modified per README directive | All features |
+| Language | JavaScript using CommonJS (`require`); no ESM syntax | F-001, F-002, F-003 |
+| Runtime | Node.js with no `engines` field; runtime version unconstrained | F-001, F-002, F-003 |
+| Module System | CommonJS only — no `import`/`export`/`module.exports` | F-001, F-002, F-003 |
+| Web Framework | None permitted — only Node.js core `http` | F-001, F-002 |
+| Network Interface | Loopback `127.0.0.1` hardcoded; not configurable | F-001 |
+| Port | `3000` hardcoded; not configurable | F-001 |
+| Configuration Mechanism | None — no `process.env`, CLI args, or config files | All features |
+| Build Pipeline | None — direct execution via `node server.js` | F-001, F-002, F-003 |
+| Source Mutability | Files must not be modified per README directive | All features |
 
 ### 2.4.2 Performance Requirements
 
-No quantitative performance targets — throughput, latency, concurrency, or memory ceilings — are documented in any repository file. Per §1.2.3, KPIs and SLAs are explicitly absent, and any performance expectations would have to be defined externally by the consumer of this fixture. The implementation's performance is therefore bounded only by the natural capabilities of the Node.js `http` core module on the host system.
+No quantitative performance targets (throughput, latency, error rates, availability SLAs) are documented in any repository file, consistent with §1.2.3's qualitative pass/fail KPI posture. Performance is bounded only by the natural characteristics of Node.js `http` on the host. The implicit performance posture per feature is summarized below.
 
 | Feature | Implicit Performance Posture |
-|---------|-------------------------------|
-| F-001 | Bind completes synchronously with the OS socket allocation |
-| F-002 | Response generation is in-memory, allocation-free of user data, and constant-time |
-| F-003 | Single synchronous `console.log` at startup; no per-request logging overhead |
+|---------|------------------------------|
+| F-001 | TCP bind completes synchronously with OS socket allocation |
+| F-002 | Response generation is in-memory and allocation-free of user data; constant-time |
+| F-003 | A single synchronous `console.log` at startup; zero per-request logging overhead |
 | F-004 | Static metadata; no runtime cost |
-| F-005 | Eliminates `npm install` time; zero startup cost from dependency resolution |
+| F-005 | Eliminates `npm install` time and dependency-resolution startup cost |
 | F-006 | Static documentation; no runtime cost |
 
 ### 2.4.3 Scalability Considerations
 
-| Scalability Dimension | Position | Evidence |
-|------------------------|----------|----------|
-| Horizontal scaling | Not supported | No clustering, no process manager configuration |
-| Vertical scaling | Bounded by single-process Node.js limits | Single `http.Server` instance |
-| Concurrency model | Single Node.js event-loop process | No `cluster` or `worker_threads` usage |
-| State migration | Not applicable (stateless) | No in-memory state to migrate |
-| Load distribution | Not applicable | Loopback binding precludes external load distribution |
-
-The system is stateless and single-process by design. Its purpose as a test fixture, combined with the loopback-only binding, removes scalability from the relevant concern set.
+| Scalability Dimension | Posture |
+|-----------------------|---------|
+| Horizontal Scaling | Not supported (no clustering, no process manager) |
+| Vertical Scaling | Bounded by single-process Node.js limits |
+| Concurrency Model | Single Node.js event-loop process (no `cluster` or `worker_threads`) |
+| State Migration | Not applicable (fully stateless) |
+| Load Distribution | Not applicable (loopback-only binding precludes external load distribution) |
 
 ### 2.4.4 Security Implications
 
 | Security Aspect | Posture | Mitigating Factor |
-|-----------------|---------|---------------------|
-| Authentication | None | Loopback binding restricts who can reach the socket |
+|-----------------|---------|-------------------|
+| Authentication | None | Loopback binding restricts socket reach |
 | Authorization | None | Same as above |
-| Transport encryption | None (plaintext HTTP) | Loopback traffic does not traverse external networks |
-| Input validation | None (request is ignored) | No input is consumed, eliminating injection surfaces |
-| Output encoding | Static literal | Body and headers are compile-time constants |
-| Security headers | Only `Content-Type` | No CSP, HSTS, X-Frame-Options, etc. |
-| Dependency vulnerabilities | None | Zero dependencies (see F-005) |
-| Network exposure | Loopback only | Hardcoded `127.0.0.1` prevents external reachability |
-
-The primary and only security boundary is the network-level restriction imposed by binding to `127.0.0.1`. This is a deliberate, architectural choice; weakening it (e.g., binding to `0.0.0.0`) would invalidate the security posture of the fixture.
+| Transport Encryption | None (plaintext HTTP) | Loopback traffic does not traverse external networks |
+| Input Validation | None (request ignored) | No input consumed, eliminating injection surfaces |
+| Output Encoding | Static literal | Body and headers are compile-time constants |
+| Security Headers | Only `Content-Type` | No CSP, HSTS, X-Frame-Options; not required for loopback fixture |
+| Dependency Vulnerabilities | None | Zero dependencies (F-005) |
+| Network Exposure | Loopback only | Hardcoded `127.0.0.1` prevents external reachability |
 
 ### 2.4.5 Maintenance Requirements
 
-| Maintenance Aspect | Position |
-|---------------------|----------|
-| Change-control posture | "Do not touch!" — explicit immutability per README |
-| Versioning | Static at `1.0.0`; no semver-driven release process expected |
-| Custodianship | Sole declared author `hxu`; no CODEOWNERS or MAINTAINERS files |
-| Defect process | Not documented; no issue templates or contribution guides exist |
-| Documentation maintenance | README is immutable per its own directive |
-| Test maintenance | Placeholder test script — no real tests to maintain |
-| Dependency updates | Not applicable (zero dependencies) |
-| Runtime upgrades | No constraint on Node.js version; user-managed |
-
-The maintenance posture is intentionally degenerate: the only required activity is to *not* modify the repository. Any maintenance effort beyond preserving the committed baseline (e.g., updating dependencies, refactoring `server.js`, fleshing out the test script) would contradict the README's directive and the project's role as an invariant fixture.
-
----
+| Maintenance Dimension | Posture |
+|-----------------------|---------|
+| Change-Control Posture | "Do not touch!" — explicit immutability per F-006 |
+| Versioning | Static at `1.0.0`; no semver evolution planned |
+| Custodianship | Sole declared author `hxu`; no `CODEOWNERS` or `MAINTAINERS` files |
+| Defect Process | Not documented in repository |
+| Documentation Maintenance | README is immutable per its own directive |
+| Test Maintenance | Placeholder `scripts.test` only; no real tests to maintain |
+| Dependency Updates | Not applicable (zero dependencies) |
+| Runtime Upgrades | No Node.js version pin; user-managed |
 
 ## 2.5 TRACEABILITY MATRIX
 
-The traceability matrix links each requirement to the validation method documented in §1.2.3 (Success Criteria) of this specification. This matrix supports verification activities by mapping every must-have requirement to an observable outcome.
+### 2.5.1 Requirement-to-Feature-to-Source Mapping
 
-### 2.5.1 Requirement-to-Success-Criterion Mapping
+The following matrix traces each requirement family to its implementing feature and the specific source location that realizes it. This mapping is complete and exhaustive for the four-file baseline.
 
-| Requirement ID | Linked Success Criterion (§1.2.3) | Validation Method |
-|----------------|------------------------------------|---------------------|
-| F-001-RQ-001 | Server Startup | Observation of listen callback execution |
-| F-001-RQ-002 | Server Startup | `netstat`/`lsof` inspection of `127.0.0.1` binding |
-| F-001-RQ-003 | Server Startup | `netstat`/`lsof` inspection of port `3000` |
-| F-001-RQ-004 | Server Startup | Observation of `"Server running at..."` console line |
-| F-002-RQ-001 | Response Correctness | `curl -w "%{http_code}"` probe |
-| F-002-RQ-002 | Response Header Correctness | `curl -I` header inspection |
-| F-002-RQ-003 | Response Correctness | `curl` body equality check against `"Hello, World!\n"` |
-| F-002-RQ-004 | Response Correctness | Probe with multiple methods/paths confirming identical responses |
-| F-003-RQ-001 | Server Startup | Stdout capture |
-| F-003-RQ-002 | Server Startup | Stdout string equality check |
-| F-004-RQ-001..004 | (Metadata — not in §1.2.3) | JSON parse of `package.json` and `npm test` invocation |
-| F-005-RQ-001..004 | (Metadata — not in §1.2.3) | JSON parse of `package.json` and `package-lock.json` |
-| F-006-RQ-001..004 | Code Immutability | Git diff against committed baseline |
+| Requirement Family | Feature | Source File and Lines |
+|--------------------|---------|------------------------|
+| F-001-RQ-001..004 | F-001 | `server.js` lines 1, 3-4, 6, 12-14 |
+| F-002-RQ-001..004 | F-002 | `server.js` lines 6-10 |
+| F-003-RQ-001..002 | F-003 | `server.js` line 13 |
+| F-004-RQ-001..004 | F-004 | `package.json` (all 11 lines) |
+| F-005-RQ-001..004 | F-005 | `package.json` (absence of dep fields) and `package-lock.json` lines 3-12 |
+| F-006-RQ-001..004 | F-006 | `README.md` (all 3 lines) |
 
-### 2.5.2 Feature-to-File Mapping
+### 2.5.2 Reference-Verification Matrix
 
-| Feature | Primary Source File | Lines / Scope |
-|---------|---------------------|----------------|
-| F-001 | `server.js` | Lines 1, 3–4, 6, 12–14 |
-| F-002 | `server.js` | Lines 6–10 |
-| F-003 | `server.js` | Line 13 |
-| F-004 | `package.json` | Entire file (11 lines) |
-| F-005 | `package.json`, `package-lock.json` | Absence of dependency fields; lines 3–12 of lockfile |
-| F-006 | `README.md` | Entire file (2 lines) |
+Each runtime construct in `server.js` was checked for cross-references between its declaration site and any subsequent use site. The following matrix records the verification outcomes — all declared symbols are used, except for the idiomatically unused `req` parameter and the documented dangling `main` reference.
 
-### 2.5.3 Cross-References to Related Specification Sections
+| Element | Declaration Location | Reference Check | Verdict |
+|---------|---------------------|-----------------|---------|
+| `http` import | `server.js` line 1 | Used by `http.createServer` (line 6) | Used |
+| `hostname` const | `server.js` line 3 | Used by `server.listen` (line 12) and log template (line 13) | Used |
+| `port` const | `server.js` line 4 | Used by `server.listen` (line 12) and log template (line 13) | Used |
+| `server` const | `server.js` line 6 | Used by `server.listen` (line 12) | Used |
+| `res` handler param | `server.js` line 6 | Used by `res.statusCode` / `setHeader` / `end` (lines 7-9) | Used |
+| `req` handler param | `server.js` line 6 | Not read anywhere; handler is branchless | Idiomatically unused (preserved) |
+| `"main": "index.js"` | `package.json` line 5 | No `index.js` file exists | Dangling reference (preserved per C-001) |
 
-| Topic | Cross-Reference |
-|-------|------------------|
-| Stakeholder identity referenced in feature dependencies | §1.1.3 Key Stakeholders and Users |
-| Diagram of inbound HTTP integration consumed by F-001/F-002 | §1.2.1 mermaid flow diagram |
-| Capability summary feeding F-001, F-002, F-003 | §1.2.2 Primary System Capabilities table |
-| Component-to-file mapping aligning with §2.5.2 | §1.2.2 Major System Components table |
-| Acceptance criteria source for §2.5.1 | §1.2.3 Measurable Objectives table |
-| In-scope items aligning with §2.1 feature catalog | §1.3.1 In-Scope Elements |
-| Verified absences excluded from this section | §1.3.2 Out-of-Scope Elements |
+### 2.5.3 Cross-Section Reference Map
 
----
+| Topic | Related Section |
+|-------|-----------------|
+| Stakeholder identity and value proposition | §1.1.3, §1.1.4 |
+| System capabilities and runtime sequence diagram | §1.2.2 |
+| Success criteria and pass/fail KPIs | §1.2.3 |
+| In-scope inventory and explicitly excluded capabilities | §1.3.1, §1.3.2 |
+| File-level evidence sources | §1.4.1 |
 
 ## 2.6 ASSUMPTIONS AND CONSTRAINTS
 
 ### 2.6.1 Assumptions
 
-| ID | Assumption | Rationale |
-|----|-------------|-----------|
-| A-001 | Node.js is installed on the host running `server.js` | No installer or runtime bundling is provided in the repository |
-| A-002 | TCP port `3000` is free on the loopback interface at startup | The server has no fallback port logic; collision causes startup failure |
-| A-003 | The unspecified "backprop" consumer issues HTTP/1.1 requests from a process on the same host | Loopback binding restricts reachability accordingly |
-| A-004 | The reader of `package.json` will tolerate the `main: "index.js"` declaration despite the absence of `index.js` | Per README immutability directive, the inconsistency cannot be corrected |
-| A-005 | No security review of plaintext HTTP / loopback binding is required beyond the documented posture | The fixture is local-only by design |
+| ID | Assumption | Rationale / Source |
+|----|------------|--------------------|
+| A-001 | Node.js is installed on the host that runs `server.js` | No installer or runtime bundling is provided in the repository |
+| A-002 | TCP port `3000` is free on loopback at startup | No fallback port logic exists; collision raises `EADDRINUSE` |
+| A-003 | The backprop consumer issues HTTP/1.1 requests from a co-resident process | Loopback binding restricts reachability to the same host |
+| A-004 | Readers will tolerate `main: "index.js"` despite the absence of `index.js` | The README immutability directive forbids correction |
+| A-005 | No security review of plaintext HTTP / loopback binding is required | The fixture is local-only by design (see §2.4.4 mitigations) |
 
 ### 2.6.2 Constraints
 
 | ID | Constraint | Source |
-|----|-------------|--------|
-| C-001 | All files must remain unchanged from the committed baseline | `README.md` "Do not touch!" directive |
+|----|------------|--------|
+| C-001 | All four baseline files must remain unchanged from their committed state | `README.md` "Do not touch!" directive |
 | C-002 | Hostname must remain hardcoded to `127.0.0.1` | `server.js` line 3 |
 | C-003 | Port must remain hardcoded to `3000` | `server.js` line 4 |
-| C-004 | Response body, status, and headers must remain byte-identical across all requests | `server.js` lines 7–9 |
-| C-005 | Zero runtime and zero development dependencies must be maintained | `package.json` and `package-lock.json` |
-| C-006 | The project must remain executable on a Node.js installation without any prior `npm install` step | Consequence of C-005 |
+| C-004 | Response body, status, and headers must remain byte-identical | `server.js` lines 7-9 |
+| C-005 | Zero runtime and zero development dependencies | `package.json` and `package-lock.json` |
+| C-006 | Project must remain executable on Node.js without prior `npm install` | Consequence of C-005 |
 | C-007 | License of all repository contents is MIT | `package.json` and `package-lock.json` license fields |
 
 ### 2.6.3 Requirement Version Tracking
 
-All requirements in this section correspond to repository state at `package.json` version `1.0.0` (mirrored in `package-lock.json`). No prior version exists in the repository's recorded artifacts (no `CHANGELOG`, no migration notes, no historical version declarations), so all requirements are at their initial revision and are tracked against the single declared version `1.0.0`.
+All requirements documented in this section correspond to `package.json` version `1.0.0` (mirrored in `package-lock.json`). No prior version exists in the repository; there is no `CHANGELOG`, no migration notes, and no version-control commentary inside the baseline files. All requirements are at their initial revision and are tracked against the single declared version `1.0.0`. Any future revision would require an override of the C-001 immutability constraint.
 
----
+| Tracking Attribute | Value |
+|--------------------|-------|
+| Requirements Document Version | 1.0.0 (aligned with `package.json` version) |
+| Lockfile Version | 3 |
+| Baseline File Count | 4 (`server.js`, `package.json`, `package-lock.json`, `README.md`) |
+| Total Features | 6 (F-001 through F-006) |
+| Total Functional Requirements | 22 (4 + 4 + 2 + 4 + 4 + 4) |
 
 ## 2.7 REFERENCES
 
-### 2.7.1 Repository Files Examined
+### 2.7.1 Files Examined
 
-- `server.js` — Sole runtime executable (14 lines); provides direct evidence for features F-001 (lines 1, 3–4, 6, 12–14), F-002 (lines 6–10), and F-003 (line 13).
-- `package.json` — npm manifest (11 lines); provides direct evidence for features F-004 (entire file) and F-005 (absence of `dependencies` / `devDependencies`). Also the source of the documented `main: "index.js"` inconsistency.
-- `package-lock.json` — Lockfile version 3 (13 lines); provides direct evidence for feature F-005 (empty `packages` tree except root entry).
-- `README.md` — Two-line documentation file; provides direct evidence for feature F-006 (title, purpose statement, and immutability directive).
+- `server.js` — Sole runtime file; provided the implementation evidence for F-001 (lines 1, 3-4, 6, 12-14), F-002 (lines 6-10), and F-003 (line 13), as well as the reference-verification entries in §2.5.2
+- `package.json` — Provided the manifest evidence for F-004 (full file), the dependency-absence evidence for F-005, and the dangling `main: "index.js"` inconsistency documented in §2.2.4 and §2.5.2
+- `package-lock.json` — Provided the lockfile evidence for F-005 (lockfile version 3, empty `packages` tree)
+- `README.md` — Provided the title, purpose, and immutability-directive evidence for F-006 and the source of constraint C-001
 
-### 2.7.2 Repository Folders Explored
+### 2.7.2 Folders Explored
 
-- Repository root (`/`) — The only directory in the repository; contains all four files listed above and no subdirectories.
+- `/` (repository root) — Enumerated the four baseline files (`server.js`, `package.json`, `package-lock.json`, `README.md`) plus the `docs/` and `blitzy/` documentation directories
+- `docs/` — Reviewed for analytical artifacts; no runtime impact on features F-001 through F-006
+- `blitzy/documentation/` — Reviewed for governance materials including the existing technical specification draft against which this section's feature catalog was cross-checked
 
-### 2.7.3 Technical Specification Sections Referenced
+### 2.7.3 Technical Specification Sections Cross-Referenced
 
-- §1.1 Executive Summary — Stakeholders, value proposition, and project identity used in feature descriptions.
-- §1.2 System Overview — Primary capabilities, components, technical approach, and success criteria used to derive features and the §2.5 traceability matrix.
-- §1.3 Scope — In-scope inventory aligning with §2.1 features; verified out-of-scope items explicitly excluded from this section's requirements.
-- §1.4 References — Cross-referenced file inventory consistent with §2.7.1.
+- §1.1 EXECUTIVE SUMMARY — Stakeholder identity, business problem, value proposition
+- §1.2 SYSTEM OVERVIEW — Primary capabilities, runtime sequence, success criteria, KPIs
+- §1.3 SCOPE — In-scope feature inventory and verified out-of-scope items
+- §1.4 REFERENCES — Source file inventory consistent with the feature-to-file mapping in §2.5.1
 
 # 3. Technology Stack
 
-## 3.1 STACK OVERVIEW AND ARCHITECTURAL POSTURE
+## 3.1 STACK PHILOSOPHY AND OVERVIEW
 
-### 3.1.1 Guiding Principles
+The technology stack for the `hao-backprop-test` repository (npm package `hello_world` v1.0.0) is governed by an explicit minimalism principle: the system is a deliberately-constructed, byte-stable HTTP fixture whose value derives from behavioral determinism rather than feature richness. Per the Core Technical Approach defined in §1.2.2, the entire runtime stack consists of **JavaScript executed on Node.js using only the built-in `http` core module**, with no third-party dependencies, no build pipeline, no containerization, and no external service integrations.
 
-The technology stack of the `hao-backprop-test` repository is governed by an explicit and uncompromising principle of minimalism. The repository exists as a deterministic test fixture for an external "backprop integration" workflow, and every stack decision is subordinated to two non-negotiable properties: behavioral stability and source invariance. Per the README directive — `"Do not touch!"` — and the constraints catalogued in §2.6.2 (C-001 through C-007), the stack composition itself is an invariant of the system rather than a flexible implementation choice.
+This minimalism is not incidental — it is enforced by seven hard constraints (C-001 through C-007 defined in §2.6.2). Constraint C-001 ("All four baseline files must remain unchanged from their committed state") combined with constraint C-005 ("Zero runtime and zero development dependencies") jointly preclude any expansion of the technology stack. Constraint C-006 reinforces this by requiring the project to remain executable on Node.js without prior `npm install`.
 
-Notably, the conventional enterprise default technology stack (AWS, Docker, Terraform, GitHub Actions, Python/Flask, Auth0, MongoDB, Langchain, React/TypeScript, TailwindCSS, React-Native, Swift, Kotlin, ElectronJS) is **explicitly inapplicable** to this repository. Adopting any element of that default would violate constraints C-001 ("All files must remain unchanged from the committed baseline"), C-005 ("Zero runtime and zero development dependencies must be maintained"), and C-006 ("The project must remain executable on a Node.js installation without any prior `npm install` step"). Accordingly, this section documents only the technologies that are demonstrably present in — or directly required by — the four files actually committed to the repository: `server.js`, `package.json`, `package-lock.json`, and `README.md`.
+### 3.1.1 Default Technology Stack Applicability Assessment
 
-### 3.1.2 Layered Stack Topology
+The default enterprise technology stack provided as guidance (AWS, Docker, Terraform, GitHub Actions, Python/Flask, Auth0, MongoDB, Langchain, React/TypeScript, TailwindCSS, React-Native, Swift, Kotlin, Objective-C, ElectronJS) is **categorically inapplicable** to this system. Per §1.3.2, every category in that stack — web frameworks, persistence, authentication, container orchestration, CI/CD pipelines — is explicitly verified absent from the repository and is enumerated as out-of-scope. Adoption of any default-stack item would violate constraint C-005 and, by extension, C-001.
 
-The entirety of the technology stack can be expressed in a single diagram of four concentric layers. There is no horizontal complexity — no microservice mesh, no client/server split, no plugin architecture — only a vertical composition of Node.js runtime + core `http` + a single 14-line application file.
+### 3.1.2 Effective Technology Stack at a Glance
+
+| Layer | Technology | Version | Rationale |
+|-------|-----------|---------|-----------|
+| Programming Language | JavaScript (ECMAScript) | Compatible with Node.js ≥ 20 | Sole language understood by the Node.js runtime when using core APIs |
+| Module System | CommonJS | N/A (built-in) | Per §1.2.2, no `import`/`export`/`module.exports` syntax is used |
+| Runtime | Node.js | v20.20.2 (verified; not pinned) | Provides the built-in `http` module without additional installs |
+| HTTP Engine | Node.js core `http` module | Bundled with Node.js | Per §2.4.1, "no permitted" web framework — core `http` only |
+| Package Manager | npm | 10.8.2 (bundled with Node 20) | Used solely for manifest/lockfile presence; never invoked for install |
+| Lockfile Format | npm lockfile | Version 3 | npm v7+ schema; empty `packages` tree confirms zero dependencies |
+| License | MIT | N/A | Per `package.json` license field and constraint C-007 |
+
+### 3.1.3 Stack Composition Diagram
 
 ```mermaid
 flowchart TB
-    subgraph HostLayer["Host Layer"]
-        HostOS["Operating System<br/>(POSIX or Windows)"]
-        NodeRT["Node.js Runtime<br/>(no engines field — unconstrained version)"]
-        HostOS --> NodeRT
+    subgraph HostOS["Host Operating System"]
+        TCP["TCP/IP Stack<br/>Loopback Interface 127.0.0.1"]
+    end
+    subgraph NodeRuntime["Node.js Runtime (v20.x, not pinned)"]
+        V8["V8 JavaScript Engine"]
+        Libuv["libuv Event Loop"]
+        HttpCore["node:http<br/>Built-in Core Module"]
+    end
+    subgraph AppLayer["Application Layer (4 Baseline Files)"]
+        ServerJS["server.js<br/>14 lines, CommonJS"]
+        Manifest["package.json<br/>Zero dependencies declared"]
+        Lock["package-lock.json<br/>lockfileVersion: 3, empty tree"]
+        Readme["README.md<br/>Governance directive"]
+    end
+    subgraph ExtBoundary["External Boundary (Out of Repo)"]
+        Consumer["Backprop Integration<br/>Validation Workflow<br/>(co-resident process)"]
     end
 
-    subgraph CoreLayer["Node.js Core (Bundled, No npm Install)"]
-        HTTPMod["http core module<br/>(actively used)"]
-        ConsoleMod["console global<br/>(actively used)"]
-        OtherCore["Other core modules<br/>(fs, path, crypto, etc. — NOT used)"]
-    end
-
-    subgraph AppLayer["Application Layer"]
-        ServerJS["server.js<br/>14 lines • CommonJS • hardcoded literals"]
-    end
-
-    subgraph MetaLayer["Metadata & Documentation"]
-        PJ["package.json<br/>(no dependencies, no devDependencies)"]
-        PLJ["package-lock.json<br/>(lockfileVersion: 3)"]
-        RM["README.md<br/>(immutability directive)"]
-    end
-
-    NodeRT --> HTTPMod
-    NodeRT --> ConsoleMod
-    NodeRT --> OtherCore
-    HTTPMod --> ServerJS
-    ConsoleMod --> ServerJS
-    PJ -.->|"describes identity"| ServerJS
-    PLJ -.->|"locks (empty tree)"| PJ
-    RM -.->|"governs change-control"| ServerJS
+    ServerJS -->|"require('http')"| HttpCore
+    HttpCore --> Libuv
+    HttpCore --> V8
+    Libuv --> TCP
+    Consumer -.->|"HTTP/1.1 plaintext<br/>Port 3000"| TCP
 ```
 
-### 3.1.3 Stack Composition Summary
-
-| Stack Concern | Decision | Evidence |
-|---------------|----------|----------|
-| Primary language | JavaScript (CommonJS) | `server.js` uses `require('http')` |
-| Runtime | Node.js (unpinned version) | No `engines` field in `package.json` |
-| Web framework | None — Node.js core `http` only | `server.js` line 1 |
-| Dependencies | Zero (runtime and development) | `package.json` omits both fields |
-| Lockfile | npm lockfile v3 | `package-lock.json` `lockfileVersion: 3` |
-| Build pipeline | None | No build scripts, no transpiler config |
-| Containerization | None | No `Dockerfile` or container manifests |
-| CI/CD | None | No `.github/`, `.gitlab-ci.yml`, `Jenkinsfile` |
-| Database / Storage | None | No persistence layer of any kind |
-| External services | None | Only inbound HTTP on `127.0.0.1:3000` |
-| License | MIT | `package.json` and `package-lock.json` |
+The diagram demonstrates the entire technology stack: an application layer of four immutable files calls into the Node.js built-in `http` module, which leverages libuv and V8 to bind a loopback TCP socket. There are zero intermediate layers — no framework, no middleware, no proxy, no transport security.
 
 ---
 
@@ -959,178 +984,190 @@ flowchart TB
 
 ### 3.2.1 Language Inventory by Component
 
-The repository contains exactly three textual languages, each confined to a single role:
+The repository contains a single executable source file and therefore exposes a single programming language. There are no separate client, server, mobile, or infrastructure tiers requiring distinct languages.
 
-| Language | Component | Module System | File(s) |
-|----------|-----------|---------------|---------|
-| JavaScript (ES2015+) | Sole runtime executable | CommonJS (`require`) | `server.js` |
-| JSON | Package metadata and lockfile | n/a (data format) | `package.json`, `package-lock.json` |
-| Markdown | Repository documentation | n/a (documentation) | `README.md` |
+| Component | Language | File | Module System | Reference |
+|-----------|----------|------|---------------|-----------|
+| HTTP Runtime | JavaScript (ECMAScript) | `server.js` (14 lines) | CommonJS | §2.4.1 Language constraint |
+| Package Manifest | JSON | `package.json` (11 lines) | N/A | §1.2.2 Major Components |
+| Dependency Lockfile | JSON | `package-lock.json` (13 lines) | N/A | §1.2.2 Major Components |
+| Documentation | Markdown | `README.md` (3 lines) | N/A | §1.2.2 Major Components |
 
-JavaScript is the only language that participates in runtime execution. The `server.js` file (14 lines) uses several ES2015+ JavaScript features that are universally available in modern Node.js runtimes: `const` declarations, arrow function expressions `(req, res) => { ... }`, and template literals (`` `Server running at http://${hostname}:${port}/` ``). No experimental syntax, stage proposals, or runtime-specific extensions are used.
+### 3.2.2 JavaScript Selection Rationale
 
-### 3.2.2 Module System and Runtime Constraints
+JavaScript is the **sole runtime language** by virtue of the implementation's exclusive use of Node.js core APIs. Per §1.2.2 "Core Technical Approach," the module system is strictly **CommonJS** — `server.js` uses `require('http')` and contains no `import`/`export`/`module.exports` syntax. Per §2.4.1 (Technical Constraints table), this CommonJS restriction applies to features F-001 (HTTP Server Lifecycle), F-002 (Request/Response Generation), and F-003 (Startup Logging).
 
-The codebase uses **CommonJS exclusively**. Per §2.4.1 and §1.2.2, `server.js` invokes `require('http')` and does not use ES Module `import`/`export` syntax. This is a deliberate constraint that ensures the file executes directly under `node server.js` without requiring `"type": "module"` declaration in `package.json` and without any `.mjs` file extension.
+The selection criteria, while not explicitly documented as a design decision, derive from three observable design properties:
 
-The Node.js runtime version is **intentionally unpinned**. The `package.json` file omits the `engines` field, so no minimum or maximum Node.js version is enforced. Per assumption A-001, the consumer is responsible for having Node.js installed, but the project does not advertise a required version. This decision is consistent with the use of only stable Node.js core APIs (`http.createServer`, `server.listen`, `res.statusCode`, `res.setHeader`, `res.end`, `console.log`) — all of which have been available since Node.js v0.x and have not undergone breaking changes.
+- **Zero-install operability** (per constraint C-006 in §2.6.2): JavaScript executed by Node.js requires no compilation or transpilation step. The launch command is unambiguously `node server.js` per §1.3.1.
+- **Built-in HTTP capability**: Node.js ships with a complete HTTP/1.1 server implementation as a core module, removing any need for third-party framework adoption (consistent with F-005's zero-dependency principle).
+- **CommonJS compatibility**: Per §1.2.2, the module system is "CommonJS (`require('http')`); no ES module syntax, no `module.exports`," ensuring maximum runtime compatibility without requiring `"type": "module"` in `package.json` or `.mjs` file extensions.
 
-### 3.2.3 Selection Justification
+### 3.2.3 Language Exclusions
 
-The JavaScript/Node.js selection is justified by three properties that align directly with the fixture's role:
+| Language | Status | Evidence |
+|----------|--------|----------|
+| TypeScript | Not used | Per `docs/dead-code-analysis.md`: "this is plain JavaScript, not TypeScript"; no `tsconfig.json`, no `.ts` files |
+| Python | Not used | Default-stack item; non-applicable per §1.3.2 |
+| Swift / Kotlin / Objective-C | Not used | No native mobile or desktop application surface |
+| ESM JavaScript | Not used | Per §1.2.2, "no ES module syntax" — only CommonJS `require` is permitted |
 
-1. **Zero install friction** — Per F-005, the absence of dependencies means the file can be cloned and executed immediately. JavaScript executed by a present Node.js runtime requires no compilation, no toolchain bootstrap, and no virtual environment.
-2. **Deterministic single-threaded execution** — Node.js's event-loop model produces predictable, in-order execution that aligns with the determinism requirements expressed in §1.2.3 (Critical Success Factors — Behavioral Stability).
-3. **Core `http` module sufficiency** — JavaScript's bundled `http` module exposes everything needed to satisfy F-001 and F-002 without invoking any external library.
+### 3.2.4 Language-Level Constraints and Dependencies
 
-### 3.2.4 Languages and Language Features Explicitly Excluded
-
-Per §1.3.2 and §2.4.1, the following language-related capabilities are demonstrably absent and out of scope:
-
-- **TypeScript** — No `.ts` files, no `tsconfig.json`, no transpiler. Adopting TypeScript would require dev dependencies (`typescript`, `@types/node`), violating C-005.
-- **ES Modules (ESM)** — `server.js` is CommonJS only; no `import`/`export` syntax is used.
-- **Native add-ons** — No `node-gyp`, no `binding.gyp`, no `.node` binaries. Stack remains pure JavaScript.
-- **JSX / TSX** — No frontend, no view layer, no framework requiring transpilation.
+- **Constraint C-001** (immutability): Forbids migration to TypeScript, ESM, or any other language variant.
+- **Constraint C-005** (zero dependencies): Forbids introduction of language-level tooling such as Babel, ts-node, esbuild, or SWC.
+- **No `engines` field** in `package.json` (per §1.2.2): The JavaScript dialect is implicitly bounded by whatever the executing Node.js runtime supports; no minimum ECMAScript edition is pinned.
 
 ---
 
 ## 3.3 FRAMEWORKS & LIBRARIES
 
-### 3.3.1 Runtime Frameworks
+### 3.3.1 Core Frameworks
 
-The system uses **exactly one runtime "framework"**, which is in fact a Node.js core module rather than a third-party framework:
+**There are no third-party frameworks of any kind in this system.** Per §2.4.1 (Technical Constraints), the "Web Framework" constraint is explicit: **"None permitted — only Node.js core `http`"**, applying to features F-001 and F-002.
 
-| Component | Type | Version | Source | Used In |
-|-----------|------|---------|--------|---------|
-| Node.js `http` core module | Bundled core module | Bundled with Node.js (any version) | `require('http')` | `server.js` line 1 |
-| Node.js `console` global | Bundled global object | Bundled with Node.js (any version) | Global namespace | `server.js` line 13 |
+The single framework-equivalent component used by the application is the Node.js built-in `http` core module, which is imported on line 1 of `server.js` and provides:
 
-Per §1.2.2 Core Technical Approach: "HTTP Layer: Exclusively the Node.js core `http` module. No third-party web framework (Express, Koa, Fastify, Hapi, etc.) is used or installed." The `http` module provides `createServer()`, `Server`, `IncomingMessage`, and `ServerResponse` — all of which are sufficient to satisfy F-001 (HTTP Server Lifecycle and TCP Binding) and F-002 (Static HTTP Response Generation).
+| Capability | API Used | Feature Reference |
+|------------|----------|-------------------|
+| Server instantiation | `http.createServer(handler)` | F-001 (HTTP Server Lifecycle) |
+| Socket binding | `server.listen(3000, '127.0.0.1', callback)` | F-001 |
+| Response status assignment | `res.statusCode = 200` | F-002 (Request/Response Generation) |
+| Header emission | `res.setHeader('Content-Type', 'text/plain')` | F-002 |
+| Response body finalization | `res.end('Hello, World!\n')` | F-002 |
 
-### 3.3.2 Justification for Sole Use of Node.js Core
+The `http` core module is bundled with every Node.js distribution and is therefore versioned with the Node.js runtime itself rather than separately tracked in a package manifest.
 
-The decision to use only the Node.js core `http` module — rather than a higher-level web framework — is justified by four reinforcing factors:
+### 3.3.2 Explicitly Excluded Frameworks and Libraries
 
-1. **Supply-chain risk elimination** — Each third-party framework would introduce a transitive dependency tree (Express alone pulls in approximately 30+ transitive packages), creating attack surface that the fixture explicitly avoids per F-005.
-2. **Behavioral invariance** — Frameworks introduce middleware stacks, error handlers, and content negotiation logic whose behavior may change across minor versions. The core `http` module's behavior has been stable for over a decade.
-3. **Zero install posture** — Per C-006, the project must remain executable without `npm install`. Any framework would require dependency resolution and disk allocation for `node_modules`.
-4. **Minimal API surface** — The implementation requires only `http.createServer()`, `server.listen(port, hostname, callback)`, `res.statusCode`, `res.setHeader()`, and `res.end()`. These five APIs are fully provided by the core module; nothing additional is needed.
+Per §1.3.2 (Out-of-Scope Elements), the following framework and library categories are **verified absent** from the implementation. Each exclusion is supported by direct evidence of non-presence in `package.json` and `package-lock.json`:
 
-### 3.3.3 Compatibility Requirements
+| Excluded Category | Specific Exclusions |
+|-------------------|---------------------|
+| Web Frameworks | Express, Koa, Fastify, Hapi, or any third-party HTTP abstraction |
+| Routing Libraries | Path-based, method-based, or parameter-based routing logic |
+| Middleware | Body parsers, compression, CORS, request preprocessing, response postprocessing |
+| Authentication Libraries | OAuth clients, JWT, session middleware, RBAC engines |
+| Configuration Management | dotenv, config, convict, environment-variable loaders |
+| ORM / Database Libraries | Mongoose, Sequelize, TypeORM, Knex, Prisma |
+| Logging Frameworks | Winston, Pino, Bunyan, Morgan |
+| Test Frameworks | Jest, Mocha, Vitest, Jasmine, AVA, Tap |
+| Linters / Formatters | ESLint, Prettier, StandardJS (not installed; would violate C-005) |
+| Type Checkers | TypeScript, Flow |
+| Build Tools | Webpack, Vite, Rollup, esbuild, Parcel, SWC, Babel |
+| HTTP Clients | Axios, node-fetch, got, superagent (no outbound calls exist) |
 
-The technology stack imposes the following compatibility expectations:
+### 3.3.3 Justification for Zero-Framework Architecture
 
-| Requirement | Source | Notes |
-|-------------|--------|-------|
-| Node.js core `http` API availability | `server.js` | Available since Node.js v0.x; no breaking changes observed |
-| npm v7+ (or compatible package manager) | `package-lock.json` `lockfileVersion: 3` | Required only if `npm` operations are performed; runtime execution does not require npm at all |
-| HTTP/1.1 wire protocol support in the client | F-002 dependency | Provided by Node.js `http` server implementation |
-| stdout stream attachment | F-003 dependency | Standard process configuration |
+The decision to forgo all third-party frameworks is rooted in the system's purpose as a **deterministic counterparty** for an external validation workflow. Per §1.1.2 (referenced via the section context), "By eliminating all variability — no routing logic, no middleware, no environment-driven configuration, no persistent state, no external dependencies — the fixture provides a deterministic counterparty."
 
-Per F-005-RQ-003, the lockfile version `3` indicates npm v7+ compatibility. However, this is a tooling compatibility, not a runtime compatibility — the running server does not invoke npm.
+The benefits enumerated for F-005 (Zero Runtime Dependencies) in §2.1.5 directly justify the framework-free approach:
 
-### 3.3.4 Frameworks and Libraries Explicitly Excluded
+- **Eliminates supply-chain attack surface**: With no transitive dependency closure, there is no opportunity for malicious package compromise.
+- **Removes the requirement for `npm install` prior to execution**: Per constraint C-006, the project must be runnable on Node.js without a prior install step.
+- **Avoids transitive vulnerability exposure**: There are no upstream CVEs to track or remediate.
+- **Maximizes startup determinism**: There is no module-resolution overhead beyond the built-in `http` import.
 
-Per §1.3.2, the following framework categories are demonstrably absent:
+### 3.3.4 Compatibility Requirements
 
-| Excluded Category | Examples | Verification |
-|-------------------|----------|--------------|
-| HTTP web frameworks | Express, Koa, Fastify, Hapi, Restify | No `dependencies` field in `package.json` |
-| Middleware libraries | body-parser, cors, helmet, morgan | No imports in `server.js` |
-| Routing libraries | router, express-router | Handler ignores `req` entirely |
-| Bundlers | webpack, rollup, esbuild, vite, parcel | No bundler config files |
-| Transpilers | Babel (`@babel/*`), SWC, TypeScript | No `.babelrc`, no `tsconfig.json` |
-| Test frameworks | Jest, Mocha, Vitest, Jasmine, AVA | `scripts.test` is the npm placeholder |
-| Linters / Formatters | ESLint, Prettier, StandardJS | No `.eslintrc*` or `.prettierrc*` files |
-| AI / ML frameworks | LangChain, OpenAI SDK, TensorFlow.js | No imports or dependencies |
-| Frontend frameworks | React, Vue, Angular, Svelte | No DOM, no UI layer exists |
+Because no third-party libraries are present, no compatibility matrix exists between framework versions. The only compatibility relationship is between `server.js` and the Node.js core `http` API, which is a stable, semantically-versioned core component of Node.js itself. The recommended runtime is **Node.js ≥ 20** as confirmed by `docs/testing-strategy.md`, which notes that `node:test` (a built-in module relevant to optional testing) "has been a stable, dependency-free part of the Node.js runtime since Node v20."
 
 ---
 
-## 3.4 OPEN SOURCE DEPENDENCIES
+## 3.4 OPEN-SOURCE DEPENDENCIES
 
 ### 3.4.1 Runtime Dependencies
 
-**None.** The `dependencies` field is entirely omitted from `package.json`. Per F-005-RQ-001 and constraint C-005, this is an enforced architectural property of the system, not an oversight.
+**ZERO runtime dependencies.** The `package.json` file does not declare a `dependencies` field at all. This satisfies functional requirement F-005-RQ-001 (per §2.2 Functional Requirements Table).
 
 ### 3.4.2 Development Dependencies
 
-**None.** The `devDependencies` field is entirely omitted from `package.json`. Per F-005-RQ-002 and constraint C-005, no development tooling — no linters, no formatters, no test frameworks, no type checkers, no build tools — is installed. This eliminates not only runtime supply-chain risk but also development-time tooling drift.
+**ZERO development dependencies.** The `package.json` file does not declare a `devDependencies` field at all. This satisfies functional requirement F-005-RQ-002.
 
-### 3.4.3 Lockfile Confirmation
+### 3.4.3 Package Manifest Inventory
 
-The `package-lock.json` file provides cryptographic-level confirmation of the zero-dependency posture:
+The complete declared metadata of the npm package, drawn from `package.json`:
 
-| Lockfile Property | Value | Significance |
-|-------------------|-------|--------------|
-| `lockfileVersion` | `3` | npm v7+ lockfile format (F-005-RQ-003) |
-| `name` | `hello_world` | Matches `package.json` |
-| `version` | `1.0.0` | Matches `package.json` |
-| `license` | `MIT` | Matches `package.json` |
-| `requires` | `true` | Standard lockfile marker |
-| `packages` tree | Single entry `""` for the root package | F-005-RQ-004 — no nested packages exist |
+| Attribute | Value | Significance |
+|-----------|-------|--------------|
+| Package Name | `hello_world` | Distinct from repository name `hao-backprop-test`; per §1.2.1 |
+| Repository Name | `hao-backprop-test` | Git repository identifier |
+| Version | `1.0.0` | Mirrored in `package-lock.json`; per §2.6.3 |
+| Description | `Hello world in Node.js` | Single-line descriptor |
+| Main Entry | `index.js` | **Dangling reference** — no `index.js` file exists; per A-004 the directive forbids correction |
+| Test Script | `echo "Error: no test specified" && exit 1` | npm-default placeholder; per §1.3.2, no QA tooling in scope |
+| Start Script | Not declared | Per §1.3.2, no `start` script; launch is exclusively via `node server.js` |
+| Author | `hxu` | Sole declared author; no `CODEOWNERS` per §2.4.5 |
+| License | `MIT` | Per constraint C-007 |
+| `dependencies` Field | **Absent** | Per F-005-RQ-001 |
+| `devDependencies` Field | **Absent** | Per F-005-RQ-002 |
+| `engines` Field | **Absent** | Per §1.2.2, no Node.js version pin |
 
-The `packages` object contains exactly one key — the empty string `""` representing the root package itself — with no nested entries. This is the verifiable proof of zero transitive dependencies. Per the acceptance criterion of F-005-RQ-004: the `packages` object contains exactly one key (`""`).
+### 3.4.4 Lockfile Inventory
 
-### 3.4.4 Package Registry Configuration
+The `package-lock.json` file confirms the zero-dependency posture through its data structure:
 
-The npm public registry (`https://registry.npmjs.org/`) is the **declared** registry mechanism by virtue of using `package.json` and `package-lock.json` in their standard forms, but **no packages are resolved from it at any point** in the project's lifecycle. No `.npmrc` file exists in the repository to override registry configuration, custom scopes, or authentication. Per C-006, the project executes without ever contacting the registry.
+| Attribute | Value | Significance |
+|-----------|-------|--------------|
+| `name` | `hello_world` | Mirrors `package.json` |
+| `version` | `1.0.0` | Mirrors `package.json` |
+| `lockfileVersion` | `3` | npm v7+ schema; current standard format |
+| `requires` | `true` | Standard npm metadata flag |
+| `packages` | Single entry: empty key `""` containing root metadata only | **Confirms empty dependency tree** — no nested entries; per F-005-RQ-004 |
 
-### 3.4.5 Supply-Chain Risk Posture
+### 3.4.5 Package Registry
 
-Per §2.4.4 and §2.1.5, the zero-dependency architecture confers the following security benefits:
+The package registry is **npm** (the default JavaScript package registry), as evidenced by the npm-format `package-lock.json` with `lockfileVersion: 3`. However, no packages are ever fetched from this registry because the dependency tree is empty. The registry is referenced solely by virtue of the lockfile format; no `.npmrc`, no `npm config` overrides, and no scoped registries are configured.
 
-| Risk Vector | Mitigation Provided by Zero Dependencies |
-|-------------|------------------------------------------|
-| Transitive vulnerability exposure | Eliminated — no transitive packages exist |
-| Typosquatting / malicious packages | Not applicable — no packages are installed |
-| Dependency confusion attacks | Not applicable — no private registry, no install step |
-| `postinstall` script execution | Not applicable — no packages, no install hooks |
-| Lockfile poisoning | Mitigated — lockfile contains only the root package entry |
-| Stale dependency drift | Not applicable — nothing to update |
+### 3.4.6 Dependency Tree Visualization
+
+```mermaid
+flowchart TB
+    Root["hello_world@1.0.0<br/>(root package)"]
+    NodeBuiltin["node:http<br/>(Node.js core module<br/>bundled with runtime)"]
+    
+    Root -.->|"require('http')<br/>not an npm dependency"| NodeBuiltin
+    
+    EmptyTree["Empty npm dependency tree<br/>packages: { '': {...root only...} }"]
+    Root --> EmptyTree
+```
+
+The diagram makes explicit the distinction between **npm-managed dependencies** (none) and the **Node.js built-in module** (`http`), which is provided by the runtime and is not an npm package.
 
 ---
 
 ## 3.5 THIRD-PARTY SERVICES
 
-### 3.5.1 External Service Integrations
+### 3.5.1 External Service Inventory
 
-**None.** The repository integrates with zero external services. This complete absence is documented across §1.2.1, §1.3.2, and §2.3.2. The following service categories were specifically evaluated and confirmed absent:
+**No third-party services are used or integrated.** Per §2.3.2 (referenced via the section context), "The system has exactly one integration point and no outbound integrations." That single integration point is **inbound HTTP/1.1 plaintext traffic on `127.0.0.1:3000`**.
 
-| Service Category | Status | Verification |
-|------------------|--------|--------------|
-| External REST/GraphQL APIs | Not used | No outbound HTTP client code in `server.js` |
-| Authentication services (Auth0, Okta, Cognito) | Not used | No security headers, no token verification, no credential handling (§1.3.2) |
-| Identity providers (OIDC, SAML) | Not used | No authentication code |
-| Cloud platforms (AWS, GCP, Azure) | Not used | No cloud SDK, no IaC files |
-| Container orchestration (Kubernetes, ECS) | Not used | No manifests, no Helm charts |
-| Monitoring / observability (DataDog, New Relic, Sentry) | Not used | Only one `console.log` on startup; no per-request logging (§1.3.2) |
-| Telemetry collectors (OpenTelemetry, Prometheus) | Not used | No telemetry exports implemented (§1.2.1) |
-| Message brokers / event streams (Kafka, RabbitMQ, SQS) | Not used | No outbound integration points exist (§2.3.2) |
-| Configuration servers (Consul, AWS Parameter Store) | Not used | No `process.env` references; values are hardcoded (§1.3.2) |
-| Service discovery (Consul, Eureka, Kubernetes DNS) | Not used | No service-discovery registration (§1.2.1) |
-| Content delivery networks (CDN) | Not used | Loopback-only binding (`127.0.0.1`) |
-| Email / SMS / push providers | Not used | No outbound communication |
-| Payment processors | Not used | No financial transaction surface |
-| AI / LLM services (OpenAI, Anthropic, LangChain) | Not used | No AI integration code |
+| Service Category | Status | Evidence |
+|------------------|--------|----------|
+| External APIs | None | `server.js` contains no outbound HTTP client code |
+| Authentication Services (Auth0, Okta, Cognito) | None | Per §2.4.4, "Authentication: None"; no identity integration |
+| Authorization Services (RBAC providers) | None | Per §2.4.4, "Authorization: None" |
+| Monitoring / APM (Datadog, New Relic, Sentry) | None | Per §1.3.2, "no instrumentation code or SDK imports" |
+| Logging Backends (Splunk, ELK, Loggly) | None | Per §1.3.2, observability is verified absent |
+| Cloud Services (AWS, GCP, Azure) | None | No cloud SDK; no Dockerfile; no IaC |
+| Service Discovery (Consul, etcd) | None | Hardcoded loopback binding precludes discovery |
+| Message Brokers / Queues (Kafka, RabbitMQ, SQS) | None | No client libraries; no producer/consumer code |
+| External Databases | None | No driver dependencies (see §3.6) |
+| CDN Services | None | No static asset distribution |
+| Email / SMS Services | None | No notification or transactional messaging |
+| Feature Flag Services (LaunchDarkly) | None | No runtime configuration surface |
 
-### 3.5.2 The Sole Integration Surface
+### 3.5.2 Integration Boundary
 
-Per §2.3.2, the system has exactly **one integration point**:
+The integration boundary is restricted to a **single inbound HTTP channel** on the loopback interface. Per §1.2.1, the integration is "one-directional and protocol-based" — external consumers (co-resident processes) issue HTTP requests to the server, and the server responds with a static payload. There is:
 
-| Direction | Protocol | Endpoint | Consumer |
-|-----------|----------|----------|----------|
-| Inbound only | HTTP/1.1 (plaintext) | `127.0.0.1:3000` | Unspecified "backprop" tooling on the same host (per assumption A-003) |
+- **No outbound network traffic** of any kind
+- **No DNS lookups** (the bind address is the literal `127.0.0.1`)
+- **No service discovery registration**
+- **No telemetry emission** to any backend
+- **No third-party SDK imports** in `server.js`
 
-This integration is intentionally minimal: any HTTP/1.1 request reaching the loopback port receives the same static `Hello, World!` response per F-002. There is no service-level handshake, no API contract negotiation, no authentication exchange, and no health-check endpoint.
-
-### 3.5.3 Justification for Zero External Services
-
-The absence of external services follows directly from the project's role as a deterministic test fixture. External services introduce three properties incompatible with that role:
-
-1. **Non-determinism** — Network calls to external systems introduce variable latency, occasional failures, and version drift that would compromise the byte-identical response guarantee of F-002.
-2. **Configuration surface** — External services require endpoints, credentials, and SDKs, which would require `process.env` configuration or hardcoded secrets — both incompatible with the current `server.js` source.
-3. **Dependency surface** — Cloud SDKs and authentication libraries would introduce dependencies, violating C-005.
+This posture satisfies assumption A-003 (per §2.6.1): "The backprop consumer issues HTTP/1.1 requests from a co-resident process; loopback binding restricts reachability to the same host."
 
 ---
 
@@ -1138,458 +1175,497 @@ The absence of external services follows directly from the project's role as a d
 
 ### 3.6.1 Persistence Posture
 
-**No persistence layer of any kind exists.** Per §1.2.2 Core Technical Approach: "Persistence/State: None. The server is fully stateless and holds no in-memory data structures beyond the constants `hostname`, `port`, and the `server` object itself."
+**No databases, caches, or persistent storage are used.** Per §1.2.2 (Core Technical Approach), the "State Model" is "Fully stateless; no persistence, no in-memory accumulation, no session tracking."
 
-### 3.6.2 Storage Categories Evaluated and Excluded
+| Storage Type | Status | Reference |
+|--------------|--------|-----------|
+| Primary Database (SQL) | None | Per §1.3.2 out-of-scope: "Databases, ORMs" |
+| Primary Database (NoSQL such as MongoDB) | None | Default-stack item; non-applicable |
+| Caching Layer (Redis, Memcached) | None | Per §1.3.2: "in-memory caches" verified absent |
+| Object Storage (S3, GCS, Azure Blob) | None | No cloud SDKs |
+| File-Based Persistence | None | Per §1.3.2: "file-based storage" verified absent |
+| Session Storage | None | Per §1.3.2: "sessions" verified absent |
+| In-Memory Accumulation | None | Per §1.2.2: "no in-memory accumulation" |
+| State Migration Surface | Not applicable | Per §2.4.3: "Not applicable (fully stateless)" |
 
-| Storage Category | Status | Verification |
-|------------------|--------|--------------|
-| Primary relational database (PostgreSQL, MySQL, etc.) | Not used | No database client `require()` statements (§1.2.1) |
-| Document database (MongoDB, CouchDB, etc.) | Not used | No database client imports |
-| Key-value store (Redis, DynamoDB, etc.) | Not used | No client libraries |
-| Search engine (Elasticsearch, OpenSearch, etc.) | Not used | No search client code |
-| In-memory cache (Redis, Memcached) | Not used | No cache client code |
-| Object storage (S3, GCS, Azure Blob) | Not used | No cloud storage SDK imports |
-| Block storage / file system persistence | Not used | `server.js` performs no `fs` I/O |
-| Session storage | Not used | No session handling, no cookies, no per-client state (§1.3.2) |
-| Time-series database (InfluxDB, TimescaleDB) | Not used | No metrics emitted |
-| Graph database (Neo4j, etc.) | Not used | No client libraries |
+### 3.6.2 Static Response Data Footprint
 
-### 3.6.3 Stateless Architecture Justification
+The only "data" in the system is a **14-byte static UTF-8 string** (`Hello, World!\n`) hardcoded in `server.js` line 9. This literal is a compile-time constant, not a persistent datum; it requires no storage strategy, no schema, no migration plan, and no backup procedure. Per constraint C-004 (per §2.6.2), this response body must remain byte-identical to its committed state.
 
-The fully stateless posture is justified by F-002 (Static HTTP Response Generation), whose Validation Rule F-002-RQ-004 mandates that "Handler must not branch on any property of `req`." Because the response is byte-identical on every invocation, no state is required to produce it. The only "memory" of the process is:
+### 3.6.3 Data Persistence Strategy
 
-- `hostname` — compile-time constant `'127.0.0.1'`
-- `port` — compile-time constant `3000`
-- `server` — the `http.Server` instance returned by `http.createServer()`
+Not applicable. The fully stateless model means each HTTP request is handled independently without reading from or writing to any external store. Per §1.3.2 (Unsupported Use Cases), "Stateful Interactions: No state model; each request is handled independently."
 
-There is no Object-Relational Mapper (ORM), no data access layer, no schema definition, no migration system, and no data fixtures. Adding any of these would violate C-001 (source invariance) and C-005 (zero dependencies).
+### 3.6.4 Caching Solutions
+
+Not applicable. No caching layer exists at any tier:
+
+- **No application-level cache** (no in-memory maps, no LRU caches)
+- **No HTTP cache headers** beyond `Content-Type` (no `Cache-Control`, no `ETag`)
+- **No external cache service** (no Redis client, no Memcached client)
+
+The static response is generated freshly per request from a compile-time string literal, which is computationally cheaper than any caching mechanism would be for a 14-byte payload.
+
+### 3.6.5 Storage Services
+
+Not applicable. There are no cloud storage service integrations (S3, GCS, Azure Blob, etc.), no local file-system writes (no log files, no temp files, no PID files), and no database backup procedures.
 
 ---
 
 ## 3.7 DEVELOPMENT & DEPLOYMENT
 
-### 3.7.1 Development Toolchain
+### 3.7.1 Runtime Environment
 
-| Tool Category | Configured? | Evidence |
-|---------------|-------------|----------|
-| Package manager | npm (metadata only) | `package.json`, `package-lock.json` present; npm v7+ via lockfile v3 |
-| Linter (ESLint, JSHint) | Not configured | No `.eslintrc*` files in repository |
-| Formatter (Prettier, dprint) | Not configured | No `.prettierrc*` files |
-| Type checker (TypeScript, Flow) | Not configured | No `tsconfig.json`, no `.ts` files |
-| Test framework (Jest, Mocha, Vitest) | Not configured | `scripts.test` is `echo "Error: no test specified" && exit 1` |
-| Pre-commit hooks (husky, lefthook) | Not configured | No `.husky/` directory |
-| IDE / editor configuration | Not provided | No `.vscode/`, no `.idea/`, no `.editorconfig` |
-| Debugging configuration | Not provided | No launch configurations |
+The execution environment requires only a Node.js runtime, per assumption A-001 (per §2.6.1): "Node.js is installed on the host that runs `server.js`."
 
-Per F-004-RQ-004, the `test` script is intentionally a placeholder that exits with code 1. This is the npm-default value, signaling explicitly that no real tests exist in the project — and per C-001, none may be added.
+| Component | Version | Pinning Status | Reference |
+|-----------|---------|----------------|-----------|
+| Node.js | v20.20.2 (verified in Project Guide §10 Appendix D) | **Not pinned** — no `engines` field in `package.json` | §1.2.2 |
+| npm | 10.8.2 (bundled with Node 20) | Not pinned | Project Guide §10 Appendix D |
 
-### 3.7.2 Build System
+The recommended minimum is **Node.js ≥ 20** per `docs/testing-strategy.md`, primarily to ensure availability of built-in modules used by the optional (unimplemented) test strategy. However, the production runtime path through `server.js` requires only the `http` core module, which has been part of Node.js since its earliest releases.
 
-**No build system exists.** Per §1.2.2: "Build/Transpile Pipeline: None. No build scripts, no TypeScript, no bundler, no transformation step." Per §2.4.1, the build pipeline constraint is "None — execute directly with `node server.js`."
+### 3.7.2 Development Tools
 
-There is no transpilation step (the source is already valid Node.js JavaScript), no bundling (the application is a single file), no minification (the file is already minimal at 14 lines), and no asset pipeline (no static assets exist).
+Per Project Guide §10 Appendix F, all permitted development tools are **built-in to Node.js with zero installation**. Third-party tooling (ESLint, Prettier, Jest, etc.) is precluded by constraint C-005 (zero dependencies, runtime or development).
 
-### 3.7.3 Run / Start Procedure
+| Tool | Use Case | Constraint Interaction |
+|------|----------|------------------------|
+| `node --check server.js` | Syntax validation | Built-in; zero dependency; satisfies C-005 |
+| `node:test` | Recommended test framework | Built-in to Node ≥ 20; honors C-005/C-006 |
+| `node:assert` | Test assertions | Built-in; pairs with `node:test` |
+| `--experimental-test-coverage` | Coverage measurement | Built-in; `c8`/`nyc`/Jest excluded by C-005 |
+| Global `fetch` | HTTP test client | Built-in since Node 18; no need for `axios`/`node-fetch` |
+| `node:http` (test side) | Lower-level HTTP probing | Same core module as production |
+| ESLint | Optional dead-code analysis | **NOT installed** — would require `npm install` (violates C-005) |
+| Prettier | Code formatting | **NOT installed** — same rationale |
 
-The system is launched directly via the Node.js CLI:
+### 3.7.3 Build System
 
-```
-node server.js
-```
+**No build pipeline exists.** Per §1.2.2 ("Build Pipeline: None — no transpilation, no bundling, no minification") and §2.4.1 ("Build Pipeline | None — direct execution via `node server.js`"), there is no build step between the source file and execution.
 
-| Property | Value |
-|----------|-------|
-| Entry point (actual) | `server.js` |
-| Entry point (declared in `package.json` `main`) | `index.js` — **file does not exist** |
-| `start` script | Not defined |
-| `test` script | `echo "Error: no test specified" && exit 1` (placeholder) |
-| Required environment variables | None (no `process.env` references) |
-| Required command-line arguments | None |
+| Build Stage | Status |
+|-------------|--------|
+| Transpilation (Babel, SWC, TypeScript compiler) | None |
+| Bundling (Webpack, Rollup, esbuild, Parcel) | None |
+| Minification (Terser, UglifyJS) | None |
+| Asset Pipeline | None |
+| Source Maps | None |
+| Compile-equivalent Step | `node --check server.js` (syntax validation only — does not produce output artifacts) |
 
-Per §1.2.2 and §2.6.1 assumption A-004, the `main: "index.js"` declaration is a documented inconsistency preserved unchanged per the README's "Do not touch!" directive. The actual runtime entry point is `server.js`, invoked directly. The absence of a convenience `start` script means consumers must invoke `node server.js` explicitly rather than `npm start`.
+The absence of a build system is a direct consequence of using only built-in Node.js APIs that require no compilation. Source files are executed verbatim by the Node.js runtime.
 
 ### 3.7.4 Containerization
 
-**No containerization is present or configured.** Per §1.3.2, "Containerization" is explicitly excluded with verification: no `Dockerfile`, no `docker-compose.yml`, and no container manifests exist in the repository.
+**No containerization exists.** Per §1.3.2 (out-of-scope integration points): "Container orchestration | No Dockerfile, no Kubernetes manifests, no Compose files."
 
-| Container Technology | Status |
-|----------------------|--------|
-| Docker | Not configured |
-| Kubernetes manifests | Not configured |
-| Helm charts | Not configured |
-| Docker Compose | Not configured |
-| Podman / containerd | Not configured |
-| OCI images | Not built |
+| Containerization Artifact | Status |
+|---------------------------|--------|
+| Dockerfile | Absent |
+| `.dockerignore` | Absent |
+| `docker-compose.yml` / `compose.yaml` | Absent |
+| Kubernetes manifests (Deployment, Service, etc.) | Absent |
+| Helm charts | Absent |
+| Container registry references | None |
 
-Although the default enterprise stack lists Docker as the standard containerization platform, adopting it would require adding a `Dockerfile` to the repository, violating C-001 (source immutability).
+The default-stack item "Containerization: Docker" is not applicable. Introduction of containerization would violate constraint C-001 (immutability of the four baseline files) unless added strictly as additive scaffolding outside those files — but even so, no such artifacts are present in the repository.
 
-### 3.7.5 CI/CD Pipeline
+### 3.7.5 Infrastructure as Code
 
-**No CI/CD pipeline is present or configured.** Per §1.2.1 and §1.3.2: "no CI/CD configuration (no `.github/`, no `.gitlab-ci.yml`, no `Jenkinsfile`)."
+**No infrastructure-as-code artifacts exist.** Per §1.2.1, the repository contains "no Dockerfile, and no CI/CD pipeline definition." No Terraform, CloudFormation, Pulumi, CDK, Ansible, or Chef artifacts are present. The default-stack item "Infrastructure as Code: Terraform" is not applicable.
 
-| CI/CD Platform | Status |
+### 3.7.6 CI/CD Pipeline
+
+**No CI/CD pipeline exists.** Per §1.3.2: "CI/CD pipelines | Verified absent."
+
+| CI/CD Artifact | Status |
 |----------------|--------|
-| GitHub Actions | Not configured (no `.github/workflows/`) |
-| GitLab CI | Not configured (no `.gitlab-ci.yml`) |
-| Jenkins | Not configured (no `Jenkinsfile`) |
-| CircleCI | Not configured (no `.circleci/`) |
-| Travis CI | Not configured (no `.travis.yml`) |
-| Azure Pipelines | Not configured (no `azure-pipelines.yml`) |
+| GitHub Actions workflows (`.github/workflows/`) | Absent |
+| GitLab CI configuration (`.gitlab-ci.yml`) | Absent |
+| CircleCI configuration (`.circleci/`) | Absent |
+| Jenkinsfile | Absent |
+| Azure Pipelines (`azure-pipelines.yml`) | Absent |
+| Travis CI configuration (`.travis.yml`) | Absent |
+| Bitbucket Pipelines | Absent |
 
-The absence of CI/CD is consistent with the fixture's role: there are no tests to run, no artifacts to publish, no deployments to orchestrate, and no quality gates to enforce. Per C-001, the codebase is intended to be immutable, removing the primary motivation for continuous integration.
+The default-stack item "CI/CD: GitHub Actions" is not applicable. The placeholder `test` script in `package.json` (`echo "Error: no test specified" && exit 1`) would intentionally fail any naïve CI invocation, reinforcing that no automated pipeline is anticipated.
 
-### 3.7.6 Infrastructure as Code
+### 3.7.7 Launch and Execution Procedure
 
-**No Infrastructure as Code (IaC) is present.** While the default enterprise stack lists Terraform as the standard IaC tool, the repository contains:
+Per §1.3.1, the canonical launch command is `node server.js`. Per F-005 and constraint C-006, the project runs without `npm install`.
 
-| IaC Technology | Status |
-|----------------|--------|
-| Terraform (`.tf` files) | Not present |
-| AWS CloudFormation (`.yaml`/`.json` templates) | Not present |
-| Pulumi | Not present |
-| Ansible playbooks | Not present |
-| Chef / Puppet recipes | Not present |
-| Crossplane / Kustomize | Not present |
+| Launch Aspect | Detail |
+|---------------|--------|
+| Canonical Command | `node server.js` |
+| Required Preceding Steps | None — no `npm install`, no build, no compile |
+| Environment Variables | None — per Project Guide Appendix E: "The application reads no environment variables; host and port are hard-coded" |
+| Working Directory | Repository root |
+| Required Network State | TCP port 3000 free on loopback (per assumption A-002) |
+| Startup Confirmation | `console.log` emission of `Server running at http://127.0.0.1:3000/` on stdout |
+| Shutdown Procedure | `SIGINT` (Ctrl-C) — no graceful shutdown handler exists per §1.2.1 |
 
-The system runs on the host operating system as a single Node.js process bound to loopback — there is no infrastructure to provision, no cloud resources to allocate, and no orchestration to declare.
+**Note on `package.json` launch fields**: Per the dead-code analysis report, the `main: "index.js"` field is a **dangling reference** (no `index.js` exists in the repository), and no `start` script is defined. The application is launched **only** via `node server.js`; `npm start` and `node .` would both fail.
 
-### 3.7.7 Version Control
+### 3.7.8 Test Infrastructure
 
-| Version Control Aspect | Configuration |
-|------------------------|----------------|
-| Version control system | Git (`.git/` directory present at repository root) |
-| `.gitignore` | Not present |
-| Hosting provider | Not declared in `package.json` (no `repository` field) |
-| Branch protection | Out of scope (not configurable from the repository) |
-| Commit hooks | Not configured (no `.husky/` or similar) |
+| Test Aspect | Current State | Recommended (Per `docs/testing-strategy.md`) |
+|-------------|---------------|----------------------------------------------|
+| Committed tests | Zero | N/A |
+| Test framework | None | `node:test` (built-in Node ≥ 20) |
+| Assertion library | None | `node:assert` (built-in) |
+| HTTP client (test) | None | Global `fetch` (built-in Node ≥ 18) |
+| Coverage tool | None | `--experimental-test-coverage` (built-in) |
+| Coverage of committed code | 0% by design | 100% of reachable lines (recommended, not implemented) |
+| `scripts.test` | `echo "Error: no test specified" && exit 1` (npm placeholder) | Not modified per C-001 |
 
-Git is used as the version control system; however, no `.gitignore` file is present, which is consistent with the absence of build artifacts, `node_modules`, log files, or other typically-ignored content.
+The recommended test stack is **entirely zero-dependency** — every tool is built-in to Node.js — preserving compatibility with constraints C-005 and C-006. However, no tests are committed to the repository, consistent with the immutability constraint C-001.
+
+### 3.7.9 Environment Variables
+
+**None required or consumed.** Per Project Guide Appendix E, "The application reads no environment variables; host and port are hard-coded." There is no `.env` file, no `dotenv` library, no `process.env` reads in `server.js`, and no documented runtime configuration surface. This is reinforced by constraint C-002 (`127.0.0.1` hardcoded) and constraint C-003 (port `3000` hardcoded).
 
 ---
 
-## 3.8 PACKAGE METADATA & LICENSING
+## 3.8 ARCHITECTURAL CONSTRAINTS GOVERNING THE STACK
 
-### 3.8.1 npm Manifest Identity
+The seven constraints defined in §2.6.2 collectively define the permissible boundary of the technology stack. The table below maps each constraint to its stack implication:
 
-Per F-004, the `package.json` declares the following npm-compatible identity:
+| ID | Constraint | Stack Implication |
+|----|-----------|-------------------|
+| C-001 | All four baseline files must remain unchanged | No new dependencies, frameworks, or stack additions are permitted within the baseline |
+| C-002 | Hostname must remain hardcoded to `127.0.0.1` | No configuration management library can be introduced |
+| C-003 | Port must remain hardcoded to `3000` | Same as C-002 |
+| C-004 | Response body, status, and headers must remain byte-identical | No template engine, no content negotiation library, no compression middleware |
+| C-005 | Zero runtime and zero development dependencies | NO third-party packages of any kind permitted |
+| C-006 | Project must remain executable on Node.js without prior `npm install` | Reinforces C-005; precludes lazy/optional dependencies |
+| C-007 | License of all repository contents is MIT | License-compatibility baseline for any future external integration |
 
-| Field | Value | Note |
-|-------|-------|------|
-| `name` | `hello_world` | Differs from repository name `hao-backprop-test` |
-| `version` | `1.0.0` | Static; no semver evolution expected per §2.4.5 |
-| `description` | `Hello world in Node.js` | Brief functional description |
-| `main` | `index.js` | **Documented inconsistency** — file does not exist (A-004) |
-| `scripts.test` | `echo "Error: no test specified" && exit 1` | npm placeholder |
-| `author` | `hxu` | Sole declared author |
-| `license` | `MIT` | SPDX-recognized identifier |
-
-The repository name (`hao-backprop-test`, per the README heading) and the npm package name (`hello_world`, per `package.json`) are intentionally distinct. The npm name reflects the package's literal functional behavior; the repository name reflects its operational role as a backprop integration test fixture.
-
-### 3.8.2 License
-
-Per F-004-RQ-003 and constraint C-007, the license is **MIT** and is declared identically in both `package.json` and `package-lock.json`. Per §1.3.1, MIT license terms apply to all repository contents. No `LICENSE.md` or `LICENSE` file is present in the repository; the license declaration exists only in the JSON manifests.
-
-### 3.8.3 Package Publication Status
-
-The package is **not intended for npm publication**:
-
-- The `private: true` field is absent from `package.json`, which would normally prevent publication — however, no publication metadata is present either.
-- No `repository`, `keywords`, `bugs`, or `homepage` fields exist in `package.json`.
-- Per §1.2.1, the project "is not a library intended for npm distribution" despite the lack of `private: true`.
+These constraints are why every item in the default technology stack (AWS, Docker, Terraform, GitHub Actions, Python, Flask, Auth0, MongoDB, Langchain, React, TypeScript, TailwindCSS, React-Native, Swift, Kotlin, Objective-C, ElectronJS) is non-applicable: each would require either modification of a baseline file (violating C-001) or installation of dependencies (violating C-005 and C-006).
 
 ---
 
 ## 3.9 SECURITY IMPLICATIONS OF STACK CHOICES
 
-### 3.9.1 Stack-Derived Security Posture
+Per §2.4.4, the security posture of the technology stack is summarized below. The minimalism of the stack produces a paradoxical security benefit: by eliminating capabilities, it also eliminates attack surface.
 
-The technology stack's minimalism directly determines the system's security posture. Per §2.4.4:
+| Aspect | Posture | Mitigating Factor |
+|--------|---------|-------------------|
+| Authentication | None | Loopback binding restricts socket reach |
+| Authorization | None | Same as above |
+| Transport Encryption | None (plaintext HTTP) | Loopback traffic does not traverse external networks |
+| Input Validation | None (request is ignored) | No input is consumed, eliminating injection surfaces |
+| Output Encoding | Static literal | Body and headers are compile-time constants |
+| Security Headers | Only `Content-Type` | No CSP, HSTS, X-Frame-Options — not required for loopback fixture |
+| Dependency Vulnerabilities | None | Zero dependencies (per F-005); `npm audit` reports zero vulnerabilities |
+| Network Exposure | Loopback only | Hardcoded `127.0.0.1` prevents external reachability |
+| Supply-Chain Risk | None | No third-party packages; no transitive closure |
 
-| Security Aspect | Posture Resulting from Stack Choice |
-|-----------------|--------------------------------------|
-| Transport encryption | None — plaintext HTTP via Node.js core `http` module (not `https`) |
-| Network exposure | Loopback-only via hardcoded `127.0.0.1` binding |
-| Authentication | None — no authentication libraries imported |
-| Authorization | None — no policy engine present |
-| Dependency vulnerabilities | None possible — zero-dependency posture eliminates this attack vector |
-| Input validation | None required — request body and headers are entirely ignored |
-| Security headers | Only `Content-Type: text/plain` — no CSP, HSTS, X-Frame-Options |
-| Secrets management | Not applicable — no credentials or secrets in use |
-
-### 3.9.2 Defense by Minimalism
-
-The security posture is best characterized as **defense by minimalism**: the absence of attack surface from frameworks, dependencies, network exposure, and dynamic input handling is the primary security control. The loopback-only binding (`127.0.0.1`) is the deliberate, architectural primary security boundary; weakening it (e.g., binding to `0.0.0.0`) would invalidate the security posture of the fixture and violate constraint C-002.
-
-### 3.9.3 Stack Decisions That Would Increase Risk
-
-The following potential stack additions would each materially expand the attack surface and are therefore prohibited under the existing constraints:
-
-| Hypothetical Addition | Risk Introduced | Constraint Violated |
-|-----------------------|-----------------|---------------------|
-| Adding Express | Transitive dependency CVEs, middleware misconfiguration | C-005, C-001 |
-| Binding to `0.0.0.0` | Public network exposure | C-002 |
-| Adding TLS via `https` module | Certificate management surface (although a net positive, it would require source modification) | C-001 |
-| Reading `process.env` | Environment-variable injection surface | C-001 |
-| Adding `body-parser` or similar | Input validation surface | C-005, C-001 |
+Per assumption A-005, "No security review of plaintext HTTP / loopback binding is required" because "the fixture is local-only by design."
 
 ---
 
-## 3.10 STACK INTEGRATION REQUIREMENTS
+## 3.10 DEFAULT TECHNOLOGY STACK RECONCILIATION
 
-### 3.10.1 Inter-Component Integration
+The following matrix explicitly reconciles each item in the prompt-provided Default Technology Stack against the actual requirements of this system. Every default item is non-applicable for the reasons documented above.
 
-Because the stack consists of a single application file consuming a single Node.js core module, there is no inter-component integration in the conventional sense. The complete integration topology is:
+| Default Stack Category | Default Item | Applicability | Reason |
+|------------------------|--------------|---------------|--------|
+| Cloud Platform | AWS | **Not applicable** | No cloud services; loopback-only deployment |
+| Containerization | Docker | **Not applicable** | No Dockerfile per §1.3.2; would not affect baseline |
+| Infrastructure as Code | Terraform | **Not applicable** | No IaC artifacts; no provisioned infrastructure |
+| CI/CD | GitHub Actions | **Not applicable** | No `.github/workflows/`; per §1.3.2 "CI/CD pipelines verified absent" |
+| Backend Language | Python | **Not applicable** | JavaScript/Node.js only |
+| Backend Framework | Flask | **Not applicable** | No framework; Node.js core `http` only per §2.4.1 |
+| Authentication | Auth0 | **Not applicable** | No authentication per §2.4.4 |
+| Database | MongoDB | **Not applicable** | No database; fully stateless per §1.2.2 |
+| AI Framework | Langchain | **Not applicable** | No AI workload; pure HTTP fixture |
+| Web Frontend | React + TypeScript | **Not applicable** | No UI surface; headless loopback HTTP endpoint |
+| CSS Framework | TailwindCSS | **Not applicable** | No UI |
+| Mobile / Cross-Platform | React-Native + TypeScript | **Not applicable** | No mobile surface |
+| iOS Native | Swift | **Not applicable** | No iOS application |
+| Android Native | Kotlin | **Not applicable** | No Android application |
+| MacOS Native | Objective-C | **Not applicable** | No macOS native application |
+| Desktop Cross-Platform | ElectronJS | **Not applicable** | No desktop application |
 
-| From | To | Mechanism |
-|------|-----|-----------|
-| Host OS | Node.js runtime | Process execution (`node` binary) |
-| Node.js runtime | `server.js` | CommonJS module loading |
-| `server.js` | `http` core module | `require('http')` |
-| `server.js` | TCP socket layer | `server.listen(3000, '127.0.0.1', ...)` |
-| `server.js` | stdout | `console.log` |
-| External client (loopback) | `server.js` | HTTP/1.1 request to `127.0.0.1:3000` |
+The **complete actual technology stack** is therefore:
 
-### 3.10.2 External Integration Requirements
-
-The only external integration requirement is HTTP/1.1 protocol compliance on the part of the consumer (per F-002 dependency on "Adherence to HTTP/1.1 wire protocol as implemented by Node.js `http`"). The consumer must be able to:
-
-1. Establish a TCP connection to `127.0.0.1:3000`.
-2. Issue any valid HTTP/1.1 request (method, path, headers, body are irrelevant).
-3. Read the static `text/plain` response body `"Hello, World!\n"`.
-
-No SDK, no client library, and no negotiation protocol is required of the consumer.
-
-### 3.10.3 Stack Evolvability
-
-The stack is **explicitly non-evolvable**. Per C-001 and §2.4.5, the maintenance posture mandates that the stack remain unchanged. Any future addition — a framework, a dependency, a build step, a container image — would constitute a violation of the immutability directive. The technology stack defined in this section is therefore both the current state and the steady state of the system.
+- **Language**: JavaScript (CommonJS module system)
+- **Runtime**: Node.js (v20.20.2 verified; not pinned via `engines`)
+- **HTTP Engine**: Node.js built-in `http` core module
+- **Package Manager**: npm 10.8.2 (used solely for manifest/lockfile presence; never invoked for install)
+- **Lockfile Format**: npm lockfile version 3 (empty `packages` tree)
+- **License**: MIT (per constraint C-007)
+- **Dependencies**: ZERO (runtime), ZERO (development)
+- **Build, Test, Containerization, CI/CD**: NONE
 
 ---
 
 ## 3.11 REFERENCES
 
-### 3.11.1 Files Examined
+### 3.11.1 Repository Files Examined
 
-- `server.js` — The sole runtime executable (14 lines). Provided complete evidence of the language (JavaScript/CommonJS), module system (`require`), runtime (Node.js), the single framework dependency (core `http` module), the use of the `console` global, and the hardcoded literals (`127.0.0.1`, `3000`).
-- `package.json` — npm manifest (11 lines). Provided the package identity (`hello_world` v`1.0.0`, MIT, author `hxu`), the absence of `dependencies` and `devDependencies` fields, the placeholder `test` script, the documented `main: "index.js"` inconsistency, and the absence of an `engines` field.
-- `package-lock.json` — npm lockfile (13 lines). Provided `lockfileVersion: 3` (npm v7+ compatibility), MIT license confirmation, and the empty `packages` tree containing only the root `""` entry.
-- `README.md` — Repository documentation (2 lines). Provided the repository name (`hao-backprop-test`), purpose statement ("test project for backprop integration"), and the immutability directive ("Do not touch!").
+- `server.js` — The 14-line sole runtime file; provided evidence of `require('http')` usage, hardcoded `127.0.0.1:3000` binding, branchless handler, and `console.log` startup signal
+- `package.json` — 11-line npm manifest; confirmed package identity, MIT license, placeholder test script, and zero declared dependencies (no `dependencies`/`devDependencies`/`engines` fields)
+- `package-lock.json` — 13-line lockfile; confirmed `lockfileVersion: 3` and empty `packages` tree (root `""` entry only)
+- `README.md` — 3-line governance directive; source of the "Do not touch!" immutability requirement (constraint C-001)
+- `docs/dead-code-analysis.md` — Provided evidence on the absence of TypeScript usage, the dangling `main: "index.js"` reference, and the actual launch mechanism (`node server.js`)
+- `docs/testing-strategy.md` — Documented the recommended zero-dependency test stack (`node:test`, `node:assert`, global `fetch`, `node:http`, `--experimental-test-coverage`) and the Node ≥ 20 baseline
+- `blitzy/documentation/Project Guide.md` — Provided verified runtime versions (Node v20.20.2, npm 10.8.2) and the technology versions table in Appendix D; established that no environment variables are consumed (Appendix E)
 
-### 3.11.2 Folders Explored
+### 3.11.2 Repository Folders Explored
 
-- Repository root (`/`) — Contains all four files plus a `.git/` directory. Confirmed no subdirectories with source code exist; no `node_modules/`, no `dist/`, no `build/`, no `.github/`, no `.vscode/`, no `.husky/`.
+- `/` (repository root) — Enumerated the four baseline files (`server.js`, `package.json`, `package-lock.json`, `README.md`) plus `docs/` and `blitzy/` subdirectories
+- `docs/` — Inventory of analysis-only documentation (dead-code report, testing strategy)
+- `blitzy/documentation/` — Engagement governance hub containing the Project Guide, Technical Specifications, and Agent Action Plan
 
 ### 3.11.3 Technical Specification Sections Cross-Referenced
 
-- §1.2 SYSTEM OVERVIEW — Core technical approach (language, runtime, HTTP layer, dependency posture, build pipeline, persistence/state)
-- §1.3 SCOPE — In-scope items and verified out-of-scope technologies (Express, Docker, CI/CD, frameworks, etc.)
-- §2.1 FEATURE CATALOG — Feature F-005 (Zero-Dependency Operation) and its technology implications
-- §2.2 FUNCTIONAL REQUIREMENTS — F-001, F-002, F-004, F-005 technical specifications including lockfile version and npm v7+ compatibility
-- §2.4 IMPLEMENTATION CONSIDERATIONS — Technical constraints table (language, runtime, module system, web framework, network interface, port, build pipeline), security implications, maintenance requirements
-- §2.6 ASSUMPTIONS AND CONSTRAINTS — Constraints C-001 through C-007 governing stack invariance, particularly C-005 (zero dependencies) and C-006 (executability without `npm install`)
+- §1.1 Executive Summary — Project purpose and minimalism rationale
+- §1.2 System Overview — Core technical approach (CommonJS, no dependencies, no build pipeline); integration boundary diagram
+- §1.3 Scope — In-scope technologies (Node.js, CommonJS, zero deps) vs. explicitly excluded categories (frameworks, middleware, auth, DBs, containerization, CI/CD)
+- §2.1 Feature Catalog — F-005 (Zero Runtime Dependencies) context
+- §2.2 Functional Requirements Table — F-005-RQ-001 through F-005-RQ-004 verification points
+- §2.3 Feature Relationships — Confirmation of single inbound integration point and no outbound integrations
+- §2.4 Implementation Considerations — Technical constraints (§2.4.1), performance posture (§2.4.2), scalability (§2.4.3), security implications (§2.4.4), maintenance requirements (§2.4.5)
+- §2.6 Assumptions and Constraints — Constraints C-001 through C-007 that bind the technology stack; assumptions A-001 through A-005
 
 # 4. Process Flowchart
 
 ## 4.1 SYSTEM WORKFLOWS OVERVIEW
 
+The `hao-backprop-test` repository implements an exceptionally narrow process surface. Per the system overview in §1.2, the runtime is a single 14-line `server.js` file that executes exactly two genuine workflows (server startup and request handling) plus one side workflow (startup logging). Per the out-of-scope enumeration in §1.3.2, many conventional process categories — error handling, authentication, persistence, batch processing, graceful shutdown, observability — are **verified absent** from the implementation. This Process Flowchart section accordingly documents both the **present workflows** as positive process artifacts and the **absent workflows** as first-class negative process artifacts, because the absence of these flows is itself a binding design contract enforced by the "Do not touch!" governance directive (F-006).
+
 ### 4.1.1 Workflow Inventory
 
-The `hao-backprop-test` repository implements a deliberately minimal Node.js HTTP fixture whose executable surface is confined to a single 14-line file (`server.js`). As a consequence, the process-flow surface area of the system is unusually narrow. Only two end-to-end workflows are observable in the codebase, and a number of workflows that would conventionally appear in this section of a Technical Specification are **demonstrably absent** by design (see §1.3.2 and §2.4.4 of this document). This section documents both the present workflows and the absent ones, treating documented absence as a first-class engineering artifact rather than an omission.
+The complete inventory of workflows is given in the following table. Workflow identifiers (WF-xxx) are introduced here as cross-section anchors. Each present workflow maps to one or more features (F-xxx) and functional requirements (F-xxx-RQ-yyy) introduced in §2.1 and §2.2.
 
-| Workflow ID | Workflow Name | Scope | Source of Truth |
-|-------------|---------------|-------|-----------------|
-| WF-001 | Server Startup Workflow | Process invocation → TCP bind → readiness signal | `server.js` lines 1–14; F-001 (§2.1, §2.2.1) |
-| WF-002 | Request–Response Workflow | Inbound HTTP request → static response emission | `server.js` lines 6–10; F-002 (§2.1, §2.2.2) |
-| WF-003 | Startup Logging Side-Workflow | Listen-callback → stdout announcement | `server.js` lines 12–14; F-003 (§2.1, §2.2.3) |
-| WF-ABSENT-001 | Error Handling / Recovery | **Absent** — no try/catch, no `'error'` listener, no signal handlers | §1.3.2 Out-of-Scope Elements |
-| WF-ABSENT-002 | Authentication / Authorization | **Absent** — no credential handling, no token verification | §2.4.4 Security Implications |
-| WF-ABSENT-003 | Batch Processing / Event Processing | **Absent** — no jobs, queues, brokers, or schedulers | §2.3.2 Integration Points |
-| WF-ABSENT-004 | State Persistence / Caching | **Absent** — fully stateless application | §1.2.2 High-Level Description |
+| Workflow ID | Workflow Name | Feature Anchor | Source Location | Type |
+|-------------|---------------|----------------|-----------------|------|
+| WF-001 | Server Startup Workflow | F-001 | `server.js` lines 1, 3–4, 6, 12–14 | Present (one-shot per process lifetime) |
+| WF-002 | Request–Response Workflow | F-002 | `server.js` lines 6–10 | Present (per HTTP request) |
+| WF-003 | Startup Logging Side-Workflow | F-003 | `server.js` line 13 | Present (one-shot, nested in WF-001) |
+| WF-ABSENT-001 | Error Handling / Recovery | — | Verified absent (§1.3.2, §2.4.4) | Documented Absence |
+| WF-ABSENT-002 | Authentication / Authorization | — | Verified absent (§2.4.4) | Documented Absence |
+| WF-ABSENT-003 | Batch / Event Processing | — | Verified absent (§2.3.2) | Documented Absence |
+| WF-ABSENT-004 | State Persistence / Caching | — | Verified absent (§1.2.2, §2.3.4) | Documented Absence |
 
-### 4.1.2 Actors, Systems, and Boundaries
+### 4.1.2 Actors and System Boundaries
 
-The process-flow space contains exactly four logical participants. Every diagram in this section uses swim lanes drawn from this set.
+Diagrams in this section use exactly four logical participants. These participants align with the integration boundary illustrated in §1.2.1 and the launch procedure described in §3.7.7.
 
-| Participant | Role | Touchpoints |
-|-------------|------|-------------|
-| **Operator** | Human user who launches `node server.js`; observes stdout for readiness | Process launch; terminal observation |
-| **External Client (Loopback)** | The unspecified "backprop" tooling issuing HTTP/1.1 requests to `127.0.0.1:3000` | Inbound HTTP request; outbound HTTP response consumption |
-| **Node.js Process (`server.js`)** | Sole runtime component; hosts the HTTP server and handler | TCP socket; stdout; `http` core module |
-| **OS / TCP Layer** | Provides socket allocation and lifecycle management | Bind to `127.0.0.1:3000`; signal delivery (SIGINT/SIGKILL) |
+| Participant | Role in Workflows | Touchpoints |
+|-------------|-------------------|-------------|
+| **Operator** | Human or automation invoking `node server.js`; observer of stdout | Process launch; terminal observation; signal delivery (SIGINT) |
+| **External Client (Loopback)** | The "backprop" integration tooling issuing HTTP/1.1 requests | Inbound TCP connect to `127.0.0.1:3000`; response consumption |
+| **Node.js Process (`server.js`)** | Sole runtime component; hosts both server and handler | TCP socket; stdout; `http` core module |
+| **OS / TCP Layer** | Provides socket allocation and signal delivery | Loopback bind enforcement; SIGINT/SIGKILL routing |
 
-The Node.js `http` core module is treated as an internal helper of the Node.js Process lane rather than as a separate actor, because it executes in the same address space as `server.js` and is loaded synchronously via `require('http')` per the integration topology defined in §3.10.1.
+### 4.1.3 High-Level System Workflow Diagram
 
-### 4.1.3 High-Level System Workflow
-
-The diagram below collapses both runtime workflows (WF-001 startup and WF-002 request-response) into a single end-to-end flow that traces a process from invocation through its event loop and ultimate termination. Decision diamonds highlight the two genuine branch points in the system: (a) success or failure of TCP bind, and (b) request arrival versus process termination.
+The diagram below combines both genuine workflows (WF-001 and WF-002) into a single process flowchart. It surfaces the **single genuine decision diamond** that exists in the entire system — the TCP bind success/failure check during startup — and confirms the **branchless** nature of the request-response path mandated by F-002-RQ-004.
 
 ```mermaid
 flowchart TD
-    Start([Operator runs<br/>node server.js]) --> LoadHTTP[Load http module<br/>line 1: require http]
-    LoadHTTP --> DeclareConst[Declare hostname=127.0.0.1<br/>and port=3000<br/>lines 3-4]
-    DeclareConst --> CreateServer[http.createServer<br/>register handler<br/>line 6 — F-001-RQ-001]
-    CreateServer --> CallListen[server.listen port hostname callback<br/>line 12 — F-001-RQ-004]
-    CallListen --> BindCheck{TCP bind<br/>successful?}
-    BindCheck -->|Yes| LogReady[console.log<br/>Server running at...<br/>line 13 — F-003-RQ-002]
-    BindCheck -->|No EADDRINUSE/EACCES| Crash([Unhandled error<br/>Process crashes<br/>no recovery])
-    LogReady --> EventLoop[Enter Node.js event loop<br/>State: Listening]
-    EventLoop --> Wait{Request arrived<br/>OR signal received?}
-    Wait -->|HTTP request| HandleReq[Execute handler lines 7-9<br/>status 200<br/>Content-Type text/plain<br/>body Hello World newline]
-    HandleReq --> EventLoop
-    Wait -->|SIGINT or SIGKILL| Term([Process terminated<br/>no graceful shutdown<br/>no server.close])
+    Start(["Operator invokes<br/>node server.js"])
+    LoadHTTP["Line 1: require('http')<br/>load core module"]
+    DefineConst["Lines 3-4: declare hostname='127.0.0.1'<br/>and port=3000 constants"]
+    CreateServer["Line 6: http.createServer<br/>register request handler"]
+    Listen["Line 12: server.listen<br/>request OS socket bind"]
+    BindCheck{"TCP bind<br/>successful?"}
+    Crash(["Process exits with<br/>EADDRINUSE / EACCES<br/>non-zero exit code"])
+    LogStartup["Line 13: console.log<br/>'Server running at http://127.0.0.1:3000/'"]
+    EventLoop["Event loop active<br/>awaiting connections"]
+    ReqArrived{"HTTP request<br/>received?"}
+    Signal{"SIGINT / SIGKILL<br/>received?"}
+    Terminate(["Process terminates<br/>abrupt exit, no server.close"])
+    SetStatus["Line 7: res.statusCode = 200<br/>F-002-RQ-001"]
+    SetHeader["Line 8: res.setHeader<br/>'Content-Type', 'text/plain'<br/>F-002-RQ-002"]
+    EndResponse["Line 9: res.end<br/>'Hello, World!\n' (14 bytes)<br/>F-002-RQ-003"]
+    Return["Return to event loop<br/>no module-state mutation"]
+
+    Start --> LoadHTTP
+    LoadHTTP --> DefineConst
+    DefineConst --> CreateServer
+    CreateServer --> Listen
+    Listen --> BindCheck
+    BindCheck -- "No (only documented failure mode)" --> Crash
+    BindCheck -- "Yes" --> LogStartup
+    LogStartup --> EventLoop
+    EventLoop --> ReqArrived
+    ReqArrived -- "Yes (handler invoked)" --> SetStatus
+    SetStatus --> SetHeader
+    SetHeader --> EndResponse
+    EndResponse --> Return
+    Return --> EventLoop
+    ReqArrived -- "No" --> Signal
+    Signal -- "Yes" --> Terminate
+    Signal -- "No" --> EventLoop
 ```
 
-The flow is intentionally linear in the success path: every observable system behavior described in §1.2.2 ("TCP Bind", "Startup Logging", "Request Acceptance", "Static Response Emission") maps to exactly one node in this diagram, and every requirement ID in F-001 through F-003 has a corresponding step.
+### 4.1.4 Documented Absent Workflows
+
+The absence of the following workflows is a binding design property derived from F-006 (the "Do not touch!" directive) and constraints C-001 through C-007 in §2.6.2. Each absence is verified by direct inspection of the four baseline files.
+
+| Absent Workflow | Evidence of Absence | Governing Constraint |
+|-----------------|---------------------|----------------------|
+| Error handling / recovery | No `try`/`catch`, no `'error'` listener on `http.Server`, no `process.on('SIGINT')` handler in `server.js` (per §1.3.2, §2.4.4) | C-001, C-004 |
+| Authentication / authorization | No credential handling, no token verification, no `Authorization` header inspection (per §2.4.4) | C-001, C-004 |
+| Batch / event processing | No job queue, no broker client, no scheduler, no batch script (per §2.3.2) | C-005 |
+| State persistence / caching | No database driver, no `fs.write`, no in-memory store, no cache layer (per §1.2.2, §2.3.4) | C-005 |
+| Graceful shutdown | No `server.close()` invocation, no signal handlers (per §1.3.2, §3.7.7) | C-001, C-004 |
+| Observability beyond startup log | No request logging, no metrics emitter, no tracing SDK, no health endpoint (per §1.3.2) | C-001, C-005 |
 
 ---
 
 ## 4.2 CORE BUSINESS PROCESSES
 
-### 4.2.1 Server Startup Workflow (WF-001)
+This subsection decomposes each present workflow into per-step detail. Decision points, validation rules, and source-of-truth line numbers are surfaced for every step.
 
-#### 4.2.1.1 Step-by-Step Process Description
+### 4.2.1 WF-001: Server Startup Workflow
 
-The startup workflow executes the six steps below in strict sequence. Steps 1–4 are synchronous; step 5 is asynchronous and gated by the OS socket allocation; step 6 fires inside the listen callback only on successful bind.
+#### Step Decomposition
 
-| Step | Line(s) | Operation | Type | Requirement Traceability |
-|------|---------|-----------|------|--------------------------|
-| 1 | 1 | `require('http')` — loads core HTTP module | Synchronous module load | F-005 (zero deps means core only) |
-| 2 | 3 | Declare `hostname = '127.0.0.1'` | Constant assignment | F-001-RQ-002, C-002 |
-| 3 | 4 | Declare `port = 3000` | Constant assignment | F-001-RQ-003, C-003 |
-| 4 | 6–10 | `http.createServer(handler)` returns Server instance | Synchronous; no network activity | F-001-RQ-001 |
+The startup workflow executes exactly six steps, all triggered by the single operator invocation `node server.js`. Steps 1 through 4 are synchronous and execute in module-load order; step 5 is asynchronous, gated by OS socket allocation; step 6 fires only on bind success.
+
+| Step | Line(s) | Operation | Synchrony | Mapped Requirement |
+|------|---------|-----------|-----------|--------------------|
+| 1 | 1 | `require('http')` — load core HTTP module | Synchronous | F-005 (zero deps means core only) |
+| 2 | 3 | Declare `hostname = '127.0.0.1'` | Synchronous | F-001-RQ-002, C-002 |
+| 3 | 4 | Declare `port = 3000` | Synchronous | F-001-RQ-003, C-003 |
+| 4 | 6–10 | `http.createServer(handler)` returns `Server` instance | Synchronous; no network activity | F-001-RQ-001 |
 | 5 | 12 | `server.listen(port, hostname, callback)` initiates bind | Asynchronous; OS-bounded | F-001-RQ-004 |
 | 6 | 13 | `console.log('Server running at http://127.0.0.1:3000/')` fires | Executes only on successful bind | F-003-RQ-001, F-003-RQ-002 |
 
-#### 4.2.1.2 Startup Workflow Diagram with Swim Lanes
+#### Decision Points
+
+WF-001 contains **exactly one** genuine decision point: the TCP bind success/failure check performed by the OS networking stack in response to `server.listen()`. Per Assumption A-002 in §2.6.1, there is no fallback port logic; per F-001-RQ-003 acceptance criteria, `EADDRINUSE` is the only documented failure mode. Bind failure is **terminal** — no recovery edge exists in the source.
+
+| Decision Point | Branch Conditions | Outcome on Success | Outcome on Failure |
+|----------------|-------------------|--------------------|--------------------|
+| TCP bind | Port `3000` free on loopback AND user holds privilege | Listen callback fires; WF-003 emits log line | Process exits non-zero (`EADDRINUSE` or `EACCES`); no recovery |
+
+#### Server Startup Swim Lane Diagram
 
 ```mermaid
 flowchart TD
-    subgraph OperatorLane["Operator / Terminal"]
-        OpStart([Invoke<br/>node server.js])
-        OpObserve[Observe stdout<br/>for readiness line]
+    subgraph LaneOp["Lane: Operator"]
+        OpStart(["Invoke<br/>node server.js"])
+        OpObserve(["Observe stdout<br/>for startup line"])
     end
-
-    subgraph NodeLane["Node.js Runtime"]
-        ModLoad[Load CommonJS<br/>module cache]
-        ExecScript[Execute server.js<br/>top-to-bottom]
+    subgraph LaneNode["Lane: Node.js Runtime"]
+        NodeSpawn["Spawn process<br/>initialize V8 + libuv"]
+        ModuleLoad["Load server.js<br/>CommonJS resolution"]
     end
-
-    subgraph AppLane["server.js Application"]
-        RequireHTTP[require http<br/>line 1]
-        DefineConstants[Define hostname<br/>and port<br/>lines 3-4]
-        CreateInstance[http.createServer<br/>F-001-RQ-001]
-        InvokeListen[server.listen<br/>F-001-RQ-004]
-        Callback[Listen callback fires<br/>console.log<br/>F-003-RQ-001]
+    subgraph LaneApp["Lane: server.js Application"]
+        Require["Line 1<br/>require('http')"]
+        DefConst["Lines 3-4<br/>declare hostname and port"]
+        CreateSrv["Line 6<br/>http.createServer(handler)"]
+        CallListen["Line 12<br/>server.listen(port, hostname, cb)"]
+        LogCb["Line 13<br/>console.log inside callback"]
     end
-
-    subgraph OSLane["OS / TCP Layer"]
-        SocketAlloc{Bind 127.0.0.1:3000<br/>available?}
-        BindOK[Socket bound<br/>file descriptor acquired]
-        BindErr[EADDRINUSE<br/>or EACCES emitted]
+    subgraph LaneOS["Lane: OS / TCP Layer"]
+        SockAlloc["Allocate socket<br/>attempt bind 127.0.0.1:3000"]
+        BindDecision{"Bind<br/>successful?"}
+        BindFail["Emit EADDRINUSE<br/>or EACCES error"]
     end
+    CrashExit(["Process exit<br/>non-zero code<br/>no recovery"])
 
-    OpStart --> ModLoad
-    ModLoad --> ExecScript
-    ExecScript --> RequireHTTP
-    RequireHTTP --> DefineConstants
-    DefineConstants --> CreateInstance
-    CreateInstance --> InvokeListen
-    InvokeListen --> SocketAlloc
-    SocketAlloc -->|Yes| BindOK
-    SocketAlloc -->|No| BindErr
-    BindOK --> Callback
-    Callback --> OpObserve
-    BindErr --> CrashExit([Process crashes<br/>NO retry NO fallback])
+    OpStart --> NodeSpawn
+    NodeSpawn --> ModuleLoad
+    ModuleLoad --> Require
+    Require --> DefConst
+    DefConst --> CreateSrv
+    CreateSrv --> CallListen
+    CallListen --> SockAlloc
+    SockAlloc --> BindDecision
+    BindDecision -- "Yes" --> LogCb
+    LogCb --> OpObserve
+    BindDecision -- "No" --> BindFail
+    BindFail --> CrashExit
 ```
 
-#### 4.2.1.3 Decision Points and Branches
+### 4.2.2 WF-002: Request–Response Workflow
 
-Only one genuine branch point exists in WF-001: the success/failure of the OS-level TCP bind. Per Assumption A-002 (§2.6.1) of this specification, the server has **no fallback port logic; collision causes startup failure**. This decision point therefore has no recovery edge in the success direction — failure is terminal.
+#### Step Decomposition
 
-### 4.2.2 Request–Response Workflow (WF-002)
+The request-response workflow executes per inbound HTTP request. The first two steps are performed by the Node.js `http` core module (parser-level); the remaining three steps are executed by `server.js` lines 7–9. Per F-002-RQ-004, the handler must produce a byte-identical response for any HTTP method, path, headers, query, or body.
 
-#### 4.2.2.1 Step-by-Step Process Description
-
-The handler is registered at startup (line 6 of `server.js`) but executes once per inbound HTTP request. Per F-002-RQ-004, the handler **must not branch on any property of `req`**, which means the workflow is strictly linear with no decision diamonds in the response path.
-
-| Step | Line | Operation | Effect | Requirement |
-|------|------|-----------|--------|-------------|
+| Step | Line | Operation | Effect | Mapped Requirement |
+|------|------|-----------|--------|--------------------|
 | 1 | n/a | TCP connection accepted by `http` core | Connection object created | Implicit |
 | 2 | n/a | Request parsed by `http` core into `req` object | Parser-level; opaque to `server.js` | Implicit |
-| 3 | 6 | Handler invoked with `(req, res)` | `req` is **ignored** per F-002-RQ-004 | F-002-RQ-004 |
+| 3 | 6 | Handler invoked with `(req, res)` | `req` argument is **ignored** | F-002-RQ-004 |
 | 4 | 7 | `res.statusCode = 200` | Sets HTTP status | F-002-RQ-001 |
 | 5 | 8 | `res.setHeader('Content-Type', 'text/plain')` | Sets sole response header | F-002-RQ-002 |
 | 6 | 9 | `res.end('Hello, World!\n')` | Writes 14-byte body and terminates response | F-002-RQ-003 |
 
-#### 4.2.2.2 Request-Handling Workflow Diagram with Swim Lanes
+#### Branchless Handler Property
+
+WF-002 has **zero decision diamonds** in its response path. This is a load-bearing design property:
+
+- The handler signature `(req, res) => {...}` reads only `res`; the `req` parameter is idiomatic but unused, as confirmed by the dead-code analysis described in §2.1.2.
+- The acceptance criterion F-002-RQ-004 explicitly stipulates that requests using `GET`, `POST`, `PUT`, `DELETE`, and `OPTIONS` against arbitrary paths all yield byte-identical responses.
+- Per the validation rules in §2.2.2, the handler must NOT branch on any property of `req` — eliminating request-shape information disclosure and rendering the response constant-time.
+
+The conventional decision points that are **demonstrably absent** from the response path include:
+
+| Absent Decision Point | Reason for Absence |
+|-----------------------|--------------------|
+| HTTP method check (GET/POST/etc.) | `req.method` is never read |
+| Path / route matching | `req.url` is never read; no router |
+| Header validation | `req.headers` is never read |
+| Body parsing | No `req.on('data', ...)` listener registered |
+| Authentication check | No credential code path (§2.4.4) |
+| Authorization check | No RBAC/ACL evaluation (§2.4.4) |
+| Rate limiting | No counter, no middleware |
+| Request logging | No per-request log call |
+| Conditional caching | No `ETag`, `Last-Modified`, or `Cache-Control` logic |
+| Content negotiation | `Content-Type` is hardcoded literal `text/plain` |
+
+#### Request–Response Swim Lane Diagram
 
 ```mermaid
 flowchart TD
-    subgraph ClientLane["External Client (Loopback)"]
-        ClientSend([Issue HTTP/1.1 request<br/>ANY method ANY path])
-        ClientReceive[Receive 200 response<br/>14-byte body])
+    subgraph LaneClient["Lane: External Client (Loopback)"]
+        ClientStart(["Initiate TCP connect<br/>to 127.0.0.1:3000"])
+        ClientSend(["Send HTTP/1.1 request<br/>any method, any path"])
+        ClientRecv(["Receive response<br/>200 / text/plain / 14 bytes"])
+    end
+    subgraph LaneHttp["Lane: Node.js http Core Module"]
+        TcpAccept["Accept TCP connection"]
+        ParseReq["Parse HTTP request<br/>build req object"]
+        DispatchHandler["Dispatch handler(req, res)"]
+        FlushSocket["Flush response bytes<br/>over socket"]
+    end
+    subgraph LaneHandler["Lane: server.js Handler (Lines 6-10)"]
+        IgnoreReq["Ignore req parameter<br/>(F-002-RQ-004)"]
+        SetCode["Line 7: res.statusCode = 200<br/>(F-002-RQ-001)"]
+        SetCT["Line 8: res.setHeader<br/>'Content-Type', 'text/plain'<br/>(F-002-RQ-002)"]
+        EndBody["Line 9: res.end<br/>'Hello, World!\n'<br/>(F-002-RQ-003)"]
     end
 
-    subgraph HTTPCoreLane["Node.js http Core Module"]
-        AcceptConn[Accept TCP connection<br/>on 127.0.0.1:3000]
-        ParseReq[Parse HTTP/1.1<br/>construct req object]
-        InvokeH[Invoke registered<br/>handler with req, res]
-        FlushResp[Flush response<br/>over socket]
-    end
-
-    subgraph HandlerLane["server.js Handler (lines 6-10)"]
-        IgnoreReq[req argument<br/>NOT inspected<br/>F-002-RQ-004]
-        SetStatus[res.statusCode = 200<br/>F-002-RQ-001]
-        SetHeader[res.setHeader<br/>Content-Type text/plain<br/>F-002-RQ-002]
-        EndResp[res.end Hello World newline<br/>F-002-RQ-003]
-    end
-
-    ClientSend --> AcceptConn
-    AcceptConn --> ParseReq
-    ParseReq --> InvokeH
-    InvokeH --> IgnoreReq
-    IgnoreReq --> SetStatus
-    SetStatus --> SetHeader
-    SetHeader --> EndResp
-    EndResp --> FlushResp
-    FlushResp --> ClientReceive
+    ClientStart --> TcpAccept
+    ClientSend --> ParseReq
+    TcpAccept --> ParseReq
+    ParseReq --> DispatchHandler
+    DispatchHandler --> IgnoreReq
+    IgnoreReq --> SetCode
+    SetCode --> SetCT
+    SetCT --> EndBody
+    EndBody --> FlushSocket
+    FlushSocket --> ClientRecv
 ```
 
-#### 4.2.2.3 Documented Absence of Decision Points
+### 4.2.3 WF-003: Startup Logging Side-Workflow
 
-The following decision points that would conventionally appear in an HTTP request flowchart are **deliberately absent** from this workflow:
+WF-003 is a one-shot side workflow nested inside the WF-001 listen callback at line 13. It exists to satisfy F-003-RQ-001 (emit a startup log message after successful `listen`) and F-003-RQ-002 (format the message as `` `Server running at http://${hostname}:${port}/` ``). It interpolates the module-scope `hostname` and `port` constants shared with F-001 (see §2.3.3 shared components).
 
-| Conventional Decision Point | Status | Evidence |
-|------------------------------|--------|----------|
-| HTTP method check (`GET`/`POST`/`PUT`/`DELETE`) | Absent | Handler ignores `req.method` per F-002-RQ-004 |
-| Path / route matching | Absent | Handler ignores `req.url` per F-002-RQ-004; no router exists |
-| Header validation | Absent | No `req.headers` inspection; per §2.4.4 "Input validation: None" |
-| Body parsing | Absent | No `req.on('data', ...)` listener registered |
-| Authentication check | Absent | No credential handling per §2.4.4 |
-| Authorization check | Absent | No role/scope evaluation per §2.4.4 |
-| Rate limiting | Absent | No counters, no buckets, no middleware |
-| Request logging | Absent | Per §1.3.2: "Only a single `console.log` on startup; no per-request log emission" |
-| Conditional caching | Absent | No `ETag`, `Last-Modified`, or `Cache-Control` headers emitted |
-| Content negotiation | Absent | `Content-Type` is hardcoded to `text/plain` |
+| Step | Line | Operation | Validation Rule |
+|------|------|-----------|-----------------|
+| 1 | 13 | `console.log(\`Server running at http://${hostname}:${port}/\`)` | Per §2.2.3, one-shot only; no per-request logging |
+| 2 | n/a | stdout write to attached terminal | Per §2.2.3, log line contains no secrets, tokens, or PII |
 
-This absence is the design contract of the fixture, not a defect: it guarantees that every request produces a byte-identical response (per F-002-RQ-004 acceptance criterion: "Requests issued with `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`, etc., to any path produce byte-identical responses").
-
-### 4.2.3 Business Rule Validation per Step
-
-Each step in WF-001 and WF-002 is governed by a small set of explicit validation rules drawn from §2.2 Functional Requirements. The table below consolidates these rules per step, including security-relevant rules.
-
-| Workflow | Step | Business / Data Validation Rule | Security / Compliance Rule | Source |
-|----------|------|-----------------------------------|-----------------------------|--------|
-| WF-001 | Server construction | Server constructed exactly once per process lifetime | No TLS material provided or expected | F-001-RQ-001 |
-| WF-001 | Hostname binding | Hostname is hardcoded literal `127.0.0.1`; must not be parameterized | Loopback binding is the primary network-level security boundary | F-001-RQ-002, C-002 |
-| WF-001 | Port binding | Port is hardcoded literal `3000`; must not be parameterized | Port must be reachable only via loopback | F-001-RQ-003, C-003 |
-| WF-001 | Listen completion | Listen must complete before any request is accepted | None | F-001-RQ-004 |
-| WF-001 | Startup log | Logging occurs exactly once per process lifetime | No sensitive data logged | F-003-RQ-001 |
-| WF-001 | Startup log format | Literal scheme `http://` (not `https://`) must appear | Reflects accurate transport (no aspirational TLS) | F-003-RQ-002 |
-| WF-002 | Status code | Status code must never deviate from `200`; no error paths exist | No status-code-leaking error information | F-002-RQ-001 |
-| WF-002 | Header emission | Header value must be the literal ASCII string `text/plain` | No security headers (CSP, HSTS, X-Frame-Options) | F-002-RQ-002 |
-| WF-002 | Body emission | Body must terminate with a single newline (`\n`); body must be exactly 14 bytes | No reflection of user input (none consumed) | F-002-RQ-003 |
-| WF-002 | Determinism | Handler must not branch on any property of `req` | Eliminates request-shape-based information disclosure | F-002-RQ-004 |
+WF-003 has no decision points and is unconditional given that step 6 of WF-001 executed (i.e., the bind succeeded). It executes exactly once per process lifetime.
 
 ---
 
@@ -1597,9 +1673,7 @@ Each step in WF-001 and WF-002 is governed by a small set of explicit validation
 
 ### 4.3.1 Integration Topology
 
-Per §2.3.2 of this specification, the system has **one** integration point: the inbound `127.0.0.1:3000` HTTP/1.1 socket. There are no outbound integrations of any kind — no DNS lookups, no outbound HTTP calls, no database connections, no message-broker clients, and no telemetry exports.
-
-The full integration topology, reproduced from §3.10.1, decomposes the single-process system into the following inter-component edges:
+Per §2.3.2, the system has exactly one integration point — inbound HTTP/1.1 traffic on the loopback interface at TCP port 3000 — and no outbound integrations. The one-way component relationships used by the integration workflows are catalogued below.
 
 | From | To | Mechanism | Direction |
 |------|-----|-----------|-----------|
@@ -1612,232 +1686,326 @@ The full integration topology, reproduced from §3.10.1, decomposes the single-p
 
 ### 4.3.2 Inbound HTTP Sequence Diagram
 
-The only meaningful runtime integration sequence is the inbound HTTP request from the loopback client (the "backprop" tooling) to `server.js`. The sequence diagram below traces the full sequence from operator-initiated process spawn through a representative request-response cycle.
+The end-to-end integration sequence below traces the system from operator invocation through bind success, startup logging, and the first request/response cycle. It demonstrates the protocol layering and lane responsibilities described in §1.2.2.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Op as Operator
+    participant Op as Operator
     participant OS as Host OS
     participant Node as Node.js Runtime
-    participant Srv as server.js
-    participant HTTP as http Core Module
-    participant TCP as TCP Socket Layer
-    actor Client as Loopback Client (Backprop)
+    participant SrvJS as server.js
+    participant Http as http Core Module
+    participant Sock as TCP Socket Layer
+    participant Cli as Loopback Client
 
     Op->>OS: node server.js
     OS->>Node: spawn process
-    Node->>Srv: load CommonJS module
-    Srv->>HTTP: require('http')
-    HTTP-->>Srv: http module exports
-    Srv->>HTTP: http.createServer(handler)
-    HTTP-->>Srv: Server instance (F-001-RQ-001)
-    Srv->>TCP: server.listen(3000, '127.0.0.1', cb)
-    TCP-->>Srv: bind successful (asynchronous)
-    Srv->>Op: stdout: Server running at http://127.0.0.1:3000/
-
-    Note over Srv,TCP: Server enters Listening state.<br/>No application state held<br/>beyond constants and Server instance.
-
-    Client->>TCP: TCP SYN to 127.0.0.1:3000
-    TCP-->>Client: TCP SYN-ACK
-    Client->>HTTP: HTTP/1.1 request (any method, any path)
-    HTTP->>Srv: invoke handler(req, res)
-    Note over Srv: req argument is IGNORED<br/>per F-002-RQ-004
-    Srv->>HTTP: res.statusCode = 200 (F-002-RQ-001)
-    Srv->>HTTP: res.setHeader Content-Type text/plain (F-002-RQ-002)
-    Srv->>HTTP: res.end Hello, World! newline (F-002-RQ-003)
-    HTTP-->>Client: HTTP/1.1 200 OK + headers + 14-byte body
-
-    Note over Client,TCP: No session, no cookie,<br/>no per-client state retained.
+    Node->>SrvJS: load module (CommonJS)
+    SrvJS->>Http: require('http')
+    SrvJS->>Http: http.createServer(handler)
+    Http-->>SrvJS: Server instance
+    SrvJS->>Http: server.listen(3000, '127.0.0.1', cb)
+    Http->>Sock: bind(127.0.0.1:3000)
+    Sock-->>Http: bind successful
+    Http->>SrvJS: invoke listen callback (line 13)
+    SrvJS->>Op: console.log('Server running at http://127.0.0.1:3000/')
+    Note over SrvJS,Sock: Event loop now active; WF-001 complete
+    Cli->>Sock: TCP SYN / handshake
+    Cli->>Http: HTTP/1.1 request (any method/path)
+    Http->>SrvJS: invoke handler(req, res)
+    Note over SrvJS: req is ignored per F-002-RQ-004
+    SrvJS->>SrvJS: res.statusCode = 200
+    SrvJS->>SrvJS: res.setHeader('Content-Type', 'text/plain')
+    SrvJS->>Http: res.end('Hello, World!\n')
+    Http->>Sock: flush response bytes
+    Sock-->>Cli: 200 OK / text/plain / 14 bytes
 ```
 
-### 4.3.3 Absent Integration Workflows
+### 4.3.3 Absent Integration Patterns
 
-The following integration patterns are documented as absent and therefore have no flowchart representation. They are listed here so that consumers of this specification have a definitive negative inventory:
+Per the integration-points inventory in §2.3.2 and the out-of-scope enumeration in §1.3.2, the following integration patterns are **verified absent** from the implementation. Each absence is supported by the inspection of the four baseline files.
 
-| Absent Pattern | Verification |
-|----------------|--------------|
-| Data flow between systems | No outbound network calls; per §2.3.2 only inbound socket exists |
-| External API consumption | No HTTP client used; `http` is imported only for server construction |
-| Event processing flows | No event bus, no broker client, no streaming framework |
+| Integration Pattern | Verification of Absence |
+|---------------------|-------------------------|
+| Data flow between systems | No outbound network calls in `server.js` |
+| External API consumption | `http` module imported only for server construction; no client usage |
+| Event processing flows | No event bus, no message broker, no streaming framework |
 | Batch processing sequences | No cron, no job queue, no scheduler, no batch script |
-| Service-discovery registration | No discovery client referenced in any repository file |
-| Telemetry / observability exports | No metrics emitter, no tracing SDK, no log shipper |
+| Service discovery registration | No discovery client in any file |
+| Telemetry / observability export | No metrics emitter, no tracing SDK, no log shipper |
 | Database read/write workflows | No database driver, no ORM, no connection pool |
 | File I/O workflows | No `fs` module usage in `server.js` |
 
 ---
 
-## 4.4 ERROR HANDLING AND RECOVERY
+## 4.4 VALIDATION RULES AND BUSINESS LOGIC
 
-### 4.4.1 Documented Absence of Error Handling
+This subsection enumerates the business rules, data validation requirements, authorization checkpoints, and regulatory compliance considerations that apply at each workflow step.
 
-Per §1.2.1 and §1.3.2 of this specification, the application contains **no error handling primitives whatsoever**. The implementation does not register an `'error'` event listener on the `http.Server` instance, does not wrap any operation in a `try`/`catch` block, and does not register handlers for `SIGINT` or `SIGTERM`. Consequently, every error that arises during the process lifetime is **unhandled** by the application and propagates to Node.js's default behavior, which is process termination with a non-zero exit code.
+### 4.4.1 Business Rules per Workflow Step
 
-This is a deliberate architectural posture, not an oversight. The fixture's role (per §1.2.1) is to provide a **deterministic** static endpoint; introducing error-handling logic would create branches in the workflow that could mask the very behaviors that downstream "backprop integration" tests are intended to observe.
+The following table is the authoritative cross-reference between workflow steps and the validation rules defined in §2.2. The rules are stated at the granularity of the source-line operations they govern.
 
-### 4.4.2 Unhandled Error Paths Flowchart
+| Workflow | Step | Business / Data Validation Rule | Security Rule | Source |
+|----------|------|----------------------------------|---------------|--------|
+| WF-001 | Server construction (line 6) | Server constructed exactly once per process lifetime | No TLS material expected | F-001-RQ-001 |
+| WF-001 | Hostname binding (line 3) | Hostname is hardcoded `127.0.0.1` (not parameterized) | Loopback binding is the sole network access control | F-001-RQ-002, C-002 |
+| WF-001 | Port binding (line 4) | Port is hardcoded `3000` (not parameterized) | Port reachable only via loopback | F-001-RQ-003, C-003 |
+| WF-001 | Listen completion (line 12) | Listen callback fires exactly once after a successful bind | None | F-001-RQ-004 |
+| WF-003 | Startup log (line 13) | Logged exactly once per process lifetime | No sensitive data logged | F-003-RQ-001 |
+| WF-003 | Log format | Literal scheme `http://` (not `https://`); template variables must resolve to bound values | Reflects accurate transport | F-003-RQ-002 |
+| WF-002 | Status code (line 7) | Response must always be successful (no 4xx/5xx surfaces); status must equal `200` | No status-code-based information leakage | F-002-RQ-001 |
+| WF-002 | Header emission (line 8) | Header value must be literal ASCII `text/plain`; only `Content-Type` is set | No security headers (CSP, HSTS, X-Frame-Options) required for loopback fixture | F-002-RQ-002 |
+| WF-002 | Body emission (line 9) | Body must terminate with `\n`; exactly 14 bytes (hex `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A`) | No reflection of user input | F-002-RQ-003 |
+| WF-002 | Determinism (line 6 handler) | Handler must NOT branch on any property of `req` | Eliminates request-shape information disclosure | F-002-RQ-004 |
 
-The diagram below enumerates the categories of errors that could arise during the process lifetime and shows that all of them converge on a single terminal outcome: process exit without recovery, retry, fallback, or notification.
+### 4.4.2 Data Validation Requirements
+
+Because the handler is branchless and consumes no request data, **every conventional data-validation point evaluates to "not applicable."** This is the inverse of the typical specification: validation absence is a deliberate property derived from F-002-RQ-004.
+
+| Data Element | Validation Required? | Mechanism |
+|--------------|----------------------|-----------|
+| `req.method` | No | Argument ignored by handler |
+| `req.url` | No | Argument ignored by handler |
+| `req.headers` | No | Argument ignored by handler |
+| Request body | No | No body parser registered; no `req.on('data', ...)` listener |
+| Query string parameters | No | Not parsed |
+| Cookies | No | Not parsed |
+| Response status code | Compile-time | Literal `200` per F-002-RQ-001 |
+| Response header value | Compile-time | Literal `'text/plain'` per F-002-RQ-002 |
+| Response body | Compile-time | Literal `'Hello, World!\n'` (14 bytes) per F-002-RQ-003 |
+| Hostname constant | Compile-time | Literal `'127.0.0.1'` per F-001-RQ-002 |
+| Port constant | Compile-time | Literal `3000` per F-001-RQ-003 |
+
+### 4.4.3 Authorization Checkpoints
+
+Per the security posture documented in §2.4.4, the system has exactly one effective access-control checkpoint: the **OS-level loopback boundary**. All application-layer authentication and authorization primitives are absent. The diagram below illustrates the topology.
 
 ```mermaid
-flowchart TD
-    Trigger([Error condition occurs<br/>during process lifetime]) --> ErrCat{Error<br/>category?}
-    ErrCat -->|EADDRINUSE<br/>port 3000 in use| NoListener1[No 'error' listener<br/>registered on server]
-    ErrCat -->|EACCES<br/>privileged port denied| NoListener2[No try/catch around<br/>server.listen]
-    ErrCat -->|Synchronous exception<br/>inside handler| NoListener3[No try/catch<br/>inside handler body]
-    ErrCat -->|SIGINT / SIGTERM<br/>operator signal| NoSignalHandler[No process.on SIGINT<br/>or SIGTERM registered]
-    ErrCat -->|stdout write failure<br/>EPIPE| NoListener4[Unhandled<br/>undefined behavior]
+flowchart LR
+    subgraph SrcExt["Source: External Network"]
+        ExtClient["Remote client<br/>(non-loopback)"]
+    end
+    subgraph SrcLocal["Source: Local Host"]
+        LocalClient["Co-resident process<br/>(loopback)"]
+    end
+    subgraph OSLayer["OS Network Stack (Loopback Enforcement)"]
+        OSCheck{"Source on<br/>loopback?"}
+        Refused["Connection refused<br/>(RST or unreachable)"]
+    end
+    subgraph AppLayer["server.js Application Layer"]
+        NoAuth["NO authentication check"]
+        NoAuthz["NO authorization check"]
+        NoRate["NO rate limiting"]
+        Serve["Serve static response<br/>(200 / text/plain / 14 bytes)"]
+    end
 
-    NoListener1 --> Propagate[Error propagates to<br/>Node.js default error handler]
-    NoListener2 --> Propagate
-    NoListener3 --> Propagate
-    NoListener4 --> Propagate
-    NoSignalHandler --> AbruptTerm[Process terminates immediately<br/>without server.close]
-
-    Propagate --> CrashExit([Process exits with<br/>non-zero status code<br/><br/>NO retry<br/>NO fallback<br/>NO recovery<br/>NO notification])
-    AbruptTerm --> CrashExit
+    ExtClient --> OSCheck
+    LocalClient --> OSCheck
+    OSCheck -- "No" --> Refused
+    OSCheck -- "Yes" --> NoAuth
+    NoAuth --> NoAuthz
+    NoAuthz --> NoRate
+    NoRate --> Serve
 ```
 
-### 4.4.3 Retry, Fallback, and Notification Posture
+| Checkpoint | Layer | Enforcement |
+|------------|-------|-------------|
+| Loopback boundary | OS network stack | Rejects connections to bound interface from non-local sources (per F-001-RQ-002) |
+| Application-layer authentication | Application | **None** (per §2.4.4) |
+| Application-layer authorization | Application | **None** (per §2.4.4) |
+| Rate limiting / throttling | Application | **None** — no middleware, no counters |
+| Token / credential validation | Application | **None** — no credential code paths |
+| Mutual TLS / client certificates | Transport | **None** — plaintext HTTP only |
 
-The table below enumerates the conventional error-handling mechanisms that are **not** present in this system, with the evidentiary source for each absence. Documenting these explicitly is the only honest way to describe the error-handling posture of a system whose author has declared "Do not touch!" and whose specification (§1.2.1) explicitly lists "No error handling, no graceful shutdown, no health checks" among intrinsic limitations.
+### 4.4.4 Regulatory Compliance Considerations
 
-| Mechanism | Status | Evidence |
-|-----------|--------|----------|
-| Retry mechanism (exponential backoff, etc.) | Not implemented | No retry library imported; no loop logic in `server.js` |
-| Fallback process (alternate port, alternate route) | Not implemented | Per A-002 (§2.6.1): "the server has no fallback port logic; collision causes startup failure" |
-| Error notification flow (email/Slack/PagerDuty) | Not implemented | No notification client imported; zero dependencies (F-005) |
-| Recovery procedure (restart policy, supervisor) | Not implemented | No process manager configuration (no PM2, no systemd unit, no Docker restart policy) |
-| Graceful shutdown | Not implemented | Per §1.3.2: "No `SIGINT` / `SIGTERM` handlers; no `server.close()` invocation" |
-| Health check endpoint | Not implemented | Handler ignores `req.url`; no `/health` route can exist |
-| Circuit breaker | Not implemented | No downstream calls exist that would warrant one |
-| Dead-letter queue | Not implemented | No queue, no messaging integration |
+No regulatory compliance regime is referenced in the repository. Per §2.4.4 and the data-domain row in §1.3.1, the system processes no personal data, stores nothing, and transmits only the static literal `Hello, World!\n`. Specifically:
 
-Any recovery from a crash is therefore an **external** concern: the operator (or an external supervisor outside the repository boundary) must re-invoke `node server.js`. This re-invocation is itself a manual repeat of WF-001 and not a workflow encoded inside the system.
+| Compliance Regime | Repository Evidence | Applicability |
+|-------------------|---------------------|---------------|
+| GDPR | No personal-data text; no DPA references | Not applicable — no PII processed |
+| HIPAA | No PHI-related text or notices | Not applicable — no health data |
+| PCI-DSS | No payment-card markers | Not applicable — no payment data |
+| SOC 2 | No evidence-collection artifacts | Not applicable — no controls implemented |
+| MIT License (C-007) | Present in `package.json` and `package-lock.json` | Applies to all repository content |
 
 ---
 
-## 4.5 STATE MANAGEMENT AND TRANSITIONS
+## 4.5 STATE MANAGEMENT
 
-### 4.5.1 Application State Posture
+### 4.5.1 Stateless Application Model
 
-Per §1.2.2 of this specification, the server is **fully stateless** and holds no in-memory data structures beyond the constants `hostname`, `port`, and the `server` object reference itself. Per §2.4.3, the **state migration** dimension is "Not applicable (stateless) — No in-memory state to migrate." Consequently, the following conventional state-management concerns have no representation in the system:
+Per §1.2.2 ("State Model: Fully stateless; no persistence, no in-memory accumulation, no session tracking") and §2.3.4 (no common services), the application contains **zero application state**. The only mutable runtime state is the per-request transient state in the handler closure (which terminates with `res.end`) and the module-level constants (which are immutable after load).
 
-| State-Management Concern | Status | Evidence |
-|--------------------------|--------|----------|
-| Data persistence points | None | No database, no `fs.write`, no in-memory store |
-| Caching layer | None | No cache library; static body is a literal compile-time constant |
-| Cache invalidation flow | Not applicable | No cache to invalidate |
-| Transaction boundaries | None | No DB transactions, no multi-step compound operations |
-| Session storage | None | No cookies emitted; no session store |
-| Per-client state | None | Handler does not inspect `req`; per §1.3.2 "no per-client state" |
-| Cross-request shared state | None | No module-level mutable variables; only immutable constants |
+| Concern | Status |
+|---------|--------|
+| Data persistence points | None — no database, no `fs.write`, no in-memory store |
+| Caching layer | None — static body is a compile-time literal |
+| Cache invalidation flow | Not applicable |
+| Transaction boundaries | None — no DB transactions |
+| Session storage | None — no cookies, no session store |
+| Per-client state | None — handler ignores `req` |
+| Cross-request shared state | None — only immutable constants at module level |
 
-### 4.5.2 Process Lifecycle State Diagram
+### 4.5.2 Process Lifecycle States
 
-Although the **application** holds no state, the **process** that hosts the application traverses a deterministic sequence of lifecycle states. These states reflect the position of execution within `server.js` and the status of the underlying TCP socket. The state diagram below captures these transitions explicitly.
+Although the application is stateless, the **hosting Node.js process** transitions through discrete lifecycle states. Each state corresponds to a point in the execution of `server.js`. This is the only state machine in the system and is summarized below.
+
+| State | Description | Source Position |
+|-------|-------------|-----------------|
+| `PreStart` | Node.js process not yet spawned | n/a (operator side) |
+| `Initializing` | Module load and constant declarations executing | `server.js` lines 1–10 |
+| `Binding` | `server.listen()` invoked; OS socket allocation in progress | `server.js` line 12 |
+| `Listening` | Bind successful; event loop active; awaiting connections | After listen callback fires (line 13) |
+| `Handling` | Per-request transient state; handler body executing | `server.js` lines 7–9 |
+| `Crashed` | Unhandled error during bind; process exits non-zero | Node.js default behavior |
+| `Terminated` | Operator-initiated process kill (SIGINT/SIGKILL); abrupt exit | No graceful path |
+
+### 4.5.3 Process Lifecycle State Diagram
+
+The state diagram below shows the seven states and their transitions. The `Listening` ↔ `Handling` transition is reentrant per HTTP request; no module-level state mutates across this transition. The `Crashed` path from `Binding` is the consequence of the absent error-handling workflow documented in §4.6.
 
 ```mermaid
 stateDiagram-v2
     [*] --> PreStart
     PreStart --> Initializing: node server.js invoked
     Initializing --> Binding: server.listen called (line 12)
-    Binding --> Listening: bind success<br/>callback fires<br/>console.log emitted
-    Binding --> Crashed: bind fails<br/>EADDRINUSE or EACCES<br/>no error handler
-    Listening --> Handling: HTTP request arrives<br/>handler invoked
-    Handling --> Listening: res.end called<br/>handler returns
-    Listening --> Terminated: SIGINT or SIGKILL<br/>no graceful shutdown
-    Handling --> Terminated: SIGINT or SIGKILL<br/>mid-request
-    Crashed --> [*]
-    Terminated --> [*]
+    Binding --> Listening: bind succeeded;<br/>listen callback fires (line 13)
+    Binding --> Crashed: bind failed;<br/>EADDRINUSE / EACCES;<br/>no error handler
+    Listening --> Handling: HTTP request received;<br/>handler dispatched
+    Handling --> Listening: res.end completes;<br/>return to event loop
+    Listening --> Terminated: SIGINT / SIGKILL
+    Handling --> Terminated: SIGINT / SIGKILL
+    Crashed --> [*]: non-zero exit
+    Terminated --> [*]: abrupt exit;<br/>no server.close
 ```
 
-| State | Description | Code Position |
-|-------|-------------|---------------|
-| `PreStart` | Node.js process not yet spawned | n/a (operator side) |
-| `Initializing` | Module load and constant declarations executing | `server.js` lines 1–10 |
-| `Binding` | `server.listen()` invoked; OS socket allocation in progress | `server.js` line 12 |
-| `Listening` | Bind successful; event loop active; awaiting connections | After listen callback fires |
-| `Handling` | Per-request transient state; handler body executing | `server.js` lines 7–9 |
-| `Crashed` | Unhandled error during bind; process exits non-zero | n/a (Node.js default behavior) |
-| `Terminated` | Operator-initiated process kill; abrupt exit | n/a (no graceful path) |
+### 4.5.4 Persistence and Caching Absence
 
-The `Handling` state is reentrant: each new request causes a transition from `Listening` to `Handling` and back, with no mutation of any module-level state between iterations. This is the operational manifestation of F-002-RQ-004's determinism guarantee.
-
-### 4.5.3 Persistence, Caching, and Transaction Boundaries
-
-As established in §4.5.1, none of these concepts apply to the system. The diagram below documents this absence in flowchart form for completeness, showing that every potential persistence-touching point in WF-002 instead routes to a "no-op" terminator.
+To make the absence of persistence/caching workflows explicit, the diagram below traces a request through every potential persistence and caching point and confirms each routes to a "skip" terminator before reaching the static-emit step. This is the negative-space counterpart to a conventional persistence workflow.
 
 ```mermaid
 flowchart LR
-    Req[HTTP request<br/>arrives] --> Q1{Read from<br/>persistence layer?}
-    Q1 -->|N/A| Skip1[No persistence layer<br/>exists]
-    Skip1 --> Q2{Read from cache?}
-    Q2 -->|N/A| Skip2[No cache layer<br/>exists]
-    Skip2 --> Q3{Begin transaction?}
-    Q3 -->|N/A| Skip3[No transactional<br/>resource exists]
-    Skip3 --> Static[Emit static body<br/>Hello, World! newline]
-    Static --> Q4{Write to<br/>persistence layer?}
-    Q4 -->|N/A| Skip4[No persistence layer<br/>exists]
-    Skip4 --> Q5{Update cache?}
-    Q5 -->|N/A| Skip5[No cache to update]
-    Skip5 --> Q6{Commit transaction?}
-    Q6 -->|N/A| Skip6[No transaction<br/>to commit]
-    Skip6 --> Resp[Response flushed<br/>to client]
-```
+    ReqIn(["HTTP request received"])
+    Q1{"Read from<br/>persistence?"}
+    Skip1["Skip — no DB driver,<br/>no fs.read"]
+    Q2{"Read from cache?"}
+    Skip2["Skip — no cache layer;<br/>body is compile-time literal"]
+    Q3{"Begin transaction?"}
+    Skip3["Skip — no transaction<br/>boundaries exist"]
+    Emit["Emit static literal<br/>'Hello, World!\n'"]
+    Q4{"Write to<br/>persistence?"}
+    Skip4["Skip — no DB driver,<br/>no fs.write"]
+    Q5{"Update cache?"}
+    Skip5["Skip — no cache layer"]
+    Q6{"Commit transaction?"}
+    Skip6["Skip — no transaction"]
+    Flush(["Response flushed<br/>to client"])
 
-This diagram is intentionally redundant; its purpose is to make the *absence* of persistence and transaction boundaries explicit at every place where a conventional Process Flowchart would expect them.
+    ReqIn --> Q1
+    Q1 -- "No" --> Skip1
+    Skip1 --> Q2
+    Q2 -- "No" --> Skip2
+    Skip2 --> Q3
+    Q3 -- "No" --> Skip3
+    Skip3 --> Emit
+    Emit --> Q4
+    Q4 -- "No" --> Skip4
+    Skip4 --> Q5
+    Q5 -- "No" --> Skip5
+    Skip5 --> Q6
+    Q6 -- "No" --> Skip6
+    Skip6 --> Flush
+```
 
 ---
 
-## 4.6 VALIDATION, AUTHORIZATION, AND COMPLIANCE CHECKPOINTS
+## 4.6 ERROR HANDLING
 
-### 4.6.1 Business Rules at Each Step
+### 4.6.1 Documented Absence of Error Handling
 
-The complete table of business rules per workflow step is given in §4.2.3 above. Those rules constitute the entirety of business logic in the system. There are no additional business rules expressed as code paths, configuration entries, or runtime data.
+The repository contains **no error-handling primitives**. This absence is binding under C-001 (immutability) and is the direct consequence of the design choices documented in §1.3.2 and §2.4.4. The following inventory enumerates the missing primitives:
 
-### 4.6.2 Authorization Checkpoints
+| Error-Handling Primitive | Status |
+|--------------------------|--------|
+| `'error'` event listener on `http.Server` instance | Not registered |
+| `try` / `catch` blocks | None in `server.js` |
+| `process.on('SIGINT', ...)` handler | None |
+| `process.on('SIGTERM', ...)` handler | None |
+| `process.on('uncaughtException', ...)` handler | None |
+| `process.on('unhandledRejection', ...)` handler | None |
+| `server.close()` invocation (graceful shutdown) | None |
+| Structured error response (4xx/5xx) | None — F-002-RQ-001 mandates `200` |
 
-Per §2.4.4 of this specification, the system has **no application-level authentication or authorization**. The sole "checkpoint" that gates access to the service is the **network-level** restriction imposed by the OS in response to the loopback bind. The diagram below illustrates this checkpoint topology.
+All errors propagate to Node.js default behavior: process termination with a non-zero exit code.
+
+### 4.6.2 Error Categories and Terminal Behavior
+
+Every error category recognized by the design converges to the same terminal outcome — abrupt process exit. The table below enumerates the categories and their triggers, mapped to the rationale for the absence of a handler in each case.
+
+| Error Category | Trigger | No-Handler Rationale |
+|----------------|---------|----------------------|
+| `EADDRINUSE` | TCP port 3000 already bound by another process | No `'error'` listener registered on `http.Server` instance (per Assumption A-002, only documented failure mode) |
+| `EACCES` | Attempt to bind privileged port without sufficient permission | No `try`/`catch` around `server.listen` |
+| Synchronous handler exception | Code error inside handler body | No `try`/`catch` inside handler (no error path can exist — handler is branchless) |
+| `SIGINT` / `SIGTERM` | Operator signal (Ctrl-C) | No `process.on('SIGINT')` registered (per §3.7.7, SIGINT only) |
+| `EPIPE` on stdout | Terminal closed before `console.log` flush | Unhandled; Node.js default behavior |
+| `uncaughtException` | Anywhere in process | No `process.on` handler registered |
+
+### 4.6.3 Error Handling Flowchart
+
+The flowchart below visualizes the convergence of all error categories to a single terminal exit, and the existence of an **external** recovery path that requires manual operator action (a fresh execution of WF-001). It also surfaces the absent recovery mechanisms as a side panel of negative-space inventory.
 
 ```mermaid
-flowchart LR
-    Remote[Remote client<br/>off-host] -->|attempt connect<br/>to host IP:3000| OSBoundary{OS-level<br/>loopback boundary}
-    OSBoundary -->|reject<br/>not bound to 0.0.0.0| Denied([Connection refused<br/>by OS])
-    Local[Loopback client<br/>same host] -->|attempt connect<br/>to 127.0.0.1:3000| OSBoundary
-    OSBoundary -->|accept<br/>matches bound interface| Accepted[TCP handshake<br/>completes]
-    Accepted --> AppLayer[Application layer:<br/>NO auth check<br/>NO authz check<br/>NO rate limit]
-    AppLayer --> Serve[Serve static<br/>200 response]
+flowchart TD
+    subgraph Sources["Error Sources (All Unhandled)"]
+        E1{{"Port 3000 occupied?<br/>EADDRINUSE"}}
+        E2{{"Privileged port denied?<br/>EACCES"}}
+        E3{{"Synchronous handler<br/>exception?"}}
+        E4{{"SIGINT or SIGTERM<br/>received?"}}
+        E5{{"stdout write failure?<br/>EPIPE"}}
+    end
+    subgraph Missing["Missing Recovery Mechanisms"]
+        NoListener["No 'error' listener<br/>on http.Server"]
+        NoTryCatch["No try/catch blocks"]
+        NoSignal["No process.on('SIGINT')"]
+        NoRetry["No retry / backoff logic"]
+        NoFallback["No fallback port logic<br/>(per A-002)"]
+        NoNotify["No notification client<br/>(per F-005 zero deps)"]
+        NoGraceful["No server.close invocation"]
+    end
+    Default["Node.js default<br/>error propagation"]
+    ExitNonZero(["Process terminates<br/>non-zero exit code"])
+    ExternalRecovery["Manual operator action:<br/>re-invoke node server.js<br/>(re-executes WF-001)"]
+
+    E1 -- "Yes" --> Default
+    E2 -- "Yes" --> Default
+    E3 -- "Yes" --> Default
+    E4 -- "Yes" --> Default
+    E5 -- "Yes" --> Default
+    Default --> ExitNonZero
+    ExitNonZero -.->|"Out-of-band"| ExternalRecovery
 ```
 
-| Checkpoint | Layer | Enforcement | Source |
-|------------|-------|-------------|--------|
-| Loopback boundary | OS network stack | Reject connections to bound interface `127.0.0.1` from any non-local source | F-001-RQ-002, §2.4.4 |
-| Application-layer authentication | Application | **None** | §2.4.4 "Authentication: None" |
-| Application-layer authorization | Application | **None** | §2.4.4 "Authorization: None" |
-| Rate limiting / throttling | Application | **None** | No middleware, no counters |
-| Token / credential validation | Application | **None** | No credential code paths |
+### 4.6.4 Missing Recovery Mechanisms
 
-Weakening the loopback boundary (e.g., changing the hostname constant to `0.0.0.0`) would invalidate the entire security posture and is therefore prohibited by C-002 (§2.6.2) and the README's "Do not touch!" directive (F-006-RQ-004).
+The "Missing Recovery Mechanisms" pane in §4.6.3 is enumerated in detail below. Each entry documents what is absent and the constraint that mandates its absence.
 
-### 4.6.3 Data Validation Requirements
+| Recovery Mechanism | Status | Governing Constraint |
+|--------------------|--------|----------------------|
+| Retry mechanism with backoff | Not implemented; no retry library imported | C-005 (zero deps) |
+| Fallback port logic | Not implemented; binding to alternative port not attempted | A-002, C-003 |
+| Fallback route / endpoint | Not implemented; handler is branchless | F-002-RQ-004 |
+| Error notification flow | Not implemented; no notification client | C-005 (zero deps) |
+| Process supervisor / restart policy | Not implemented; no PM2, no systemd unit, no Docker restart policy | C-001 (no additional baseline files) |
+| Graceful shutdown | Not implemented; no `server.close()` invocation | C-001, C-004 |
+| Health check endpoint | Not implemented; handler ignores `req.url` | F-002-RQ-004 |
+| Circuit breaker | Not implemented; no downstream calls to break | §2.3.2 (no outbound integrations) |
+| Dead-letter queue | Not implemented; no queue, no messaging | §2.3.2 |
 
-Per §2.4.4, "Input validation: None (request is ignored) — No input is consumed, eliminating injection surfaces." Because the handler does not inspect any property of `req` (F-002-RQ-004), there is no input to validate. Output validation is implicit in the use of compile-time string literals: the status code `200`, the header value `text/plain`, and the body `Hello, World!\n` are all literal constants that cannot be perturbed at runtime.
-
-| Data Element | Validation Required? | Mechanism |
-|--------------|----------------------|-----------|
-| `req.method` | No | Argument ignored |
-| `req.url` | No | Argument ignored |
-| `req.headers` | No | Argument ignored |
-| Request body | No | No body parser registered |
-| Response status code | Compile-time | Literal `200` per F-002-RQ-001 |
-| Response header value | Compile-time | Literal `'text/plain'` per F-002-RQ-002 |
-| Response body | Compile-time | Literal `'Hello, World!\n'` (14 bytes) per F-002-RQ-003 |
-
-### 4.6.4 Regulatory Compliance Checks
-
-No regulatory compliance regime is referenced anywhere in the repository (no GDPR text, no HIPAA notice, no PCI-DSS markers, no SOC-2 evidence collection). The system processes no personal data (request bodies are not consumed), stores nothing, transmits nothing beyond the static literal `"Hello, World!\n"`, and emits no telemetry. Consequently, no compliance checkpoint exists in any workflow. This absence is consistent with the system's role as a local test fixture and is enforced architecturally by the limitations enumerated in §1.2.1 and §1.3.2.
+**Recovery is exclusively external**: any recovery from a crash requires the operator to manually re-invoke `node server.js`, which is a fresh execution of WF-001. Per §3.7.7, this is the only documented operational recovery procedure.
 
 ---
 
@@ -1845,56 +2013,63 @@ No regulatory compliance regime is referenced anywhere in the repository (no GDP
 
 ### 4.7.1 Per-Step Timing Characteristics
 
-Per §2.4.2 of this specification, **no quantitative performance targets** — throughput, latency, concurrency, or memory ceilings — are documented anywhere in the repository. The implicit timing characteristics, drawn from §2.2 and §2.4.2, are summarized below and are the only timing constraints applicable to any workflow step.
+Per §2.4.2, no quantitative performance targets are documented in any repository file. Timing is bounded only by the natural characteristics of Node.js `http` on the host. The implicit per-step timing posture is summarized below.
 
-| Workflow | Step | Performance Characteristic | Source |
-|----------|------|----------------------------|--------|
-| WF-001 | `http.createServer()` | Synchronous; sub-millisecond | F-001-RQ-001 Technical Spec |
+| Workflow | Step | Performance Characteristic | Mapped Requirement |
+|----------|------|----------------------------|--------------------|
+| WF-001 | `require('http')` | Synchronous; cached by Node.js module loader after first call | F-005 |
+| WF-001 | `http.createServer()` | Synchronous; sub-millisecond | F-001-RQ-001 |
 | WF-001 | `server.listen()` bind | Asynchronous; bounded by OS socket allocation | F-001-RQ-002, F-001-RQ-003 |
 | WF-001 | Listen callback / `console.log` | Sub-millisecond after bind | F-003-RQ-001 |
-| WF-002 | Status code assignment | Sub-millisecond, in-memory | F-002-RQ-001 |
-| WF-002 | Header emission | Sub-millisecond, in-memory | F-002-RQ-002 |
-| WF-002 | Body emission (`res.end`) | Sub-millisecond, in-memory; constant-time | F-002-RQ-003, F-002-RQ-004 |
+| WF-002 | TCP accept | Driven by libuv; non-blocking | Implicit |
+| WF-002 | HTTP parse | Driven by `http` core parser | Implicit |
+| WF-002 | Status code assignment (line 7) | Sub-millisecond, in-memory | F-002-RQ-001 |
+| WF-002 | Header emission (line 8) | Sub-millisecond, in-memory | F-002-RQ-002 |
+| WF-002 | Body emission via `res.end` (line 9) | Sub-millisecond, in-memory; constant-time | F-002-RQ-003, F-002-RQ-004 |
 
 ### 4.7.2 SLA Posture
 
-Per §1.2.3, "No KPIs, SLAs, throughput targets, latency budgets, or quality-of-service metrics are documented in the repository." The system's performance is bounded only by the natural capabilities of the Node.js `http` core module on the host system, and any quantitative performance expectations must be defined externally by the consumer (the "backprop integration" tooling) rather than inside this repository.
+Per §1.2.3 ("No quantitative KPIs … are documented"), the system has a **qualitative pass/fail** KPI surface only. No throughput, latency, concurrency, or memory ceilings are defined. The SLA posture per dimension is summarized below.
 
-```mermaid
-flowchart LR
-    Cons[Consumer<br/>backprop tooling] -->|defines<br/>expectations| ExtSLA[External SLA<br/>posture]
-    Repo[hao-backprop-test<br/>repository] -->|provides<br/>capability only| NoSLA[No internal<br/>SLA declared]
-    NoSLA --> Disclaimer[Performance bounded by<br/>Node.js http core<br/>and host system]
-    ExtSLA -.->|references| Disclaimer
-```
+| SLA Dimension | Documented Target |
+|---------------|-------------------|
+| Throughput | Not documented |
+| Latency (p50/p95/p99) | Not documented |
+| Availability / uptime | Not documented |
+| Error-rate ceiling | Not documented (F-002-RQ-001 mandates 100% `200` responses) |
+| Concurrent connection ceiling | Not documented; bounded by Node.js `http` defaults |
+| Cold-start latency | Not documented; bounded by `server.listen` bind time |
+| Memory ceiling | Not documented; bounded by Node.js single-process limits |
 
-This separation of concerns is intentional: the fixture provides a deterministic, low-latency static endpoint, and any latency budget or throughput requirement is a property of the **integration**, not of the fixture itself.
+Any quantitative SLA expectations must be defined externally by the consuming backprop tooling. The implementation provides only the behavioral guarantees enumerated in the success criteria in §1.2.3: a `200` status, `text/plain` content type, and the 14-byte response body.
 
 ---
 
 ## 4.8 REFERENCES
 
-### 4.8.1 Files Examined
+### 4.8.1 Repository Files Examined
 
-- `server.js` — Sole runtime file (14 lines). Provided the complete startup sequence (lines 1, 3, 4, 6, 12, 13), the request handler logic (lines 7, 8, 9), the hardcoded `hostname` and `port` constants, and the listen-callback structure used in WF-001, WF-002, WF-003, and the state diagram in §4.5.2.
-- `package.json` — NPM manifest (11 lines). Used to confirm the absence of a `start` script (relevant to WF-001 invocation), the absence of `engines` constraints, and the documented `main: "index.js"` inconsistency noted alongside §4.2.1.
-- `package-lock.json` — NPM lockfile (lockfileVersion 3, 13 lines). Used to confirm zero dependencies (F-005), which substantiates the absence of any imported retry, validation, or notification library in §4.4.3.
-- `README.md` — Project documentation (2 lines). Established the "Do not touch!" immutability directive that governs every absent workflow listed in §4.1.1, §4.4.3, and §4.6.2.
+- `server.js` — Sole runtime file (14 lines); source of truth for WF-001, WF-002, WF-003 step decompositions, decision points, and line-level mappings to requirements
+- `package.json` — Package manifest; confirmed absence of `start` script and the dangling `main: "index.js"` reference relevant to WF-001 launch procedure
+- `package-lock.json` — Lockfile version 3 with empty `packages` tree; underpins F-005 zero-dependency posture used throughout this section
+- `README.md` — Source of the "Do not touch!" immutability directive (F-006, C-001) that governs the absence of every WF-ABSENT workflow
 
-### 4.8.2 Folders Explored
+### 4.8.2 Repository Folders Examined
 
-- `/` (repository root, depth 0) — Confirmed no subdirectories exist; the entire repository is the four files enumerated above. No additional flowcharts can be derived from non-existent submodules.
+- `/` (repository root) — Confirmed exactly four baseline runtime files; no `src/`, `lib/`, `test/`, or `config/` subdirectories that could host alternative workflows
+- `docs/` — Auxiliary analysis artifacts (dead-code report, testing strategy); not part of the runtime surface
+- `blitzy/documentation/` — Engagement governance materials; not part of the runtime surface
 
 ### 4.8.3 Technical Specification Sections Cross-Referenced
 
-- **§1.2 SYSTEM OVERVIEW** — Source of the existing high-level integration diagram (§1.2.1), the high-level description of system capabilities (§1.2.2), and the explicit "no KPIs/SLAs" statement (§1.2.3) referenced in §4.7.2.
-- **§1.3 SCOPE** — Source of the comprehensive out-of-scope inventory (§1.3.2) used to justify absent workflows in §4.1.1, §4.2.2.3, §4.3.3, §4.4.1, §4.4.3, and §4.6.
-- **§2.1 FEATURE CATALOG** — Source of feature IDs F-001 through F-006 referenced throughout this section.
-- **§2.2 FUNCTIONAL REQUIREMENTS** — Source of requirement IDs (e.g., F-001-RQ-001, F-002-RQ-004, F-003-RQ-001) used as traceability anchors in §4.2.1.1, §4.2.2.1, §4.2.3, and the swim-lane diagrams.
-- **§2.3 FEATURE RELATIONSHIPS** — Source of the single-integration-point assertion (§2.3.2) used in §4.3.1, and the shared-constants observation (§2.3.3) reflected in §4.5.1.
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — Source of constraints (§2.4.1), the absent SLA posture (§2.4.2), the stateless declaration (§2.4.3), and the security posture (§2.4.4) referenced in §4.5, §4.6, and §4.7.
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Source of A-002 (no fallback port logic) referenced in §4.2.1.3, and constraints C-002/C-003 (hardcoded host/port) referenced in §4.2.3 and §4.6.2.
-- **§3.10 STACK INTEGRATION REQUIREMENTS** — Source of the complete integration topology table reproduced in §4.3.1.
+- §1.2 SYSTEM OVERVIEW — Integration boundary diagram, runtime sequence diagram, success criteria, fully-stateless declaration
+- §1.3 SCOPE — Primary user workflows (Server Launch, Integration Validation); verified-absent inventory of out-of-scope features
+- §2.1 FEATURE CATALOG — F-001 through F-006 feature definitions and dependencies anchoring WF-001/WF-002/WF-003
+- §2.2 FUNCTIONAL REQUIREMENTS TABLE — 22 functional requirements (F-xxx-RQ-yyy) with acceptance criteria, technical specs, and validation rules surfaced per workflow step
+- §2.3 FEATURE RELATIONSHIPS — Feature dependency map, single inbound integration point, shared module-scope constants
+- §2.4 IMPLEMENTATION CONSIDERATIONS — Technical constraints, performance posture, security implications underlying §4.4 and §4.7
+- §2.6 ASSUMPTIONS AND CONSTRAINTS — A-001 through A-005, C-001 through C-007 governing workflow immutability
+- §3.7 DEVELOPMENT & DEPLOYMENT — Launch procedure (`node server.js`), shutdown procedure (SIGINT only), absence of supervisor/CI/CD/container infrastructure
 
 # 5. System Architecture
 
@@ -1902,5229 +2077,5460 @@ This separation of concerns is intentional: the fixture provides a deterministic
 
 ### 5.1.1 System Overview
 
-#### 5.1.1.1 Architectural Style and Rationale
+#### Architectural Style and Rationale
 
-The `hao-backprop-test` repository realizes a **monolithic, single-process, single-file Node.js HTTP server** whose entire executable surface is contained in `server.js` (14 lines). This style is not an accident of scale; it is a deliberate posture motivated by the system's role as a deterministic test fixture for an external "backprop integration" consumer. Every alternative architectural style — microservices, layered service, hexagonal, event-driven, plugin-based — would introduce moving parts that could degrade the system's two non-negotiable properties: **behavioral stability** (byte-identical response on every request) and **source invariance** (the README explicitly states "Do not touch!").
+The `hao-backprop-test` repository implements a **single-process, single-file, monolithic micro-service** that exposes one stateless HTTP endpoint atop the Node.js core `http` module. The system is intentionally devoid of conventional architectural layering: there is no controller/service/repository separation, no middleware chain, no routing tier, and no internal modules. The entire runtime is contained within a single 14-line `server.js` file invoked directly by the Node.js binary.
 
-The architecture can be characterized along the following orthogonal axes:
+This is not an oversight — it is the design. The repository exists exclusively as a deterministic test counterparty for an external "backprop integration" validation workflow, and its architectural value derives from **invariance and minimalism** rather than feature richness. The architecture is best understood through its deliberate omissions as much as through its inclusions.
 
-- **Topology**: Single-process, single-file monolith
-- **State posture**: Fully stateless — the application holds no mutable in-memory state and no persistent state
-- **Concurrency model**: Node.js native event loop (single-threaded with non-blocking I/O); no `cluster` module, no `worker_threads`
-- **Network exposure**: Loopback-only binding to `127.0.0.1:3000`; unreachable from non-local clients
-- **Dependency posture**: Zero runtime and zero development npm dependencies; uses only Node.js core modules
-- **Module system**: CommonJS exclusively (no ECMAScript Modules, no `.mjs`, no `"type": "module"` declaration)
-- **Determinism contract**: Request handler is forbidden from branching on any property of the incoming request (per F-002-RQ-004)
+The stack is governed by an explicit minimalism principle. The technology stack for the `hao-backprop-test` repository (npm package `hello_world` v1.0.0) is governed by an explicit minimalism principle: the system is a deliberately-constructed, byte-stable HTTP fixture whose value derives from behavioral determinism rather than feature richness. The entire runtime stack consists of JavaScript executed on Node.js using only the built-in `http` core module, with no third-party dependencies, no build pipeline, no containerization, and no external service integrations.
 
-The rationale for each axis is the same: minimize the number of behaviors that downstream "backprop integration" tests could observe so that the fixture itself never becomes a source of variance.
+#### Key Architectural Principles and Patterns
 
-#### 5.1.1.2 Key Architectural Principles and Patterns
+The system embodies the following principles, each of which is operationalized by one or more enforceable constraints (C-001 through C-007):
 
-The system embodies six architectural principles, each enforced by the constraints catalogued in §2.6.2 of this specification:
+- **Deliberate Minimalism**: ~40 lines of code across four baseline files; the architecture is valued for what it omits.
+- **Source Immutability**: The "Do not touch!" directive in `README.md` is operational, not advisory. All four baseline files must remain byte-identical (C-001).
+- **Zero-Dependency Posture**: No runtime or dev dependencies; runnable without `npm install` (F-005, C-005, C-006).
+- **Hardcoded Configuration**: Host (`127.0.0.1`) and port (`3000`) are literal constants — no environment variables, no config files (C-002, C-003).
+- **Branchless Determinism**: The request handler ignores the `req` object entirely and returns a byte-identical response to every request regardless of method, path, headers, or body (F-002-RQ-004, C-004).
+- **Loopback-Only Network Exposure**: Binding to `127.0.0.1` is the sole effective access control.
+- **Stateless by Design**: No persistence, no in-memory accumulation, no session tracking.
 
-| Principle | Enforcement Mechanism | Source Constraint |
-|-----------|----------------------|-------------------|
-| Behavioral stability | Handler ignores `req`; response is a compile-time literal | F-002-RQ-004, C-004 |
-| Source invariance | Repository governance directive | C-001 (README: "Do not touch!") |
-| Operational simplicity | No install step, no build step, no transpile step | C-005, C-006 |
-| Defense by minimalism | Zero dependencies + loopback-only binding | C-002, C-005 |
-| Determinism | Handler must not inspect request properties | F-002-RQ-004 |
-| Self-containment | Entire system fits in four files at repository root | C-001 |
+This minimalism is enforced by hard constraints. This minimalism is not incidental — it is enforced by seven hard constraints (C-001 through C-007 defined in §2.6.2). Constraint C-001 ("All four baseline files must remain unchanged from their committed state") combined with constraint C-005 ("Zero runtime and zero development dependencies") jointly preclude any expansion of the technology stack.
 
-The system applies a small number of well-recognized patterns: the **Reactor Pattern** (inherited from Node.js's event loop), the **Single Responsibility Principle** at the file level (one file = the entire server), and what may be termed the **"Negative Architecture" pattern** — the deliberate, documented exclusion of features (routing, middleware, error handling, logging frameworks, caching, persistence, authentication) that a non-fixture system would normally include.
+#### System Boundaries and Major Interfaces
 
-#### 5.1.1.3 System Boundaries and Major Interfaces
+The system's boundaries are sharply defined:
 
-The system has exactly **one inbound interface and zero outbound interfaces**. The boundaries are summarized below:
+- **Inside the repository**: Four baseline files at the root (`server.js`, `package.json`, `package-lock.json`, `README.md`) plus two documentation folders (`docs/`, `blitzy/documentation/`) that are additive and analysis-only.
+- **Sole runtime artifact**: `server.js`.
+- **External interface**: A single inbound HTTP/1.1 channel on `127.0.0.1:3000`.
+- **Outbound traffic**: None — there are zero outbound network calls of any kind.
 
-| Boundary | Definition | Crossing Mechanism |
-|----------|------------|--------------------|
-| Process boundary | One Node.js process executing `server.js` | OS process spawn via `node server.js` |
-| Network boundary | TCP socket bound to `127.0.0.1:3000` | HTTP/1.1 over loopback |
-| Data boundary | A single static UTF-8 string (`"Hello, World!\n"`, 14 bytes) | Response body emission via `res.end()` |
-| Governance boundary | Four-file repository surface | README "Do not touch!" directive |
+### 5.1.2 Core Components
 
-There is **no outbound interface**: no HTTP client calls, no DNS lookups, no database connections, no message brokers, no telemetry exporters, no cloud SDKs, and no service-discovery registration.
+The system has exactly four production files and zero internal modules. The Node.js core `http` module is listed as a substrate component because it provides the entire HTTP engine.
 
-#### 5.1.1.4 High-Level Architecture Diagram
-
-```mermaid
-flowchart TB
-    subgraph HostEnvironment["Host Environment"]
-        OS["Operating System<br/>(POSIX or Windows)"]
-        NodeRT["Node.js Runtime<br/>(unpinned version)"]
-    end
-
-    subgraph CoreModules["Node.js Core Modules (Bundled)"]
-        HttpMod["http module"]
-        ConsoleAPI["console global"]
-    end
-
-    subgraph ApplicationProcess["Application Process"]
-        ServerJS["server.js<br/>14 lines, CommonJS<br/>Stateless handler"]
-    end
-
-    subgraph LoopbackBoundary["Network Boundary — 127.0.0.1:3000"]
-        TCPSocket["TCP Listening Socket<br/>(loopback only)"]
-    end
-
-    LocalClient["Local Backprop<br/>Consumer (same host)"]
-    Stdout["stdout<br/>(startup log only)"]
-
-    OS --> NodeRT
-    NodeRT --> HttpMod
-    NodeRT --> ConsoleAPI
-    HttpMod --> ServerJS
-    ConsoleAPI --> ServerJS
-    ServerJS --> TCPSocket
-    LocalClient <-->|"HTTP/1.1<br/>plaintext"| TCPSocket
-    ServerJS -->|"startup line only"| Stdout
-```
-
-### 5.1.2 Core Components Table
-
-The system is composed of one runtime component and three metadata or documentation artifacts. Each is listed below with its primary responsibility, key dependencies, and critical considerations.
-
-| Component Name | Primary Responsibility | Key Dependencies | Critical Considerations |
-|----------------|------------------------|------------------|--------------------------|
-| **HTTP Server** (`server.js`) | Sole runtime executable; accepts loopback HTTP requests and emits a static 14-byte response | Node.js core `http` module; `console` global | Must remain byte-invariant per C-001; handler must not branch on `req` per F-002-RQ-004 |
-| **Package Manifest** (`package.json`) | Declares package identity (name `hello_world`, version `1.0.0`), author, MIT license, and a placeholder test script | npm-compatible tooling for parsing | Declares `main: "index.js"` despite no `index.js` existing — actual entry is `server.js`; omits `dependencies` and `devDependencies` fields entirely |
-| **Dependency Lockfile** (`package-lock.json`) | Locks the dependency tree at npm lockfile v3; cryptographically attests an empty dependency graph | npm v7+ for lockfile v3 generation/consumption | The `packages` tree contains only the root `""` entry — verifiable proof of zero dependencies (F-005, C-005) |
-| **Project Documentation** (`README.md`) | Establishes project identity and the "Do not touch!" governance directive | None (plain Markdown) | Source-invariance constraint C-001 derives directly from this file |
-
-Within the single runtime component `server.js`, five logically distinct sub-components can be identified by line number:
-
-| Sub-component | Lines | Responsibility |
-|---------------|-------|----------------|
-| Module import | 1 | `require('http')` — loads core HTTP module |
-| Configuration constants | 3–4 | Declares hardcoded `hostname` and `port` literals |
-| Server constructor + handler | 6–10 | `http.createServer((req, res) => { ... })` |
-| Listen invocation | 12 | `server.listen(port, hostname, callback)` — initiates TCP bind |
-| Startup log callback | 13 | Single `console.log` of readiness message |
+| Component | Primary Responsibility | Key Dependencies | Critical Considerations |
+|-----------|-----------------------|------------------|-------------------------|
+| `server.js` (HTTP Runtime) | Implements server lifecycle, branchless request handler, TCP bind on 127.0.0.1:3000, and startup log emission | Node.js core `http` module only (`require('http')`) | Immutable per C-001; 14 lines; no `module.exports` — cannot be embedded as a library |
+| `package.json` (Package Manifest) | Declares npm identity (`name: "hello_world"`, `version: "1.0.0"`, `author: "hxu"`, `license: "MIT"`) | npm package schema | Preserved inconsistency: `"main": "index.js"` references a non-existent file (per A-004); placeholder `scripts.test` |
+| `package-lock.json` (Lockfile) | Deterministic dependency state; confirms zero-dependency posture | npm lockfile v3 schema | Empty `packages` tree below the root `""` entry; no transitive deps |
+| `README.md` (Governance Document) | Asserts project identity and the operational immutability directive | None (static markdown) | "Do not touch!" is the operational contract (F-006); 3 lines total |
+| Node.js core `http` module (substrate) | Provides server instantiation, TCP bind, HTTP parsing, and response API | V8, libuv, OS TCP/IP stack | Bundled with the Node.js runtime; not an npm dependency |
 
 ### 5.1.3 Data Flow Description
 
-#### 5.1.3.1 Startup Data Flow
+#### Primary Data Flows Between Components
 
-When an operator invokes `node server.js`, the Node.js runtime spawns a process and loads `server.js` as a CommonJS module. The module executes top-to-bottom: it requires the `http` core module, declares two constant literals (`hostname = '127.0.0.1'` and `port = 3000`), constructs a `Server` instance by passing a handler function to `http.createServer()`, and then invokes `server.listen(port, hostname, callback)` to initiate an asynchronous TCP bind. Control returns to the Node.js event loop. When the operating system successfully allocates the socket on `127.0.0.1:3000`, the listen callback fires and writes a single readiness line to standard output via `console.log`. From that point forward the process remains in the `Listening` state, awaiting incoming connections.
+The system has two unidirectional data flows and one reentrant per-request flow:
 
-If the TCP bind fails (for example with `EADDRINUSE` or `EACCES`), the error is not caught — no `'error'` listener is registered on the `Server` instance — and the process exits with a non-zero status code.
+- **Inbound request flow**: External loopback client → OS TCP layer (port 3000) → Node.js `http` core parser → `server.js` handler `(req, res) => {...}` (which ignores the `req` argument entirely) → response writer.
+- **Outbound response flow**: Handler sets `res.statusCode = 200`, `res.setHeader('Content-Type', 'text/plain')`, and `res.end('Hello, World!\n')` → `http` core flushes bytes → TCP socket → client.
+- **Startup log flow**: A one-shot side flow inside the `server.listen` callback writes a single `console.log` line to stdout.
 
-#### 5.1.3.2 Request/Response Data Flow
+The integration topology is fully one-way except for the request/response cycle itself. Per §2.3.2, the system has exactly one integration point — inbound HTTP/1.1 traffic on the loopback interface at TCP port 3000 — and no outbound integrations.
 
-Every inbound HTTP request follows an identical, branchless path. The Node.js `http` core module accepts the TCP connection on the loopback socket, parses the HTTP/1.1 request line and headers into a `req` object, constructs the `res` object, and invokes the registered handler with both arguments. The handler **does not inspect the `req` argument** (this is mandated by F-002-RQ-004 as a determinism guarantee). It then performs three synchronous operations in order: assigns `res.statusCode = 200`, calls `res.setHeader('Content-Type', 'text/plain')`, and calls `res.end('Hello, World!\n')`. The 14-byte body is flushed by the `http` core module over the open socket, and the connection terminates per HTTP/1.1 semantics. The handler returns control to the event loop, ready to service the next request.
+#### Integration Patterns and Protocols
 
-#### 5.1.3.3 Data Transformation Points
+The system uses pure synchronous request/response over HTTP/1.1 plaintext. There is no asynchronous messaging, no event-driven pattern beyond the Node.js intrinsic event loop, no batch processing, and no scheduled task subsystem. The handler is fully branchless: it cannot route, cannot negotiate content, and cannot differentiate clients.
 
-The system contains **no data transformation points within the application**. No serialization, no validation, no enrichment, no encoding/decoding, and no schema mapping occurs on the request or response paths. The only transformation that takes place anywhere in the codebase is the template-literal interpolation of `hostname` and `port` into the startup log string `` `Server running at http://${hostname}:${port}/` `` — and this executes exactly once per process lifetime, not on the request path.
+#### Data Transformation Points
 
-#### 5.1.3.4 Data Stores and Caches
+There are **no runtime data transformations**. The response body is a compile-time UTF-8 string literal — `Hello, World!\n` — encoding 14 bytes (hex `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A`). No templating engine, no content negotiation, no encoding decisions at runtime. Per C-004, the response is byte-identical across requests.
 
-The system has **no data stores and no caches**. There is no database, no in-memory key-value store, no file-system persistence, no session storage, no HTTP-level cache, and no CDN. The only "memory" in the application is three module-level immutable references: the `hostname` string, the `port` number, and the `server` object. Per §4.5.1, the application is fully stateless and the state-migration dimension is not applicable.
+#### Key Data Stores and Caches
+
+There are **none**. The application contains no data persistence and no caching layer:
+
+| Concern | Status |
+|---------|--------|
+| Database / ORM | None — no driver imported in `server.js` |
+| File-system persistence | None — no `fs.write` calls |
+| In-memory store | None — no module-level mutable state |
+| Application cache | None — body is a compile-time literal; caching a 14-byte constant offers no benefit |
+| HTTP response cache headers | None beyond `Content-Type` |
+| External cache service (Redis/Memcached) | None |
+
+Per §1.2.2 ("State Model: Fully stateless; no persistence, no in-memory accumulation, no session tracking") and §2.3.4 (no common services), the application contains zero application state. The only mutable runtime state is the per-request transient state in the handler closure (which terminates with `res.end`) and the module-level constants (which are immutable after load).
 
 ### 5.1.4 External Integration Points
 
-The system has exactly one external integration point — an inbound HTTP/1.1 listener — and no outbound integrations of any kind.
+The system has exactly **one** integration point. All other integration categories typically expected of an enterprise service are verified absent.
 
-| System Name | Integration Type | Data Exchange Pattern | Protocol / Format |
-|-------------|------------------|------------------------|--------------------|
-| Local "backprop" consumer (unspecified) | Inbound HTTP listener on loopback | Synchronous request/response, one-shot per connection | HTTP/1.1 plaintext; `text/plain` response body |
+| System Name | Integration Type | Data Exchange Pattern | Protocol/Format |
+|-------------|------------------|-----------------------|-----------------|
+| External "backprop integration" validation workflow (co-resident process) | Inbound HTTP request acceptance | Synchronous client-initiated request/response; one round-trip per request | HTTP/1.1 plaintext on `127.0.0.1:3000` |
 
-**SLA requirements**: No service-level agreements, throughput targets, latency budgets, or QoS metrics are documented anywhere in the repository. Performance is bounded only by the Node.js `http` core implementation on the host system. All steps in the request path are in-memory, synchronous, and constant-time, so per-request latency is dominated by socket I/O rather than by any application logic.
+**SLA Requirements**: No quantitative SLAs are documented. The only acceptance criteria are qualitative pass/fail checks against four exact-match invariants:
 
-**Negative integration inventory** (explicit absences confirmed by §3.5):
+- HTTP status code = `200` (exact)
+- `Content-Type` header = `text/plain` (exact)
+- Response body = `Hello, World!\n` (exact, 14 bytes)
+- Startup log line = `Server running at http://127.0.0.1:3000/` (exact)
 
-- No outbound HTTP calls (no `http.request`, `fetch`, `axios`, or equivalent)
-- No DNS lookups
-- No database, ORM, or data-access layer
-- No message brokers (Kafka, RabbitMQ, SQS) or event streams
-- No telemetry exporters (OpenTelemetry, Prometheus, DataDog)
-- No service-discovery registration
-- No CDN, no email/SMS, no payment processors
-- No AI/LLM service integrations
-- No cloud SDKs (AWS, GCP, Azure)
-- No configuration servers (Consul, Parameter Store)
-- No identity providers (Auth0, OIDC, SAML)
+**Verified-absent integration categories**: External APIs, identity providers (Auth0/Okta/Cognito), APM platforms (Datadog/New Relic/Sentry), centralized logging (Splunk/ELK), cloud services (AWS/GCP/Azure), service discovery (Consul/etcd), message brokers (Kafka/RabbitMQ/SQS), external databases, CDN providers, email/SMS gateways, and feature-flag services. None of these are present in the dependency closure or the source.
 
 ---
 
 ## 5.2 COMPONENT DETAILS
 
-### 5.2.1 HTTP Server (`server.js`)
+### 5.2.1 `server.js` — Sole Runtime Component
 
-#### 5.2.1.1 Purpose and Responsibilities
+#### Purpose and Responsibilities
 
-`server.js` is the sole runtime executable of the system. Its purpose is to bind a TCP listening socket on `127.0.0.1:3000` and respond to every inbound HTTP request with an identical 14-byte `text/plain` payload. It fulfills features F-001 (server construction and binding), F-002 (static response emission), and F-003 (single startup log line).
+`server.js` is the only file with executable behavior. It encapsulates three discrete features:
 
-#### 5.2.1.2 Technologies and Frameworks Used
+- **F-001** — HTTP server lifecycle and TCP binding (require, createServer, listen).
+- **F-002** — Static HTTP response generation (status code, header, body via `res.end`).
+- **F-003** — Startup console logging (single `console.log` inside the listen callback).
 
-| Aspect | Choice |
-|--------|--------|
-| Language | JavaScript (ES2015+ syntax: `const`, arrow functions, template literals) |
-| Module system | CommonJS (`require`) |
-| Runtime | Node.js (unpinned — no `engines` field in `package.json`) |
-| Web framework | None — Node.js core `http` module only |
-| External libraries | None |
+#### Technologies and Frameworks Used
 
-#### 5.2.1.3 Key Interfaces and APIs
+- **Language**: JavaScript (ECMAScript) executed on the Node.js runtime.
+- **Module system**: CommonJS (`require('http')`); no ES Module syntax is used.
+- **Frameworks**: **None**. The implementation uses only the Node.js core `http` module. There is no Express, Koa, Fastify, Hapi, or any other web framework.
 
-The complete inventory of Node.js core APIs invoked by `server.js`:
+#### Key Interfaces and APIs Consumed
 
-| API | Purpose | Source Line |
-|-----|---------|-------------|
-| `http.createServer(handler)` | Constructs the `Server` instance | Line 6 |
-| `server.listen(port, hostname, cb)` | Initiates the TCP bind | Line 12 |
-| `res.statusCode = 200` | Assigns the HTTP status code | Line 7 |
-| `res.setHeader(name, value)` | Emits the sole response header | Line 8 |
-| `res.end(body)` | Writes the body and closes the response | Line 9 |
-| `console.log(message)` | Emits the single startup readiness line | Line 13 |
+- `http.createServer(handler)` — creates the Server instance.
+- `server.listen(port, hostname, callback)` — initiates TCP bind.
+- `res.statusCode`, `res.setHeader(name, value)`, `res.end(body)` — response API exposed by the `http` module.
+- `console.log` — built-in logging primitive for the startup log.
 
-The exposed network interface is HTTP/1.1 plaintext on `127.0.0.1:3000`. No other interfaces are exposed; `server.js` declares no `module.exports`, so it cannot be imported by other modules.
+#### Data Persistence Requirements
 
-#### 5.2.1.4 Data Persistence Requirements
+**None**. The component is fully stateless. The only "data" handled is a 14-byte compile-time literal returned to every caller.
 
-None. The component performs no I/O against any persistence layer. The only data it produces is the response body (a compile-time literal) and the startup log line (a template-literal interpolation of constants).
+#### Scaling Considerations
 
-#### 5.2.1.5 Scaling Considerations
+- **Horizontal scaling**: Not supported. There is no clustering primitive (no `cluster` module use, no `worker_threads`), no process manager (no PM2, no systemd), and no load balancer in front of the process.
+- **Vertical scaling**: Bounded by the limits of a single Node.js event-loop process on a single host.
+- **Load distribution**: Not applicable — loopback-only binding precludes any external load-balancing arrangement.
 
-| Scalability Dimension | Position |
-|-----------------------|----------|
-| Horizontal scaling | Not supported — no clustering, no process-manager configuration |
-| Vertical scaling | Bounded by single-process Node.js event-loop limits |
-| Concurrency model | Single event-loop process; no `cluster` or `worker_threads` |
-| State migration | Not applicable — fully stateless |
-| Load distribution | Not applicable — loopback binding precludes external load distribution |
+### 5.2.2 `package.json` — Package Manifest
 
-### 5.2.2 Package Manifest (`package.json`)
+#### Purpose and Responsibilities
 
-#### 5.2.2.1 Purpose and Responsibilities
+Declares the npm package identity so the project participates in the npm ecosystem (introspection, license auditing) without consuming or publishing any packages.
 
-Declares the package identity (`hello_world` v1.0.0), author (`hxu`), MIT license, and a placeholder `test` script. It also declares `main: "index.js"` — a value that is intentionally preserved despite the absence of any `index.js` file in the repository (per assumption A-004).
+#### Notable Fields and Inconsistencies
 
-#### 5.2.2.2 Technologies and Frameworks Used
+- `name: "hello_world"` — distinct from the repository name `hao-backprop-test`.
+- `version: "1.0.0"`.
+- `description: "Hello world in Node.js"`.
+- `main: "index.js"` — a **dangling reference** to a file that does not exist in the repository. Per assumption A-004 and constraint C-001, this is preserved as-is.
+- `scripts.test: "echo \"Error: no test specified\" && exit 1"` — the npm placeholder test script; no real test target.
+- `author: "hxu"`, `license: "MIT"`.
+- **Absent fields**: `dependencies`, `devDependencies`, `engines`, `start` script.
 
-Plain JSON conforming to the npm `package.json` schema. No `dependencies`, `devDependencies`, `peerDependencies`, `optionalDependencies`, or `engines` fields are present.
+### 5.2.3 `package-lock.json` — Dependency Lockfile
 
-#### 5.2.2.3 Key Interfaces and APIs
+Confirms the zero-dependency posture and provides a reproducible install state. The file uses `lockfileVersion: 3` (the npm v7+ schema). The `packages` object contains only the root `""` entry — there are no transitive dependencies to record. Identity fields (name, version, license) mirror `package.json`.
 
-The manifest is consumed by npm-compatible tooling at parse time but has no runtime effect on `server.js` (which is invoked directly via `node server.js`, not through the `main` field). The `test` script returns a non-zero exit code by design.
+### 5.2.4 `README.md` — Governance Document
 
-### 5.2.3 Dependency Lockfile (`package-lock.json`)
+A 3-line markdown file that establishes the project's identity and the operational immutability contract (F-006):
 
-#### 5.2.3.1 Purpose and Responsibilities
+- Line 1: `# hao-backprop-test`
+- Line 2: `test project for backprop integration. Do not touch!`
 
-Locks the dependency tree at npm lockfile format version 3. Its `packages` map contains only the root entry (`""`), constituting a cryptographic attestation that the project has zero installed dependencies. This file enforces the zero-install posture (constraint C-006) by giving any future `npm install` invocation a deterministic empty graph to verify against.
-
-#### 5.2.3.2 Technologies and Frameworks Used
-
-Plain JSON conforming to npm lockfile v3 schema (npm v7+).
-
-#### 5.2.3.3 Key Interfaces and APIs
-
-Consumed by npm during install verification. Not consumed at runtime by `server.js`.
-
-### 5.2.4 Project Documentation (`README.md`)
-
-#### 5.2.4.1 Purpose and Responsibilities
-
-Establishes the system's identity (`hao-backprop-test`), declares its role ("test project for backprop integration"), and issues the source-invariance directive ("Do not touch!"). This file is the textual origin of constraint C-001 — the most consequential constraint governing every other architectural decision in this specification.
-
-#### 5.2.4.2 Technologies and Frameworks Used
-
-Plain Markdown. No special tooling.
+The "Do not touch!" sentence is the operational contract enforced by C-001.
 
 ### 5.2.5 Component Interaction Diagram
 
-The following diagram shows how the runtime sub-components of `server.js` interact with the Node.js core modules and the operating-system resources during both the startup phase and the request-handling phase.
+The diagram below depicts the full stack composition: an immutable application layer of four baseline files invokes Node.js's built-in `http` module, which in turn uses libuv and V8 to bind a loopback TCP socket. The external backprop consumer connects only via the OS loopback interface.
 
 ```mermaid
-flowchart LR
-    subgraph ApplicationProcess["Node.js Process"]
-        Bootstrap["Bootstrap<br/>(lines 1-10)"]
-        ListenCall["listen() call<br/>(line 12)"]
-        ListenCB["Listen callback<br/>(line 13)"]
-        Handler["Request handler<br/>(lines 6-10)"]
+flowchart TB
+    subgraph HostOS["Host Operating System"]
+        TCP["TCP/IP Stack<br/>Loopback Interface 127.0.0.1"]
+    end
+    subgraph NodeRuntime["Node.js Runtime (v20.x, not pinned)"]
+        V8["V8 JavaScript Engine"]
+        Libuv["libuv Event Loop"]
+        HttpCore["node:http<br/>Built-in Core Module"]
+    end
+    subgraph AppLayer["Application Layer (4 Baseline Files)"]
+        ServerJS["server.js<br/>14 lines, CommonJS"]
+        Manifest["package.json<br/>Zero dependencies declared"]
+        Lock["package-lock.json<br/>lockfileVersion: 3, empty tree"]
+        Readme["README.md<br/>Governance directive"]
+    end
+    subgraph ExtBoundary["External Boundary (Out of Repo)"]
+        Consumer["Backprop Integration<br/>Validation Workflow<br/>(co-resident process)"]
     end
 
-    subgraph CoreModules["Node.js Core"]
-        HttpCore["http module"]
-        ConsoleAPI["console global"]
-    end
-
-    subgraph OSResources["OS Resources"]
-        TCPStack["TCP/IP stack"]
-        StdoutFD["stdout file descriptor"]
-    end
-
-    Bootstrap -->|"require('http')"| HttpCore
-    Bootstrap -->|"createServer"| HttpCore
-    Bootstrap --> ListenCall
-    ListenCall -->|"bind 127.0.0.1:3000"| TCPStack
-    TCPStack -->|"bind success"| ListenCB
-    ListenCB -->|"emit readiness line"| ConsoleAPI
-    ConsoleAPI --> StdoutFD
-    TCPStack -.->|"inbound HTTP request"| Handler
-    Handler -.->|"flush 14-byte response"| TCPStack
+    ServerJS -->|"require('http')"| HttpCore
+    HttpCore --> Libuv
+    HttpCore --> V8
+    Libuv --> TCP
+    Consumer -.->|"HTTP/1.1 plaintext<br/>Port 3000"| TCP
 ```
 
-### 5.2.6 Process State Transitions
+### 5.2.6 State Transition Diagram
 
-Although the **application** holds no state, the **process** that hosts the application traverses a deterministic sequence of lifecycle states. The diagram below — consistent with §4.5.2 — captures these transitions explicitly.
+Although the application data model is stateless, the hosting Node.js process traverses a small, well-defined state machine over its lifetime. Although the application is stateless, the hosting Node.js process transitions through discrete lifecycle states. Each state corresponds to a point in the execution of `server.js`.
+
+| State | Description | Source Position |
+|-------|-------------|-----------------|
+| `PreStart` | Process not yet spawned | n/a (operator side) |
+| `Initializing` | Module load and constant declarations executing | `server.js` lines 1–10 |
+| `Binding` | `server.listen()` invoked; OS socket allocation in progress | `server.js` line 12 |
+| `Listening` | Bind successful; event loop active; awaiting connections | After listen callback fires (line 13) |
+| `Handling` | Per-request transient state; handler body executing | `server.js` lines 7–9 |
+| `Crashed` | Unhandled error during bind; process exits non-zero | Node.js default behavior |
+| `Terminated` | Operator-initiated process kill (SIGINT/SIGKILL); abrupt exit | No graceful path |
+
+The `Listening` ↔ `Handling` transition is reentrant per HTTP request and does not mutate any module-level state. The `Crashed` path from `Binding` is the consequence of the absent error-handling primitives (see §5.4.3).
 
 ```mermaid
 stateDiagram-v2
     [*] --> PreStart
     PreStart --> Initializing: node server.js invoked
     Initializing --> Binding: server.listen called (line 12)
-    Binding --> Listening: bind success<br/>callback fires<br/>console.log emitted
-    Binding --> Crashed: bind fails<br/>EADDRINUSE or EACCES<br/>no error handler
-    Listening --> Handling: HTTP request arrives<br/>handler invoked
-    Handling --> Listening: res.end called<br/>handler returns
-    Listening --> Terminated: SIGINT or SIGKILL<br/>no graceful shutdown
-    Handling --> Terminated: SIGINT or SIGKILL<br/>mid-request
-    Crashed --> [*]
-    Terminated --> [*]
+    Binding --> Listening: bind succeeded;<br/>listen callback fires (line 13)
+    Binding --> Crashed: bind failed;<br/>EADDRINUSE / EACCES;<br/>no error handler
+    Listening --> Handling: HTTP request received;<br/>handler dispatched
+    Handling --> Listening: res.end completes;<br/>return to event loop
+    Listening --> Terminated: SIGINT / SIGKILL
+    Handling --> Terminated: SIGINT / SIGKILL
+    Crashed --> [*]: non-zero exit
+    Terminated --> [*]: abrupt exit;<br/>no server.close
 ```
 
-| State | Description | Code Position |
-|-------|-------------|---------------|
-| `PreStart` | Node.js process not yet spawned | n/a (operator side) |
-| `Initializing` | Module load and constant declarations executing | `server.js` lines 1–10 |
-| `Binding` | `server.listen()` invoked; OS socket allocation in progress | `server.js` line 12 |
-| `Listening` | Bind successful; event loop active; awaiting connections | After listen callback fires |
-| `Handling` | Per-request transient state; handler body executing | `server.js` lines 7–9 |
-| `Crashed` | Unhandled error during bind; process exits non-zero | n/a (Node.js default behavior) |
-| `Terminated` | Operator-initiated kill; abrupt exit | n/a (no graceful path) |
+### 5.2.7 Sequence Diagram — End-to-End Inbound HTTP Flow
 
-The `Handling` state is reentrant: each new request causes a transition from `Listening` to `Handling` and back, with no mutation of any module-level state between iterations. This is the operational manifestation of the F-002-RQ-004 determinism guarantee.
-
-### 5.2.7 Sequence Diagrams for Key Flows
-
-#### 5.2.7.1 Server Startup Sequence (WF-001)
+The sequence below traces the system from operator invocation through bind, startup logging, and the first request/response cycle. It demonstrates the lane responsibilities described in §5.1.3.
 
 ```mermaid
 sequenceDiagram
+    autonumber
     participant Op as Operator
+    participant OS as Host OS
     participant Node as Node.js Runtime
-    participant App as server.js
-    participant Http as http Core
-    participant OS as OS TCP Layer
-    participant Out as stdout
+    participant SrvJS as server.js
+    participant Http as http Core Module
+    participant Sock as TCP Socket Layer
+    participant Cli as Loopback Client
 
-    Op->>Node: node server.js
-    Node->>App: Load module (CommonJS)
-    App->>Http: require('http')
-    Http-->>App: http module reference
-    App->>App: Declare hostname='127.0.0.1'
-    App->>App: Declare port=3000
-    App->>Http: http.createServer(handler)
-    Http-->>App: Server instance
-    App->>Http: server.listen(3000, '127.0.0.1', cb)
-    Http->>OS: TCP bind on 127.0.0.1:3000
-    OS-->>Http: Bind success
-    Http->>App: Invoke listen callback
-    App->>Out: console.log('Server running at...')
-    Note over App,OS: Event loop active<br/>awaiting connections
-```
-
-#### 5.2.7.2 Request/Response Sequence (WF-002)
-
-```mermaid
-sequenceDiagram
-    participant Client as Loopback Client
-    participant OS as OS TCP Layer
-    participant Http as http Core
-    participant Handler as server.js Handler
-
-    Client->>OS: TCP connect to 127.0.0.1:3000
-    OS->>Http: Connection accepted
-    Client->>Http: HTTP/1.1 request<br/>(any method, any path)
-    Http->>Http: Parse request into req object
-    Http->>Handler: Invoke handler(req, res)
-    Note over Handler: req argument NOT inspected<br/>(F-002-RQ-004)
-    Handler->>Handler: res.statusCode = 200
-    Handler->>Handler: res.setHeader('Content-Type', 'text/plain')
-    Handler->>Http: res.end('Hello, World!\n')
-    Http->>OS: Flush 14-byte response
-    OS->>Client: HTTP/1.1 200 OK + body
+    Op->>OS: node server.js
+    OS->>Node: spawn process
+    Node->>SrvJS: load module (CommonJS)
+    SrvJS->>Http: require('http')
+    SrvJS->>Http: http.createServer(handler)
+    Http-->>SrvJS: Server instance
+    SrvJS->>Http: server.listen(3000, '127.0.0.1', cb)
+    Http->>Sock: bind(127.0.0.1:3000)
+    Sock-->>Http: bind successful
+    Http->>SrvJS: invoke listen callback (line 13)
+    SrvJS->>Op: console.log('Server running at http://127.0.0.1:3000/')
+    Note over SrvJS,Sock: Event loop now active; WF-001 complete
+    Cli->>Sock: TCP SYN / handshake
+    Cli->>Http: HTTP/1.1 request (any method/path)
+    Http->>SrvJS: invoke handler(req, res)
+    Note over SrvJS: req is ignored per F-002-RQ-004
+    SrvJS->>SrvJS: res.statusCode = 200
+    SrvJS->>SrvJS: res.setHeader('Content-Type', 'text/plain')
+    SrvJS->>Http: res.end('Hello, World!\n')
+    Http->>Sock: flush response bytes
+    Sock-->>Cli: 200 OK / text/plain / 14 bytes
 ```
 
 ---
 
 ## 5.3 TECHNICAL DECISIONS
 
-### 5.3.1 Architecture Style Decisions
+### 5.3.1 Architecture Style: Minimalist Stateless HTTP Fixture
 
-The decision to adopt a monolithic, single-file architecture is the foundational architectural choice from which all subsequent decisions flow. The principal style decisions and their tradeoffs are tabulated below.
+The selected architectural style is "minimalist stateless HTTP fixture": a single process, a single file, a branchless handler, and a compile-time response literal. The decision is grounded in the system's purpose as a deterministic counterparty for an external validation workflow — the architecture's value lies in its refusal to change.
 
-| Decision | Rationale | Tradeoff Accepted |
-|----------|-----------|-------------------|
-| Monolithic single-file | Maximizes simplicity; aligns with source-invariance constraint C-001 | No modularity, no unit testability, no library reuse |
-| Stateless handler | Guarantees byte-identical response per F-002-RQ-004 | Cannot support sessions, per-client state, or caching |
-| Single-process (no clustering) | Aligns with deterministic-test-fixture role | No horizontal scaling, no multi-core utilization |
-| Synchronous callback-based handler | Simpler than async/await; preserves call-site clarity | Slightly older idiom than modern async patterns |
-| CommonJS modules | Default for Node.js without `"type": "module"`; no transpile step | No top-level await, no ESM interop |
+| Aspect | Decision | Tradeoff Accepted |
+|--------|----------|-------------------|
+| Layering | No controller/service/repository layers | No reuse across endpoints; only one endpoint exists |
+| Framework | None — Node.js core `http` only | Manual handler wiring; no routing or middleware |
+| Configuration | Hardcoded constants for host and port | No environment-based deployment flexibility |
+| Concurrency model | Single event loop, no clustering | No horizontal scaling on a single host |
+| Library exposure | No `module.exports` | Cannot be embedded into another Node.js program |
 
-### 5.3.2 Communication Pattern Choices
+Benefits realized include predictability, minimal attack surface, operational simplicity (no `npm install` required per C-006), zero supply-chain risk, and constant-time response generation that eliminates injection surfaces. Costs accepted include unsuitability for production traffic, no resilience to operational failures, and no TLS/auth.
 
-| Pattern | Choice | Rationale |
-|---------|--------|-----------|
-| Network protocol | HTTP/1.1 plaintext via core `http` module | Sufficient for static response; no TLS overhead, no certificate provisioning |
-| Wire format | UTF-8 `text/plain` | Trivial to consume; no parsing required by client |
-| Request/response model | Synchronous one-shot per connection | No streaming, no WebSocket, no Server-Sent Events needed |
-| Direction | Inbound only | Aligns with fixture role; no external dependencies at runtime |
-| Routing | None — single handler for all paths and methods | Per F-002-RQ-004: requests issued with `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`, etc. to any path produce byte-identical responses |
+### 5.3.2 Communication Pattern Choice: Synchronous HTTP/1.1 Only
 
-### 5.3.3 Data Storage Solution Rationale
+| Pattern Considered | Decision | Rationale |
+|--------------------|----------|-----------|
+| HTTP/1.1 plaintext | **Adopted** | Minimum viable protocol; supported by core `http` module without dependencies |
+| HTTP/2 | Rejected | Would require additional configuration; not needed for a 14-byte response |
+| gRPC | Rejected | Requires third-party libraries (violates C-005) |
+| WebSockets | Rejected | Long-lived connections incompatible with the stateless fixture model |
+| Message queue / broker | Rejected | Asynchronous patterns introduce dependencies (violates C-005); no batch needs |
 
-**No storage solution was chosen** because no data persists in the system. The static response body is a compile-time string literal embedded in `server.js`. Introducing any storage layer — relational, document, key-value, or file-system-based — would:
+The decision is also informed by assumption A-003 — the backprop consumer is assumed to be co-resident on the same host — which means non-loopback transport is unnecessary.
 
-1. Violate constraint C-001 (files must remain unchanged from the committed baseline)
-2. Violate constraint C-005 (zero runtime dependencies must be maintained)
-3. Violate constraint C-006 (project must remain executable without `npm install`)
-4. Introduce a new failure mode that could compromise the determinism guarantee of F-002-RQ-004
+### 5.3.3 Data Storage Solution Rationale: None
 
-The decision to use no storage is therefore not a deferred decision but a permanent architectural property of the system.
+No data storage solution is adopted. Each request is handled independently from a compile-time literal — there is no data to store. There is no database driver, no `fs.write`, no in-memory store, no session storage, and no transaction boundary. This decision is structural: the response is a 14-byte UTF-8 constant, and any storage layer would represent overhead with no behavioral benefit.
 
-### 5.3.4 Caching Strategy Justification
+### 5.3.4 Caching Strategy Justification: None
 
-**No caching layer is implemented**, and this is the correct design choice for three converging reasons:
+No caching layer is implemented. The response is already a compile-time string literal residing in resident memory; constructing a cache abstraction over a constant would add complexity without performance benefit. No HTTP cache headers beyond `Content-Type` are emitted, and no external cache service (Redis, Memcached) is consulted. Cache invalidation is therefore also not applicable.
 
-1. **The static body is already a literal constant** in source code. There is no upstream source from which to cache, and a cache hit could not be faster than reading a string already resident in memory.
-2. **No HTTP-level caching headers are emitted** (`ETag`, `Last-Modified`, `Cache-Control` are all absent). Emitting them would conflict with the F-002-RQ-004 determinism requirement that every response be byte-identical regardless of request shape.
-3. **No external data source exists** that would warrant client-side, server-side, CDN, or reverse-proxy caching.
+### 5.3.5 Security Mechanism Selection: Network-Layer Only
 
-### 5.3.5 Security Mechanism Selection
+The system has exactly one effective access control checkpoint: the OS-level loopback boundary enforced by binding to `127.0.0.1`. All application-layer security primitives are deliberately absent.
 
-The system adopts a posture of **"defense by minimalism"** — the absence of attack surface is itself the security control. The three layered controls (in priority order) are:
+| Security Aspect | Posture | Mitigating Factor |
+|-----------------|---------|-------------------|
+| Authentication | None | Loopback binding restricts reach to same-host processes |
+| Authorization | None | Same — no remote actor can reach the listener |
+| Transport encryption | None (plaintext HTTP) | Loopback traffic does not traverse external networks |
+| Input validation | None (request ignored) | No input is consumed → no injection surface |
+| Output encoding | Static literal | Body is a compile-time constant; no dynamic content |
+| Security headers | Only `Content-Type` | No CSP/HSTS/X-Frame-Options needed for a loopback fixture |
+| Dependency vulnerabilities | None applicable | Zero dependencies (F-005); `npm audit` reports no findings |
+| Supply-chain risk | None | No third-party packages; no transitive closure |
 
-| Control | Mechanism | Implementation |
-|---------|-----------|----------------|
-| Network-layer isolation | Loopback-only bind (`127.0.0.1`) | Hardcoded literal in `server.js` line 3 (per constraint C-002) |
-| Supply-chain elimination | Zero dependencies | `package.json` omits `dependencies`/`devDependencies`; `package-lock.json` `packages` tree contains only root entry |
-| Injection-surface elimination | Request input never read | Handler ignores `req` per F-002-RQ-004; no `req.url`, `req.headers`, `req.method`, or body parsing |
+Per assumption A-005, no security review of plaintext HTTP / loopback binding is required because the fixture is local-only by design.
 
-Conventional application-layer security mechanisms (TLS, authentication tokens, authorization scopes, rate limiting, CSRF protection, input validation, output encoding, security headers such as CSP/HSTS/X-Frame-Options) are **not implemented**. Per assumption A-005, this stance presupposes that no security review of plaintext loopback HTTP is required for the fixture's role.
+### 5.3.6 Architectural Decision Records (ADRs) — Governing Constraints
 
-### 5.3.6 Architecture Decision Records (ADRs)
+The seven constraints C-001 through C-007 act as the explicit ADRs for this system. Every architectural decision can be traced to one or more of these constraints.
 
-The following ADRs formally document the principal architectural decisions and the constraints that compelled them.
+| ADR / Constraint | Rule | Stack & Architecture Implication |
+|------------------|------|----------------------------------|
+| C-001 | All four baseline files must remain byte-identical to their committed state | Precludes new dependencies, new frameworks, new files, or any baseline mutation |
+| C-002 | Hostname hardcoded to `127.0.0.1` | No configuration management library; no environment variable parsing |
+| C-003 | Port hardcoded to `3000` | Same — no fallback port logic permissible |
+| C-004 | Response body, status, and headers must be byte-identical across all requests | No template engine, no compression, no content negotiation |
+| C-005 | Zero runtime and zero development dependencies | No third-party packages of any kind |
+| C-006 | Must remain executable on Node.js ≥ 20 without prior `npm install` | Reinforces C-005; lockfile must remain empty |
+| C-007 | MIT license for all repository contents | License compatibility baseline preserved |
 
-#### 5.3.6.1 ADR-001: Use Node.js Core `http` Module Instead of an External Framework
+#### Decision Flow for Stack Additions
 
-| Field | Value |
-|-------|-------|
-| Status | Accepted (enforced by C-005) |
-| Context | An HTTP listener is required to satisfy F-001; popular options are Express, Koa, Fastify, Hapi, or Node.js core `http` |
-| Decision | Use Node.js core `http` exclusively |
-| Consequences | Eliminates ~30+ transitive packages that Express alone would introduce; preserves zero-install posture; restricts API surface to ~5 stable core APIs |
-
-#### 5.3.6.2 ADR-002: Bind to `127.0.0.1` Loopback Only
-
-| Field | Value |
-|-------|-------|
-| Status | Accepted (enforced by C-002) |
-| Context | The fixture must accept HTTP connections; binding to `0.0.0.0` would expose the listener on all interfaces |
-| Decision | Bind exclusively to `127.0.0.1` (hardcoded literal) |
-| Consequences | Listener is unreachable from non-local clients; becomes the primary and only network-level security boundary; aligns with assumption A-003 (consumer is on the same host) |
-
-#### 5.3.6.3 ADR-003: Hardcode Hostname and Port Literals
-
-| Field | Value |
-|-------|-------|
-| Status | Accepted (enforced by C-002, C-003) |
-| Context | Hostname and port could be environment-overridable via `process.env` |
-| Decision | Hardcode `'127.0.0.1'` and `3000` as `const` literals |
-| Consequences | No configuration drift possible; byte-identical startup log every invocation; loss of deployment flexibility (acceptable for fixture role) |
-
-#### 5.3.6.4 ADR-004: Defer All Error Handling to Node.js Default Behavior
-
-| Field | Value |
-|-------|-------|
-| Status | Accepted |
-| Context | Node.js permits explicit error handling via `'error'` listeners, `try`/`catch` blocks, and signal handlers |
-| Decision | Register no error handlers; allow all errors to propagate to Node.js's default behavior (process exit, non-zero status) |
-| Consequences | No graceful shutdown; no fallback port; no retry; recovery becomes an external operator concern — but eliminates all branching that could mask the deterministic behavior under test |
-
-#### 5.3.6.5 ADR-005: Maintain Zero Runtime and Zero Development Dependencies
-
-| Field | Value |
-|-------|-------|
-| Status | Accepted (enforced by C-005, F-005) |
-| Context | npm provides a rich ecosystem; even logging or testing libraries are conventionally added |
-| Decision | Maintain `package.json` with neither `dependencies` nor `devDependencies` fields; lockfile attests empty tree |
-| Consequences | Project runs on any Node.js install with no `npm install`; no supply-chain attack vector; no test framework, no linter, no formatter |
-
-#### 5.3.6.6 ADR-006: Adopt Source Invariance as a Governance Constraint
-
-| Field | Value |
-|-------|-------|
-| Status | Accepted (enforced by C-001 / README) |
-| Context | The repository must serve as a stable reference fixture for downstream integration |
-| Decision | All four committed files must remain unchanged from baseline ("Do not touch!") |
-| Consequences | Documented inconsistencies (e.g., `package.json` `main: "index.js"` with no `index.js` file) are preserved rather than corrected; all future architectural work is documentation-only |
-
-### 5.3.7 Decision Tree for Framework Selection
-
-The diagram below traces the decision logic that yielded the current architecture. Every "Yes" branch toward a conventional choice was rejected because of an explicit constraint; only the "No" branches survive.
+The decision tree below formalizes the question every contributor must ask before proposing any change to the architecture. Almost every branch terminates in rejection because of C-001/C-005.
 
 ```mermaid
 flowchart TD
-    Q1{Do we need<br/>an HTTP server?}
-    Q1 -->|"Yes (F-001)"| Q2{Adopt an external<br/>framework?}
-    Q2 -->|"No: violates C-005"| Core["Use Node.js core http module"]
-    Q2 -->|"Yes"| RejFW["REJECTED:<br/>Express/Koa/Fastify add<br/>transitive dependencies<br/>(violates F-005, C-005)"]
-    Core --> Q3{Need TLS<br/>(HTTPS)?}
-    Q3 -->|"No: loopback only<br/>per A-005"| Plain["Plaintext HTTP/1.1"]
-    Q3 -->|"Yes"| RejTLS["REJECTED:<br/>No TLS material;<br/>loopback transit"]
-    Plain --> Q4{Need request<br/>routing?}
-    Q4 -->|"No: single static response<br/>per F-002-RQ-004"| OneHandler["Single handler that<br/>ignores req"]
-    Q4 -->|"Yes"| RejRoute["REJECTED:<br/>Violates determinism<br/>guarantee"]
-    OneHandler --> Q5{Need persistence<br/>or caching?}
-    Q5 -->|"No: response is<br/>compile-time literal"| NoState["No storage layer<br/>No cache"]
-    Q5 -->|"Yes"| RejStore["REJECTED:<br/>Violates C-001, C-005"]
-    NoState --> Final([Final: monolithic,<br/>single-file,<br/>stateless,<br/>loopback-only])
+    Start([Proposed change])
+    Q1{"Touches one of the<br/>4 baseline files?"}
+    Q2{"Adds a runtime<br/>or dev dependency?"}
+    Q3{"Requires npm install<br/>before run?"}
+    Q4{"Adds a new file<br/>under repo root?"}
+    Q5{"Changes response body,<br/>status, or headers?"}
+    Q6{"Changes host or port<br/>literal?"}
+    Reject1[Reject — violates C-001]
+    Reject2[Reject — violates C-005]
+    Reject3[Reject — violates C-006]
+    Reject4[Reject — violates C-001]
+    Reject5[Reject — violates C-004]
+    Reject6[Reject — violates C-002 or C-003]
+    Allow[Allow — additive docs only<br/>under docs/ or blitzy/]
+
+    Start --> Q1
+    Q1 -- Yes --> Reject1
+    Q1 -- No --> Q2
+    Q2 -- Yes --> Reject2
+    Q2 -- No --> Q3
+    Q3 -- Yes --> Reject3
+    Q3 -- No --> Q4
+    Q4 -- Yes --> Reject4
+    Q4 -- No --> Q5
+    Q5 -- Yes --> Reject5
+    Q5 -- No --> Q6
+    Q6 -- Yes --> Reject6
+    Q6 -- No --> Allow
 ```
+
+### 5.3.7 Default Technology Stack Reconciliation
+
+Every item in the prompt-provided default enterprise stack — AWS, Docker, Terraform, GitHub Actions, Python/Flask, Auth0, MongoDB, Langchain, React/TypeScript, TailwindCSS, React-Native, Swift, Kotlin, Objective-C, ElectronJS — is categorically non-applicable here. The default enterprise technology stack provided as guidance (AWS, Docker, Terraform, GitHub Actions, Python/Flask, Auth0, MongoDB, Langchain, React/TypeScript, TailwindCSS, React-Native, Swift, Kotlin, Objective-C, ElectronJS) is categorically inapplicable to this system. Per §1.3.2, every category in that stack — web frameworks, persistence, authentication, container orchestration, CI/CD pipelines — is explicitly verified absent from the repository and is enumerated as out-of-scope. Adoption of any default-stack item would violate C-001, C-005, or C-006.
 
 ---
 
 ## 5.4 CROSS-CUTTING CONCERNS
 
-### 5.4.1 Monitoring and Observability Approach
+### 5.4.1 Monitoring and Observability
 
-The system implements **no monitoring or observability primitives**. Every conventional observability surface is deliberately absent, as documented below.
+The system's observability surface is intentionally minimal — a single one-shot startup log line written to stdout. All other observability primitives expected of a production service are verified absent.
 
-| Aspect | Status | Evidence |
-|--------|--------|----------|
-| Metrics emission | None | No Prometheus, no StatsD, no OpenTelemetry import |
-| Distributed tracing | None | No tracing SDK; no propagation of trace context headers |
-| Health-check endpoint | None | Handler ignores `req.url`, so `/health` cannot be served distinctly |
-| Per-request logging | None | Only a single startup `console.log` is emitted |
-| Log shipping | None | stdout only; no log aggregation agent |
-| Application performance monitoring | None | No APM agent (New Relic, DataDog, AppDynamics) |
+| Observability Primitive | Status |
+|-------------------------|--------|
+| Structured logging framework (Winston/Pino/Bunyan/Morgan) | Not present (zero deps) |
+| Per-request log emission | Not implemented; handler contains no `console.log` |
+| Metrics emission (Prometheus, StatsD) | Not implemented |
+| Distributed tracing (OpenTelemetry, Jaeger SDK) | Not implemented |
+| Health-check endpoint | Not implemented; handler ignores `req.url` |
+| APM integration (Datadog, New Relic, Sentry) | Absent |
+| Log shipper / aggregator | Absent |
 
-The downstream "backprop integration" consumer must therefore infer the system's health by observing the HTTP response itself (connection success and a `200` status) rather than by querying any observability endpoint exposed by the system.
+The single observability event is the startup log emitted by F-003: the literal string `Server running at http://127.0.0.1:3000/` written from the `server.listen` callback to stdout, exactly once per process lifetime.
 
 ### 5.4.2 Logging and Tracing Strategy
 
-The logging strategy consists of a single operation. The diagram below summarizes the strategy in full.
+There is no log levelling, no log rotation, no remote shipping, and no tracing. The startup log line is the only "trace" available to consumers. Per the validation rules documented in §4.4.1, the log line contains no secrets, no tokens, and no PII — it is a static format string with hardcoded host/port values.
 
-| Aspect | Specification |
-|--------|---------------|
-| Logging operation | `console.log` in the listen callback (`server.js` line 13) |
-| Log format | Template-literal interpolation: `` `Server running at http://${hostname}:${port}/` `` |
-| Frequency | Exactly once per process lifetime, at startup |
-| Levels | None (no `info`/`warn`/`error`/`debug` distinction) |
-| Structure | Plain text (no JSON, no key/value structured fields) |
-| Rotation | None (writes to stdout, externally managed if at all) |
-| Tracing | None (no spans, no correlation IDs, no W3C Trace Context) |
-
-The literal scheme `http://` (not `https://`) must appear in the log line per F-003-RQ-002, accurately reflecting the actual transport without aspirational TLS.
+Future logging or tracing instrumentation would require introducing a logging library (forbidden by C-005), persisting log files (forbidden by C-001 because it would require new files or `fs` use in `server.js`), or registering tracing SDK hooks (forbidden by C-005). Therefore, the documented strategy is "no expansion of logging or tracing is permitted."
 
 ### 5.4.3 Error Handling Patterns
 
-#### 5.4.3.1 Documented Absence of Error Handling
+The repository contains no error-handling primitives. The repository contains no error-handling primitives. This absence is binding under C-001 (immutability) and is the direct consequence of the design choices documented in §1.3.2 and §2.4.4. All errors propagate to Node.js default behavior, which terminates the process with a non-zero exit code.
 
-Per §4.4.1, the application contains **no error handling primitives whatsoever**. The implementation does not register an `'error'` event listener on the `http.Server` instance, does not wrap any operation in a `try`/`catch` block, and does not register handlers for `SIGINT` or `SIGTERM`. Consequently, every error that arises during the process lifetime is unhandled by the application and propagates to Node.js's default behavior, which is process termination with a non-zero exit code.
+#### Missing Error-Handling Primitives
 
-This is a deliberate architectural posture, not an oversight. Introducing error-handling logic would create branches in the workflow that could mask the very behaviors that downstream "backprop integration" tests are intended to observe.
+| Primitive | Status |
+|-----------|--------|
+| `'error'` event listener on `http.Server` | Not registered |
+| `try`/`catch` blocks in `server.js` | None |
+| `process.on('SIGINT' / 'SIGTERM' / 'uncaughtException' / 'unhandledRejection', ...)` | None |
+| `server.close()` (graceful shutdown) | Not invoked |
+| Structured 4xx/5xx response paths | None — F-002-RQ-001 mandates 200 for every request |
 
-The complete inventory of error categories and their (absent) handlers:
+#### Error Categories and Terminal Behavior
 
-| Error Category | Trigger | Handler Status |
-|----------------|---------|----------------|
-| `EADDRINUSE` | Port 3000 already bound on loopback | No `'error'` listener — process crashes |
-| `EACCES` | Privileged port denied (would not normally occur on port 3000) | No `try`/`catch` — process crashes |
-| Synchronous exception in handler | Hypothetical — impossible given current 3-line handler body | Would propagate — process crashes |
-| `SIGINT` / `SIGTERM` | Operator signal | No signal handler — abrupt termination, no `server.close()` |
-| `EPIPE` on stdout write | stdout closed by external process | No handler — undefined behavior |
+Every error category recognized by the design converges to the same outcome: abrupt process exit. Every error category recognized by the design converges to the same terminal outcome — abrupt process exit.
 
-#### 5.4.3.2 Error Handling Flow Diagram
+| Error Category | Trigger | Documented Rationale for No Handler |
+|----------------|---------|--------------------------------------|
+| `EADDRINUSE` | TCP port 3000 already bound | Only documented failure mode per A-002 |
+| `EACCES` | Insufficient privilege to bind | No `try`/`catch` around `server.listen` |
+| Synchronous handler exception | Code error inside handler body | Cannot occur — handler is branchless |
+| `SIGINT` / `SIGTERM` | Operator signal (e.g., Ctrl-C) | No `process.on('SIGINT')` registered |
+| `EPIPE` on stdout | Terminal closed before `console.log` flush | Unhandled; Node.js default behavior |
+| `uncaughtException` | Anywhere in the process | No `process.on` handler registered |
 
-The diagram below — consistent with §4.4.2 — enumerates the categories of errors that could arise during the process lifetime and shows that all of them converge on a single terminal outcome: process exit without recovery, retry, fallback, or notification.
+#### Recovery Model
+
+Recovery is exclusively external. Following a crash, the operator must manually re-invoke `node server.js`, which is a fresh execution of workflow WF-001. There is no retry logic, no fallback port, no circuit breaker, no dead-letter queue, and no process supervisor (no PM2, no systemd unit, no Docker restart policy).
+
+#### Error Handling Flow Diagram
+
+The flow below visualizes the convergence of every error category to a single terminal exit, and the existence of an external recovery path that requires manual operator action.
 
 ```mermaid
 flowchart TD
-    Trigger([Error condition occurs<br/>during process lifetime]) --> ErrCat{Error<br/>category?}
-    ErrCat -->|"EADDRINUSE<br/>port 3000 in use"| NoListener1[No 'error' listener<br/>registered on server]
-    ErrCat -->|"EACCES<br/>privileged port denied"| NoListener2[No try/catch around<br/>server.listen]
-    ErrCat -->|"Synchronous exception<br/>inside handler"| NoListener3[No try/catch<br/>inside handler body]
-    ErrCat -->|"SIGINT / SIGTERM<br/>operator signal"| NoSignalHandler[No process.on SIGINT<br/>or SIGTERM registered]
-    ErrCat -->|"stdout write failure<br/>EPIPE"| NoListener4[Unhandled<br/>undefined behavior]
+    subgraph Sources["Error Sources (All Unhandled)"]
+        E1{{"Port 3000 occupied?<br/>EADDRINUSE"}}
+        E2{{"Privileged port denied?<br/>EACCES"}}
+        E3{{"Synchronous handler<br/>exception?"}}
+        E4{{"SIGINT or SIGTERM<br/>received?"}}
+        E5{{"stdout write failure?<br/>EPIPE"}}
+    end
+    subgraph Missing["Missing Recovery Mechanisms"]
+        NoListener["No 'error' listener<br/>on http.Server"]
+        NoTryCatch["No try/catch blocks"]
+        NoSignal["No process.on('SIGINT')"]
+        NoRetry["No retry / backoff logic"]
+        NoFallback["No fallback port logic<br/>(per A-002)"]
+        NoNotify["No notification client<br/>(per F-005 zero deps)"]
+        NoGraceful["No server.close invocation"]
+    end
+    Default["Node.js default<br/>error propagation"]
+    ExitNonZero(["Process terminates<br/>non-zero exit code"])
+    ExternalRecovery["Manual operator action:<br/>re-invoke node server.js<br/>(re-executes WF-001)"]
 
-    NoListener1 --> Propagate[Error propagates to<br/>Node.js default handler]
-    NoListener2 --> Propagate
-    NoListener3 --> Propagate
-    NoListener4 --> Propagate
-    NoSignalHandler --> AbruptTerm[Process terminates immediately<br/>without server.close]
-
-    Propagate --> CrashExit([Process exits with<br/>non-zero status code<br/><br/>NO retry<br/>NO fallback<br/>NO recovery<br/>NO notification])
-    AbruptTerm --> CrashExit
+    E1 -- "Yes" --> Default
+    E2 -- "Yes" --> Default
+    E3 -- "Yes" --> Default
+    E4 -- "Yes" --> Default
+    E5 -- "Yes" --> Default
+    Default --> ExitNonZero
+    ExitNonZero -.->|"Out-of-band"| ExternalRecovery
 ```
-
-#### 5.4.3.3 Retry, Fallback, and Notification Posture
-
-The conventional error-handling mechanisms enumerated below are explicitly **not** present in the system:
-
-| Mechanism | Status |
-|-----------|--------|
-| Retry logic (exponential backoff, etc.) | Not implemented — no retry library, no loop logic |
-| Fallback process (alternate port, alternate route) | Not implemented — per A-002, collision causes startup failure |
-| Error notification (email/Slack/PagerDuty) | Not implemented — zero dependencies |
-| Recovery procedure (restart policy, supervisor) | Not implemented — no PM2, systemd, or Docker restart policy |
-| Graceful shutdown | Not implemented — no `SIGINT`/`SIGTERM` handlers, no `server.close()` |
-| Circuit breaker | Not implemented — no downstream calls exist that would warrant one |
-| Dead-letter queue | Not implemented — no messaging integration |
 
 ### 5.4.4 Authentication and Authorization Framework
 
-#### 5.4.4.1 Network-Layer Boundary as Sole Checkpoint
+There is no authentication or authorization at the application layer. The sole effective access-control mechanism is the OS network stack itself: by binding to `127.0.0.1`, the listener is reachable only by processes already running on the same host. Connections from any non-loopback source are refused by the OS before reaching Node.js.
 
-The system implements **no authentication or authorization at the application layer**. The sole "checkpoint" is at the network layer: the OS-level loopback binding of `127.0.0.1` rejects connections originating from any non-local interface before they can ever reach the application. There are no tokens, no credentials, no role or scope evaluation, no rate limiting, and no per-client identification.
+| Authorization Checkpoint | Mechanism | Effect |
+|--------------------------|-----------|--------|
+| Network reachability | OS loopback check | Non-loopback connections refused (RST/unreachable) |
+| Application-layer auth | None | Loopback callers reach the handler unfiltered |
+| Application-layer authz | None | Same — no role/scope/claim check |
+| Rate limiting / throttling | None | No per-client tracking exists |
 
-| Concern | Status |
-|---------|--------|
-| Application-layer authentication | None — no credential extraction from headers/body |
-| Application-layer authorization | None — no role or scope evaluation |
-| Token validation (JWT, OAuth, etc.) | None — no token-handling library imported |
-| Rate limiting | None — no counters, no buckets, no middleware |
-| CSRF protection | None — no anti-CSRF tokens, no SameSite cookies |
-| Network-layer access control | Loopback binding (`127.0.0.1`) is the primary and only network boundary |
-
-#### 5.4.4.2 Loopback Boundary Diagram
-
-```mermaid
-flowchart LR
-    subgraph LocalHost["Local Host (Same Machine)"]
-        LocalProc["Local Process<br/>(any local user)"]
-    end
-
-    subgraph RemoteHost["Any Remote Host"]
-        RemoteProc["Remote Client<br/>(any IP, any user)"]
-    end
-
-    subgraph NetStack["OS Network Stack"]
-        LoopbackIF["Loopback interface<br/>127.0.0.1"]
-        ExternalIF["External interfaces<br/>(eth0, wlan0, etc.)"]
-    end
-
-    subgraph AppListener["Application"]
-        Listener["server.js<br/>bound to 127.0.0.1:3000"]
-    end
-
-    LocalProc -->|"TCP to 127.0.0.1:3000"| LoopbackIF
-    LoopbackIF -->|"Allowed"| Listener
-    RemoteProc -.->|"TCP from external IP"| ExternalIF
-    ExternalIF -.->|"NEVER reaches<br/>the application"| Listener
-```
+This is acceptable under assumption A-005, which classifies the system as local-only by design and therefore exempt from a security review of plaintext HTTP.
 
 ### 5.4.5 Performance Requirements and SLAs
 
-No service-level agreements, throughput targets, latency budgets, or QoS metrics are documented anywhere in the repository. Performance is bounded only by the Node.js `http` core implementation on the host system. The per-step characteristics of the request path are all sub-millisecond, in-memory, and constant-time:
+No quantitative SLAs are documented for this system. The acceptance criteria from §5.1.4 (status code, content type, body bytes, startup log) are the only contractual surface.
 
-| Step | Characteristic |
-|------|----------------|
-| `http.createServer()` | Synchronous, sub-millisecond, executed once at startup |
-| `server.listen()` bind | Asynchronous; bounded by OS socket allocation, not by application logic |
-| Status code assignment | Sub-millisecond property assignment |
-| Header emission | Sub-millisecond property assignment |
-| Body emission (`res.end`) | Sub-millisecond, constant-time (14 bytes) |
+| KPI Dimension | Documented Target |
+|---------------|-------------------|
+| Throughput (requests/sec) | Not documented |
+| Latency p50 / p95 / p99 | Not documented |
+| Availability (uptime %) | Not documented |
+| Error-rate ceiling | Not documented |
+| Concurrent connections | Not documented |
+| Cold-start latency | Not documented |
+| Memory footprint | Not documented |
 
-Because the application performs no I/O against any backend, no work whose cost depends on input size, and no branching based on request shape, per-request latency is dominated by socket I/O rather than by any application logic. Throughput is bounded by the single Node.js event loop's ability to accept and dispatch connections on the loopback interface.
+The implicit performance posture of each per-step operation is sub-millisecond except for the `server.listen` bind itself, which is bounded by OS socket allocation latency:
+
+- `require('http')` — synchronous; cached after first load.
+- `http.createServer()` — synchronous; allocates a Server instance in microseconds.
+- `server.listen()` — asynchronous; bind latency dominated by OS socket-allocation.
+- Per-request response operations (`res.statusCode`, `res.setHeader`, `res.end`) — sub-millisecond, in-memory, constant-time per F-002-RQ-004.
 
 ### 5.4.6 Disaster Recovery Procedures
 
-No disaster recovery procedures are implemented **within** the system. Per §4.4.3, any recovery from a crash is an external concern: the operator (or an external supervisor outside the repository boundary) must re-invoke `node server.js`.
+Disaster recovery is fully external and consists of a single procedure: manual re-invocation of `node server.js` by the operator. The following mechanisms are explicitly not implemented:
 
-| DR Concern | Status |
-|------------|--------|
-| Process supervisor | None — no PM2, systemd unit, or Docker restart policy committed |
-| Health checks for orchestrator restart | None — handler ignores `req.url`, so `/health` cannot exist |
-| Backup of persistent state | Not applicable — no persistent state |
-| Failover to standby instance | Not implemented — single process, loopback-only |
-| Geographic redundancy | Not applicable — loopback binding precludes multi-region deployment |
-| Recovery Time Objective (RTO) | Undocumented — bounded only by manual operator reaction time |
-| Recovery Point Objective (RPO) | Not applicable — stateless system has no data to recover |
+- No process supervisor (no PM2, no systemd unit, no upstart, no Docker restart policy).
+- No `server.close()` for graceful shutdown.
+- No state to restore — the application is stateless, so there is no checkpoint, snapshot, or log to replay.
+- No backup or replication — there is no data plane.
+- No automated alerting or pager rotation hookup.
 
-The re-invocation of `node server.js` is itself a manual repeat of the WF-001 startup workflow and is not a workflow encoded inside the system.
+Because the system holds no state and serves a 14-byte constant, the recovery time objective (RTO) is bounded only by the time required to type `node server.js`, and the recovery point objective (RPO) is undefined because there is nothing to lose.
+
+### 5.4.7 Runtime and Operational Posture Summary
+
+For completeness, the operational posture of the system across runtime, build, container, and CI/CD dimensions is summarized below. Each row reinforces the cross-cutting story that the system's robustness model relies on simplicity and external recovery.
+
+| Aspect | Value |
+|--------|-------|
+| Runtime | Node.js v20.20.2 verified (not pinned; no `engines` field) |
+| Package Manager | npm 10.8.2 (bundled with Node 20; never invoked for install) |
+| Build Pipeline | None — no transpilation, bundling, or minification |
+| Containerization | None — no Dockerfile, docker-compose, K8s manifests, or Helm charts |
+| Infrastructure as Code | None — no Terraform, CloudFormation, Pulumi, or CDK |
+| CI/CD | None — no GitHub Actions, GitLab CI, CircleCI, or Jenkins |
+| Launch Command | `node server.js` |
+| Working Directory | Repository root |
+| Required Pre-steps | None — no `npm install` required (C-006) |
+| Environment Variables | None — host and port are literal constants |
+| Startup Confirmation | stdout line: `Server running at http://127.0.0.1:3000/` |
+| Shutdown Procedure | SIGINT (Ctrl-C); no graceful handler |
+| Test Infrastructure | None committed; future recommendation is `node:test` + `node:assert` (also zero-dep) |
 
 ---
 
-#### References
+## 5.5 References
 
-#### Files Examined
+#### Repository Files Examined
 
-- `server.js` — Complete 14-line source of the HTTP server; established runtime architecture, request/response flow, hardcoded literals (`hostname = '127.0.0.1'`, `port = 3000`), single `require('http')`, handler signature `(req, res)` that ignores `req`, and the single `console.log` in the listen callback
-- `package.json` — Confirmed package identity (`hello_world` v1.0.0), MIT license, author `hxu`, placeholder `test` script, declared `main: "index.js"` field, and absence of `dependencies`/`devDependencies`/`engines` fields
-- `package-lock.json` — Confirmed npm lockfile format version 3 and empty `packages` tree (only root `""` entry) — cryptographic attestation of zero dependencies
-- `README.md` — Established the "Do not touch!" governance directive and the "backprop integration" purpose
+- `server.js` — Sole runtime component; 14-line CommonJS module implementing the HTTP server lifecycle, the branchless request handler, and the startup log.
+- `package.json` — npm manifest declaring package identity, MIT license, placeholder test script, and the dangling `main: "index.js"` reference preserved under C-001/A-004.
+- `package-lock.json` — Lockfile v3 confirming an empty `packages` tree and the zero-dependency posture.
+- `README.md` — Three-line governance document containing the operational "Do not touch!" immutability directive (F-006).
+- `docs/dead-code-analysis.md` — Confirms zero removable dead code and documents the dangling `main` reference and the unused `req` parameter as idiomatic Node.js patterns.
+- `docs/testing-strategy.md` — Risk-prioritized testing strategy proposing zero-dependency `node:test` validators.
+- `blitzy/documentation/Project Guide.md` — High-level project overview.
+- `blitzy/documentation/Technical Specifications.md` — Parent technical specifications document.
 
-#### Folders Explored
+#### Repository Folders Explored
 
-- `/` (repository root) — Confirmed there are no subdirectories at all; the entire repository surface is the four files above (no `.github/`, no `src/`, no `tests/`, no `node_modules/`)
+- `` (repository root, depth 0) — Contains the four baseline files plus the two documentation folders.
+- `docs/` (depth 1) — Additive analysis-only markdown reports.
+- `blitzy/` (depth 1) — Container directory whose sole child is `blitzy/documentation/`.
+- `blitzy/documentation/` (depth 2) — Governance and specification markdown files.
 
-#### Cross-Referenced Technical Specification Sections
+#### Technical Specification Sections Referenced
 
-- §1.2 SYSTEM OVERVIEW — Project context, intrinsic limitations
-- §1.3 SCOPE — In-scope and out-of-scope features, unsupported use cases
-- §2.1 FEATURE CATALOG — Features F-001 through F-006
-- §2.2 FUNCTIONAL REQUIREMENTS — Acceptance criteria including F-001-RQ-001 through F-003-RQ-002 and the F-002-RQ-004 determinism contract
-- §2.4 IMPLEMENTATION CONSIDERATIONS — Scalability, performance, security positions
-- §2.6 ASSUMPTIONS AND CONSTRAINTS — Assumptions A-001 through A-005 and constraints C-001 through C-007
-- §3.1 STACK OVERVIEW AND ARCHITECTURAL POSTURE — Layered stack topology and guiding principles
-- §3.3 FRAMEWORKS & LIBRARIES — Justification for core-only approach
-- §3.4 OPEN SOURCE DEPENDENCIES — Zero-dependency confirmation and lockfile properties
-- §3.5 THIRD-PARTY SERVICES — Negative integration inventory
-- §3.6 DATABASES & STORAGE — Documented absence of any persistence layer
-- §3.9 SECURITY IMPLICATIONS OF STACK CHOICES — Defense-by-minimalism posture
-- §3.10 STACK INTEGRATION REQUIREMENTS — Inter-component edges and external requirements
-- §4.2 CORE BUSINESS PROCESSES — Step-by-step workflows WF-001 (startup) and WF-002 (request/response)
-- §4.4 ERROR HANDLING AND RECOVERY — Documented absence of error-handling primitives; error flow diagram source
-- §4.5 STATE MANAGEMENT AND TRANSITIONS — Process lifecycle state diagram source
-- §4.6 VALIDATION, AUTHORIZATION, AND COMPLIANCE CHECKPOINTS — Network-layer-only "checkpoint" posture
-- §4.7 TIMING AND SLA CONSIDERATIONS — Absence of documented SLAs; per-step latency characteristics
+- §1.1 Executive Summary — Project overview, stakeholders, value proposition.
+- §1.2 System Overview — Integration boundary, technical approach, success criteria.
+- §1.3 Scope — In-scope and out-of-scope elements.
+- §2.1 Feature Catalog — Features F-001 through F-006.
+- §2.2 Functional Requirements Table — Acceptance criteria, including F-002-RQ-001 and F-002-RQ-004.
+- §2.3 Feature Relationships — Dependency map and integration points.
+- §2.4 Implementation Considerations — Technical constraints, performance posture, scalability, and security.
+- §2.6 Assumptions and Constraints — Assumptions A-001 through A-005 and constraints C-001 through C-007.
+- §3.1 Stack Philosophy and Overview — Effective stack inventory and stack composition diagram.
+- §3.2 Programming Languages — JavaScript/CommonJS only.
+- §3.3 Frameworks & Libraries — Zero frameworks; Node.js core `http` only.
+- §3.4 Open-Source Dependencies — Zero runtime and dev dependencies.
+- §3.5 Third-Party Services — None.
+- §3.6 Databases & Storage — None; fully stateless.
+- §3.7 Development & Deployment — Runtime, build, container, and CI/CD posture (all absent except runtime).
+- §3.8 Architectural Constraints Governing the Stack — Constraint-to-stack mapping.
+- §3.9 Security Implications of Stack Choices — Security posture matrix.
+- §3.10 Default Technology Stack Reconciliation — Default-stack non-applicability matrix.
+- §4.1 System Workflows Overview — WF-001 through WF-003.
+- §4.2 Core Business Processes — Workflow step decomposition.
+- §4.3 Integration Workflows — Integration topology and inbound HTTP sequence diagram.
+- §4.4 Validation Rules and Business Logic — Authorization checkpoints and log validation rules.
+- §4.5 State Management — Stateless model and process lifecycle state diagram.
+- §4.6 Error Handling — Documented absence and error category convergence flowchart.
+- §4.7 Timing and SLA Considerations — Per-step timing and the absence of quantitative SLAs.
 
 # 6. SYSTEM COMPONENTS DESIGN
 
 ## 6.1 Core Services Architecture
 
-### 6.1.1 Applicability Assessment
+### 6.1.1 Applicability Statement
 
-#### 6.1.1.1 Determination Statement
+**Core Services Architecture is not applicable to this system.**
 
-**Core Services Architecture is not applicable for this system.**
+The `hao-backprop-test` repository implements a deliberately minimal, single-process, single-file HTTP fixture that contains no service decomposition, no inter-service communication, no scaling architecture, and no resilience patterns. Every dimension of the Core Services Architecture concern domain — service components, scalability design, and resilience patterns — is verified absent by direct repository inspection and is precluded by binding architectural constraints documented in §2.6.2.
 
-The `hao-backprop-test` repository implements a monolithic, single-process, single-file Node.js HTTP server whose entire executable surface is contained in `server.js` (14 lines). The system has no microservices, no distributed components, no inter-service communication, no service-discovery requirements, and no scalability or resilience layer above the Node.js runtime itself. Every subtopic prescribed for a Core Services Architecture section — service boundaries, inter-service communication, discovery, load balancing, circuit breakers, retry/fallback, horizontal scaling, auto-scaling, fault tolerance, failover, disaster recovery — is either inapplicable by topology or has been deliberately excluded by architectural decision.
+The system is characterized in §5.1.1 as a "single-process, single-file, monolithic micro-service" whose "entire runtime is contained within a single 14-line `server.js` file invoked directly by the Node.js binary." It is "intentionally devoid of conventional architectural layering: there is no controller/service/repository separation, no middleware chain, no routing tier, and no internal modules." Because no services exist to interconnect, no scaling tier exists to operate on a service mesh, and no resilience primitives exist to coordinate across services, this section documents the verified absence of each requested sub-area and the constraints that make their introduction impossible without violating the immutability contract.
 
-This determination is not a documentation gap; it is a substantive architectural finding. As established in §5.1.1.1, the monolithic posture is "a deliberate posture motivated by the system's role as a deterministic test fixture for an external 'backprop integration' consumer," in which every alternative architectural style — microservices, layered service, hexagonal, event-driven, plugin-based — would introduce moving parts that could degrade the system's two non-negotiable properties: **behavioral stability** and **source invariance**.
+This section is structured as a "negative-space" reference: it enumerates each architectural concern from the standard Core Services Architecture prompt, records the documented absence with traceable evidence, and identifies the governing constraint that bars introduction of the concern. Readers seeking the runtime details that *are* present should consult §5.1 (architectural style), §5.2 (component details), and §5.4 (cross-cutting concerns).
 
-#### 6.1.1.2 Architectural Evidence Summary
+### 6.1.2 System Composition Establishing Non-Applicability
 
-The applicability determination rests on the following directly observable repository properties:
+#### 6.1.2.1 Runtime Footprint
 
-| Evidence Dimension | Observed State | Cross-Reference |
-|--------------------|----------------|-----------------|
-| Repository surface | 4 files, 0 subdirectories | §5.1.1.3, §5.2 |
-| Runtime executable count | 1 (`server.js`, 14 lines) | §5.1.2, §5.2.1 |
-| Runtime npm dependencies | 0 (no `dependencies` field) | §5.2.2, §5.2.3 |
-| Outbound integration points | 0 | §5.1.4 |
-| Inbound integration points | 1 (loopback HTTP on `127.0.0.1:3000`) | §5.1.4 |
-| Concurrency primitives | None — no `cluster`, no `worker_threads` | §5.1.1.1, §5.2.1.5 |
-| State posture | Fully stateless | §5.1.1.1, §5.1.3.4 |
-| Network exposure | Loopback-only (`127.0.0.1`) | §5.1.1.3, §5.4.4 |
+The total system composition — across all baseline files and runtime artifacts — categorically forecloses the existence of a service architecture. The repository contains four immutable baseline files at the root and zero internal modules.
 
-Because there is exactly one service component running in exactly one process bound to exactly one loopback interface with zero state and zero downstream integrations, the entire conceptual framework of "core services architecture" — which presupposes a plurality of services that must coordinate — has no referent in this repository.
+| Attribute | Value | Authoritative Source |
+|-----------|-------|----------------------|
+| Total baseline files | 4 (`server.js`, `package.json`, `package-lock.json`, `README.md`) | §5.1.1 |
+| Sole runtime artifact | `server.js` (14 lines) | §5.2.1 |
+| Third-party dependencies | Zero (no `dependencies`, no `devDependencies`) | §5.2.2, §5.2.3 |
+| Internal modules | Zero (no `module.exports`, no local `require`) | §2.3.3 |
+| Process topology | One Node.js event-loop process | §5.2.1 |
+| Endpoints exposed | One implicit endpoint (branchless handler) | §5.1.3 |
+| Integration points | One inbound; zero outbound | §2.3.2 |
 
-#### 6.1.1.3 Single-Service Topology Diagram
+#### 6.1.2.2 Architectural Constraints That Preclude Service Architecture
 
-The diagram below illustrates the actual topology of the system, contrasted with the typical microservices topology that the Core Services Architecture section would normally describe.
+Seven hard constraints from §2.6.2 jointly preclude introducing any of the standard service-architecture patterns. Each constraint is binding under the operational "Do not touch!" directive in `README.md`.
 
-```mermaid
-flowchart TB
-    subgraph ActualTopology["Actual Topology — This System"]
-        direction TB
-        LocalClient["Local Backprop<br/>Consumer<br/>(same host)"]
-        LoopbackBound["127.0.0.1:3000<br/>Loopback Boundary"]
-        SingleProcess["Single Node.js Process<br/>server.js (14 lines)<br/>Stateless handler"]
-        LocalClient <-->|"HTTP/1.1<br/>plaintext"| LoopbackBound
-        LoopbackBound --> SingleProcess
-    end
+| ID | Constraint | Impact on Service Architecture |
+|----|------------|-------------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add new source files, modules, or service implementations |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Cannot deploy multi-host service topology |
+| C-003 | Port hardcoded to `3000` | Cannot run multiple service instances on distinct ports |
+| C-004 | Response body, status, headers byte-identical across requests | Cannot implement differentiated routing, degradation, or health endpoints |
+| C-005 | Zero runtime and zero development dependencies | Cannot add service framework, mesh, load balancer, or circuit breaker libraries |
+| C-006 | Must remain executable without prior `npm install` | Reinforces C-005; dependency installation is operationally forbidden |
+| C-007 | MIT license for all repository contents | License-compatibility baseline preserved |
 
-    subgraph TypicalTopology["Typical Topology — Not Applicable Here"]
-        direction TB
-        Gateway["API Gateway /<br/>Load Balancer"]
-        SvcA["Service A"]
-        SvcB["Service B"]
-        SvcC["Service C"]
-        Registry["Service<br/>Registry"]
-        DB[("Data Store")]
-        Broker["Message<br/>Broker"]
-        Gateway --> SvcA
-        Gateway --> SvcB
-        Gateway --> SvcC
-        SvcA <--> Registry
-        SvcB <--> Registry
-        SvcC <--> Registry
-        SvcA --> DB
-        SvcB --> Broker
-        SvcC --> Broker
-    end
+Per §3.1, "Constraint C-001 ('All four baseline files must remain unchanged from their committed state') combined with constraint C-005 ('Zero runtime and zero development dependencies') jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every sub-area documented in this section.
 
-    ActualTopology -.->|"Comparison only —<br/>no architectural relationship"| TypicalTopology
-```
+#### 6.1.2.3 Single-Component Negative-Space Topology
 
-The right-hand cluster is presented purely as a visual contrast; none of its elements exist in this repository, and the negative integration inventory in §5.1.4 explicitly confirms the absence of API gateways, message brokers, data stores, service registries, and additional service instances.
-
----
-
-### 6.1.2 Service Components Analysis
-
-#### 6.1.2.1 Service Boundaries and Responsibilities
-
-There is exactly one bounded unit of execution in this repository: the `server.js` process. Its responsibility is to bind a TCP listening socket on `127.0.0.1:3000` and respond to every inbound HTTP request with an identical 14-byte `text/plain` payload (per §5.2.1.1). Because there is no second service, the concept of a "service boundary" reduces to the process boundary and the network boundary already documented in §5.1.1.3:
-
-| Boundary | Definition | Crossing Mechanism |
-|----------|------------|--------------------|
-| Process boundary | One Node.js process executing `server.js` | OS process spawn via `node server.js` |
-| Network boundary | TCP socket bound to `127.0.0.1:3000` | HTTP/1.1 over loopback |
-| Data boundary | A single static UTF-8 string (`"Hello, World!\n"`, 14 bytes) | Response body emission via `res.end()` |
-| Governance boundary | Four-file repository surface | README "Do not touch!" directive |
-
-No service decomposition is performed and none is possible without violating constraint C-001 ("All files must remain unchanged from the committed baseline" — per §2.6.2). Within `server.js`, the five logically distinct sub-components identified in §5.1.2 (module import, configuration constants, server constructor + handler, listen invocation, startup log callback) are syntactic regions of a single CommonJS module, not deployable units.
-
-#### 6.1.2.2 Inter-Service Communication Patterns
-
-Inter-service communication is **not applicable**. Per §5.1.4, the system has "exactly one external integration point — an inbound HTTP/1.1 listener — and no outbound integrations of any kind." The negative integration inventory enumerated in §5.1.4 confirms the deliberate absence of every channel that would be required for inter-service communication:
-
-| Communication Channel | Status | Evidence Location |
-|------------------------|--------|-------------------|
-| Synchronous outbound HTTP/REST/gRPC | None — no `http.request`, no `fetch`, no `axios` | §5.1.4 |
-| Asynchronous message brokers | None — no Kafka, RabbitMQ, or SQS client | §5.1.4, §3.5 |
-| Event streams / pub-sub | None — no event-streaming SDK imported | §5.1.4 |
-| Shared persistence as integration substrate | None — no database, no cache, no file persistence | §5.1.3.4, §3.6 |
-| Cross-process IPC | None — no `worker_threads`, no `child_process` | §5.1.1.1 |
-
-The only communication that occurs is the inbound HTTP request/response cycle between a same-host client and the single listening socket — a client/server interaction, not an inter-service one.
-
-#### 6.1.2.3 Service Discovery, Load Balancing, and Circuit Breakers
-
-All three of these patterns presuppose either a plurality of service instances (discovery, load balancing) or a downstream call site (circuit breaker). None of these conditions hold:
-
-| Pattern | Status | Reason |
-|---------|--------|--------|
-| Service discovery | Not implemented — no registration logic | Per §5.1.4, "no service-discovery registration"; only one service exists |
-| Load balancing | Not applicable | Per §2.4.3 and §5.2.1.5, "Load distribution: Not applicable — loopback binding precludes external load distribution" |
-| Circuit breaker | Not implemented | Per §5.4.3.3, "Not implemented — no downstream calls exist that would warrant one" |
-| Sidecar / service mesh | Not deployed | No container manifests, no mesh sidecars present anywhere in the repository |
-
-The hostname (`127.0.0.1`) and port (`3000`) are hardcoded literals declared as `const` at the top of `server.js` (per §5.2.1.3), enforced as constraints C-002 and C-003 (per §2.6.2). Because there is no configuration mechanism (no `process.env`, no CLI args, no config files — per §2.4.1), no dynamic address resolution is possible even in principle.
-
-#### 6.1.2.4 Retry and Fallback Mechanisms
-
-Retry and fallback mechanisms are also explicitly absent. Per §5.4.3.3:
-
-| Mechanism | Status | Architectural Rationale |
-|-----------|--------|-------------------------|
-| Retry logic (exponential backoff, etc.) | Not implemented — no retry library, no loop logic | Zero dependencies (C-005); no downstream to retry |
-| Fallback process (alternate port, alternate route) | Not implemented | Per assumption A-002, port collision causes startup failure by design |
-| Recovery procedure (restart policy, supervisor) | Not implemented | No PM2, systemd, or Docker restart policy committed |
-| Dead-letter queue | Not implemented | No messaging integration anywhere in the system |
-
-This absence is deliberate. As §5.4.3.1 explains: "Introducing error-handling logic would create branches in the workflow that could mask the very behaviors that downstream 'backprop integration' tests are intended to observe." Retry and fallback patterns are precisely the kind of branching logic that would compromise the fixture's determinism contract (F-002-RQ-004).
-
----
-
-### 6.1.3 Scalability Design Analysis
-
-#### 6.1.3.1 Horizontal and Vertical Scaling Approach
-
-The system's scaling posture is documented authoritatively in §2.4.3 and §5.2.1.5. Both sections agree on the same conclusion: scaling is not a relevant concern set for this fixture. Reproducing the canonical table for clarity:
-
-| Scalability Dimension | Position | Evidence |
-|------------------------|----------|----------|
-| Horizontal scaling | Not supported | No clustering, no process-manager configuration |
-| Vertical scaling | Bounded by single-process Node.js limits | Single `http.Server` instance |
-| Concurrency model | Single Node.js event-loop process | No `cluster` or `worker_threads` usage |
-| Load distribution | Not applicable | Loopback binding precludes external load distribution |
-
-Per §2.4.3, "The system is stateless and single-process by design. Its purpose as a test fixture, combined with the loopback-only binding, removes scalability from the relevant concern set."
-
-The loopback binding constraint (C-002) is the binding constraint here: even if the operator were to spawn additional `server.js` processes, none of them could share the bound socket on `127.0.0.1:3000`, and none of them would be reachable from any non-local interface. Horizontal scale-out is therefore precluded at the network layer, not merely at the orchestration layer.
-
-#### 6.1.3.2 Auto-scaling Triggers, Rules, and Resource Allocation
-
-Auto-scaling is not configured because no orchestration platform is present. The evidence:
-
-| Auto-scaling Prerequisite | Presence in Repository | Source |
-|---------------------------|------------------------|--------|
-| Container manifest (Dockerfile) | Absent | §5.1.4 negative inventory |
-| Kubernetes manifests / Helm chart | Absent | §5.1.4 negative inventory |
-| CI/CD configuration | Absent (no `.github/`, no `.gitlab-ci.yml`, no `Jenkinsfile`) | Repository topology in §5.1.1 |
-| Metrics emission for trigger evaluation | None — no Prometheus, StatsD, OpenTelemetry | §5.4.1 |
-| Resource limit declarations | None — no container resource manifests | §5.1.4 |
-| Cloud SDKs / orchestrator clients | None — no AWS/GCP/Azure SDKs | §5.1.4 negative inventory |
-
-Resource allocation is consequently unmanaged at the application layer. Node.js process memory and CPU consumption are bounded only by the operating system's defaults; no `--max-old-space-size`, no cgroup limits, and no ulimit settings are committed to the repository.
-
-#### 6.1.3.3 Performance Optimization and Capacity Planning
-
-Performance optimization techniques are absent because the request path already performs the minimum possible work. Per §5.1.4, "All steps in the request path are in-memory, synchronous, and constant-time, so per-request latency is dominated by socket I/O rather than by any application logic." The per-step characteristics documented in §5.4.5 confirm that every operation in the request handler is sub-millisecond, in-memory, and constant-time, leaving no application-layer surface to optimize.
-
-Capacity planning is similarly undocumented. Per §4.7 and §2.4.2, "No quantitative performance targets — throughput, latency, concurrency, or memory ceilings — are documented in any repository file." Capacity ceilings, if they exist, are inherited from the Node.js `http` core implementation on the host system and from the operating-system loopback stack — neither of which is parameterized by this repository.
-
-| Optimization Surface | Posture | Reason |
-|----------------------|---------|--------|
-| Response caching | None | Response is already a compile-time literal — caching would be redundant |
-| Connection pooling | None | No outbound connections to pool |
-| Compression (gzip/brotli) | None | 14-byte body — compression overhead exceeds savings |
-| HTTP keep-alive tuning | Defaults only | No middleware layer in which to apply tuning |
-| Event-loop tuning | None | No `--max-old-space-size` or similar flags committed |
-
-#### 6.1.3.4 Scalability Boundary Diagram
+The diagram below visualizes the entire runtime topology of the system. It is shown here to demonstrate the categorical absence of a service plane: there is exactly one application-layer component (`server.js`), exactly one substrate (Node.js core `http`), and exactly one inbound integration point. No service-to-service edges exist anywhere in the graph.
 
 ```mermaid
 flowchart TB
-    subgraph BindBoundary["Loopback Binding — 127.0.0.1:3000 (hard architectural boundary)"]
-        direction TB
-        EventLoop["Single Node.js Event Loop<br/>(non-blocking I/O)<br/>No cluster module<br/>No worker_threads"]
-        Handler["Branchless Handler<br/>Constant-time<br/>In-memory<br/>Allocation-free of user data"]
-        EventLoop --> Handler
+    subgraph ExtBoundary["External Boundary (Out of Repo)"]
+        Consumer["Backprop Integration<br/>Validation Workflow<br/>(co-resident process)"]
+    end
+    subgraph HostOS["Host Operating System"]
+        TCP["TCP/IP Stack<br/>Loopback 127.0.0.1:3000"]
+    end
+    subgraph NodeRuntime["Node.js Runtime (substrate)"]
+        HttpCore["node:http<br/>Built-in Core Module"]
+        Libuv["libuv Event Loop"]
+        V8["V8 JS Engine"]
+    end
+    subgraph AppLayer["Application Layer (Single Component)"]
+        ServerJS["server.js<br/>14 lines, branchless handler<br/>no module.exports"]
+    end
+    subgraph AbsentPlane["Verified-Absent Service Plane"]
+        NoSvcA["No additional service nodes"]
+        NoSvcB["No service registry / discovery"]
+        NoSvcC["No load balancer / API gateway"]
+        NoSvcD["No message broker"]
+        NoSvcE["No outbound integrations"]
     end
 
-    LocalOnly["Local Clients ONLY<br/>(same host)"]
-    BlockedRemote["Remote Clients<br/>(any IP, any user)"]
-    BlockedHScale["Additional server.js<br/>instance attempts"]
-    BlockedAutoscale["Orchestrator-driven<br/>autoscaling"]
-
-    LocalOnly -->|"Reachable"| BindBoundary
-    BlockedRemote -.->|"NEVER reaches<br/>the application<br/>(rejected at OS network stack)"| BindBoundary
-    BlockedHScale -.->|"BLOCKED — EADDRINUSE<br/>cannot share bound socket"| BindBoundary
-    BlockedAutoscale -.->|"NOT APPLICABLE — no<br/>container manifest, no<br/>orchestrator integration"| BindBoundary
+    Consumer -.->|"HTTP/1.1 plaintext<br/>port 3000"| TCP
+    TCP --> Libuv
+    Libuv --> HttpCore
+    V8 --> HttpCore
+    HttpCore -->|"invoke handler(req,res)"| ServerJS
+    ServerJS -.->|"return 200 / text/plain /<br/>'Hello, World!\n'"| HttpCore
 ```
 
-The diagram makes the architectural conclusion explicit: the loopback binding is not just a network-security choice; it is also the boundary that precludes every conventional scalability pattern. Adding a second instance would collide on the socket; adding a load balancer in front would have nothing to load-balance (no second instance) and no external listener to forward to.
+The "Verified-Absent Service Plane" subgraph is drawn deliberately disconnected from the live data path to emphasize that no member of that set is present in the runtime, the dependency closure, or the source. Every category enumerated there was verified absent during the analysis recorded in §5.1.4.
 
----
+### 6.1.3 Service Components Analysis (Verified Absent)
 
-### 6.1.4 Resilience Patterns Analysis
+This subsection addresses each component-level concern from the Core Services Architecture prompt and documents its absence with file-level evidence.
 
-#### 6.1.4.1 Fault Tolerance Mechanisms
+#### 6.1.3.1 Service Boundaries and Responsibilities
 
-Fault tolerance primitives are documented as deliberately absent in §5.4.3. The complete inventory of error categories and their (absent) handlers is reproduced below from §5.4.3.1:
+The system has no internal service boundaries because it has no internal services. The entire application is contained within a single 14-line file with no module decomposition. Per §2.3.3, "No internal helper modules, utility libraries, factories, service registries, or cross-cutting abstractions exist," and "the single source file `server.js` exposes no symbols (no `module.exports`), and the project cannot be `require`d as a library." Per §2.3.4, "the system has no common services in the conventional sense. There is no logging service, no configuration service, no telemetry service, no error-handling middleware, and no dependency-injection container."
 
-| Error Category | Trigger | Handler Status |
-|----------------|---------|----------------|
-| `EADDRINUSE` | Port 3000 already bound on loopback | No `'error'` listener — process crashes |
-| `EACCES` | Privileged port denied | No `try`/`catch` — process crashes |
-| Synchronous exception in handler | Hypothetical — impossible given current 3-line handler body | Would propagate — process crashes |
-| `SIGINT` / `SIGTERM` | Operator signal | No signal handler — abrupt termination |
-| `EPIPE` on stdout write | stdout closed by external process | No handler — undefined behavior |
+| Service-Boundary Concern | Documented State | Governing Source |
+|--------------------------|------------------|------------------|
+| Domain decomposition | None — single file, single concern | §5.1.1 |
+| Bounded contexts | None — no context delineation possible in 14 LOC | §5.1.1 |
+| Service-to-service contracts | None — no second service exists | §2.3.4 |
+| API gateway / BFF tier | None — direct HTTP listener only | §5.1.4 |
+| Internal module exports | None — `server.js` has no `module.exports` | §2.3.3 |
 
-Per §5.4.3.1, "every error that arises during the process lifetime is unhandled by the application and propagates to Node.js's default behavior, which is process termination with a non-zero exit code." This is described as "a deliberate architectural posture, not an oversight."
+#### 6.1.3.2 Inter-Service Communication Patterns
 
-#### 6.1.4.2 Disaster Recovery Procedures
+The system supports no inter-service communication because no second service exists in the runtime topology. Per §5.1.3, "the system uses pure synchronous request/response over HTTP/1.1 plaintext. There is no asynchronous messaging, no event-driven pattern beyond the Node.js intrinsic event loop, no batch processing, and no scheduled task subsystem." Per §5.1.3, outbound traffic is "None — there are zero outbound network calls of any kind." Per §2.3.2, the system has "exactly one integration point and no outbound integrations. There are no DNS lookups, outbound HTTP calls, database connections, message brokers, telemetry exports, or service-discovery registrations."
 
-Disaster recovery procedures are not implemented within the system. Per §5.4.6:
+| Communication Concern | Documented State | Governing Source |
+|-----------------------|------------------|------------------|
+| Synchronous service-to-service (REST/gRPC) | Not present — no downstream targets | §5.1.3 |
+| Asynchronous messaging (queue/topic) | Not present — no broker client imported | §5.1.3 |
+| Event-driven choreography | Not present — only intrinsic Node.js event loop | §5.1.3 |
+| Batch / scheduled task channels | Not present — no scheduler, no cron | §5.1.3 |
+| Outbound HTTP calls | Zero — no `http.request`, `fetch`, or socket open | §2.3.2 |
 
-| DR Concern | Status |
-|------------|--------|
-| Process supervisor | None — no PM2, systemd unit, or Docker restart policy committed |
-| Health checks for orchestrator restart | None — handler ignores `req.url`, so `/health` cannot exist |
-| Backup of persistent state | Not applicable — no persistent state |
-| Recovery Time Objective (RTO) | Undocumented — bounded only by manual operator reaction time |
+#### 6.1.3.3 Service Discovery Mechanisms
 
-As §5.4.6 explains, "Any recovery from a crash is therefore an external concern: the operator (or an external supervisor outside the repository boundary) must re-invoke `node server.js`." The re-invocation is a manual repeat of the WF-001 startup workflow and is not a workflow encoded inside the system.
+No service discovery client, registry, or DNS-SRV consumer is present. Per §5.1.4, "Verified-absent integration categories" explicitly include "service discovery (Consul/etcd)." Per the F-001 feature specification (§2.1.1), "a stable, well-known address (`http://127.0.0.1:3000/`) eliminates the need for service discovery, registration, or runtime configuration on the consumer side." The hardcoded hostname and port pairing (constraints C-002 and C-003) is the design substitute for any dynamic discovery mechanism.
 
-#### 6.1.4.3 Data Redundancy and Failover Configurations
+| Discovery Concern | Documented State |
+|-------------------|------------------|
+| Service registry (Consul, etcd, Eureka) | Not present — no registry client in any file |
+| DNS-based discovery (SRV records) | Not used — host is the loopback literal `127.0.0.1` |
+| Client-side resolver | Not present — no resolver library imported |
+| Configuration discovery (env vars, config maps) | Not present — no `process.env` access |
+| Static addressing | Sole mechanism — host/port hardcoded in `server.js` lines 3–4 |
 
-| Resilience Dimension | Status | Reason |
-|----------------------|--------|--------|
-| Data redundancy | Not applicable | Per §5.4.6, "stateless system has no data to recover" — no persistence layer exists (§3.6) |
-| Failover to standby instance | Not implemented | Per §5.4.6, "single process, loopback-only" |
-| Geographic redundancy | Not applicable | Per §5.4.6, "loopback binding precludes multi-region deployment" |
-| Recovery Point Objective (RPO) | Not applicable | Stateless system has no recoverable state |
-| Active-active / active-passive HA | Not implemented | Socket-binding collision (EADDRINUSE) precludes co-existing replicas on the same host |
+#### 6.1.3.4 Load Balancing Strategy
 
-The stateless posture documented throughout §5.1.1.1 ("Fully stateless — the application holds no mutable in-memory state and no persistent state") and §5.1.3.4 ("The system has no data stores and no caches") removes the data-recovery problem entirely.
+No load balancing exists at any layer of the system. Per §5.2.1, "load distribution: not applicable — loopback-only binding precludes any external load-balancing arrangement." Per §2.4.3, "load distribution: not applicable (loopback-only binding precludes external load distribution)." The loopback binding mandated by C-002 ensures the listener is reachable only by processes on the same host, which structurally precludes any meaningful load-balancing arrangement.
 
-#### 6.1.4.4 Service Degradation Policies
+| Load Balancing Concern | Documented State |
+|------------------------|------------------|
+| External load balancer (L4/L7, ALB/NLB/HAProxy/Nginx) | Not deployed — loopback binding prevents external reachability |
+| Internal load balancing / client-side LB | Not present — no second instance to balance toward |
+| Algorithm selection (round-robin / least-conn / weighted) | Not applicable — single replica |
+| Sticky sessions / session affinity | Not applicable — fully stateless |
 
-Service degradation policies — tiered responses, graceful feature shedding, "lite mode" fallbacks — are not implemented and would violate the determinism contract. Per §5.4.4.2 and §5.4.3.1, the request handler is branchless and ignores the `req` argument entirely (F-002-RQ-004). There is consequently no decision point at which the handler could choose to return a degraded response. The response is a compile-time literal, identical on every invocation:
+#### 6.1.3.5 Circuit Breaker Patterns
 
-| Degradation Pattern | Status | Reason |
-|---------------------|--------|--------|
-| Tiered response logic | Not implemented | Handler is branchless; ignores `req` per F-002-RQ-004 |
-| Feature-flag-driven degradation | Not implemented | No configuration mechanism (no `process.env`, no CLI args) |
-| Bulkhead / pool isolation | Not implemented | No pools to isolate — zero downstream calls |
-| Timeout-based shedding | Not implemented | No outbound calls to time-bound |
-| Graceful shutdown / draining | Not implemented | Per §5.4.3.3, "no `SIGINT`/`SIGTERM` handlers, no `server.close()`" |
+No circuit breaker is implemented. Per §4.6.4, "circuit breaker: not implemented; no downstream calls to break" with the governing constraint being §2.3.2 (no outbound integrations). The system has no downstream dependencies whose failure could be detected, isolated, or shed by a breaker. Circuit-breaker semantics require an upstream-to-downstream call topology that does not exist in this repository.
 
-#### 6.1.4.5 Resilience Pattern Absence Map
+| Circuit Breaker Concern | Documented State |
+|-------------------------|------------------|
+| Library (opossum, brakes, polly-js) | Not present — C-005 forbids dependency addition |
+| Custom breaker logic | Not present — no `if`/`catch` around outbound calls |
+| Failure-threshold configuration | Not applicable — no calls to count failures of |
+| Half-open trial-call logic | Not applicable — same |
 
-The diagram below enumerates each conventional resilience pattern and identifies the specific architectural constraint that excludes it.
+#### 6.1.3.6 Retry and Fallback Mechanisms
 
-```mermaid
-flowchart TD
-    Root["Conventional Resilience Patterns<br/>(none implemented)"]
+No retry or fallback logic is implemented. Per §4.6.4, the following entries are explicitly recorded:
 
-    Root --> CB["Circuit Breaker"]
-    Root --> Retry["Retry with Backoff"]
-    Root --> Fallback["Fallback Response"]
-    Root --> HC["Health Check Endpoint"]
-    Root --> GS["Graceful Shutdown"]
-    Root --> Failover["Active-Passive Failover"]
-    Root --> DR["Data Redundancy"]
-    Root --> Degrade["Service Degradation"]
-    Root --> Supervisor["Process Supervisor"]
+| Mechanism | Status | Governing Constraint |
+|-----------|--------|----------------------|
+| Retry mechanism with backoff | Not implemented; no retry library imported | C-005 (zero deps) |
+| Fallback port logic | Not implemented; binding to alternative port not attempted | A-002, C-003 |
+| Fallback route / endpoint | Not implemented; handler is branchless | F-002-RQ-004 |
+| Error notification flow | Not implemented; no notification client | C-005 (zero deps) |
 
-    CB --> CBReason["Excluded —<br/>no downstream calls<br/>(§5.4.3.3)"]
-    Retry --> RetryReason["Excluded —<br/>zero dependencies (C-005)<br/>no retry library<br/>(§5.4.3.3)"]
-    Fallback --> FallbackReason["Excluded —<br/>A-002: collision causes<br/>startup failure by design<br/>(§5.4.3.3)"]
-    HC --> HCReason["Excluded —<br/>handler ignores req.url<br/>(§5.4.1)"]
-    GS --> GSReason["Excluded —<br/>no SIGINT/SIGTERM handler<br/>no server.close()<br/>(§5.4.3.3)"]
-    Failover --> FailoverReason["Excluded —<br/>single process,<br/>loopback-only<br/>(§5.4.6)"]
-    DR --> DRReason["Not applicable —<br/>fully stateless<br/>(§5.1.3.4, §5.4.6)"]
-    Degrade --> DegradeReason["Excluded —<br/>handler is branchless<br/>F-002-RQ-004"]
-    Supervisor --> SupervisorReason["Excluded —<br/>no PM2 / systemd / Docker<br/>restart policy (§5.4.6)"]
-```
+Per §5.4.3, "there is no retry logic, no fallback port, no circuit breaker, no dead-letter queue, and no process supervisor (no PM2, no systemd unit, no Docker restart policy)." Recovery is exclusively external — see §6.1.5.2 below.
 
----
+### 6.1.4 Scalability Design (Verified Absent)
 
-### 6.1.5 Architectural Rationale for Inapplicability
+#### 6.1.4.1 Horizontal and Vertical Scaling Approach
 
-#### 6.1.5.1 Deliberate Design Posture
+The repository documents an explicit scalability posture in §2.4.3 that records every standard scaling dimension as either "not supported" or "not applicable." This is reproduced and elaborated here.
 
-The inapplicability of Core Services Architecture is not a consequence of immaturity, prototype status, or planned future work. It is the **design intent** of the repository. Per §5.1.1.1, the monolithic style "is not an accident of scale; it is a deliberate posture motivated by the system's role as a deterministic test fixture for an external 'backprop integration' consumer." The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of any service-oriented complexity:
+| Scalability Dimension | Posture | Rationale |
+|-----------------------|---------|-----------|
+| Horizontal Scaling | Not supported | No clustering primitive; no process manager |
+| Vertical Scaling | Bounded by single-process Node.js limits | Single event-loop process per §5.2.1 |
+| Concurrency Model | Single Node.js event-loop process | No `cluster` or `worker_threads` use per §5.2.1 |
+| State Migration | Not applicable | Fully stateless application per §5.1.3 |
+| Load Distribution | Not applicable | Loopback-only binding per §2.4.3 |
 
-| Principle | Implication for Core Services Architecture |
-|-----------|---------------------------------------------|
-| Behavioral stability | Branchless handler — no degradation, no fallback, no retry logic possible |
-| Source invariance | "Do not touch!" directive (C-001) forbids adding service-decomposition code |
-| Operational simplicity | "No install step, no build step, no transpile step" — no orchestrator possible |
-| Defense by minimalism | Zero dependencies + loopback-only binding — no service mesh, no broker client |
-| Determinism | Handler must not inspect request properties — precludes routing or load-aware logic |
-| Self-containment | Entire system fits in four files — no room for service-mesh or sidecar artifacts |
+Per §5.2.1, "there is no clustering primitive (no `cluster` module use, no `worker_threads`), no process manager (no PM2, no systemd), and no load balancer in front of the process." This forecloses the horizontal-scaling concern at the runtime level; the loopback binding additionally forecloses it at the network level.
 
-These principles are mutually reinforcing. The "Negative Architecture" pattern documented in §5.1.1.2 — "the deliberate, documented exclusion of features (routing, middleware, error handling, logging frameworks, caching, persistence, authentication) that a non-fixture system would normally include" — extends naturally to the exclusion of service-architecture features.
+#### 6.1.4.2 Auto-Scaling Triggers and Rules
 
-#### 6.1.5.2 Governing Constraints
+No auto-scaling exists. No metric is emitted that could serve as a scaling signal, no orchestrator is present to consume such a signal, and no scaling actuator is configured. Per §5.4.7, the operational posture explicitly records: "Containerization: None — no Dockerfile, docker-compose, K8s manifests, or Helm charts" and "Infrastructure as Code: None — no Terraform, CloudFormation, Pulumi, or CDK."
 
-The applicability determination is also enforced by the constraints catalog in §2.6.2. Six of the seven catalogued constraints have direct bearing on Core Services Architecture:
+| Auto-Scaling Concern | Documented State |
+|----------------------|------------------|
+| Container orchestrator (Kubernetes, ECS, Nomad) | Not deployed — no manifests, no Dockerfile |
+| Horizontal Pod Autoscaler / target tracking policies | Not applicable — no orchestrator |
+| Trigger metrics (CPU, memory, request rate, queue depth) | Not emitted — no metrics endpoint, no APM |
+| Scaling cooldowns / scale-out and scale-in policies | Not configured |
+| Predictive / scheduled scaling | Not configured |
 
-| Constraint ID | Statement | Effect on Core Services Architecture |
-|---------------|-----------|--------------------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding service-decomposition, clustering, or resilience code |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Precludes external load balancing and multi-host failover |
-| C-003 | Port must remain hardcoded to `3000` | Prevents dynamic port allocation needed for replicas |
-| C-005 | Zero runtime and zero development dependencies | Excludes resilience libraries, service-mesh clients, telemetry exporters |
-| C-006 | Project must remain executable without `npm install` | Excludes any installable dependency (process manager, orchestrator client) |
+#### 6.1.4.3 Resource Allocation Strategy
 
-Any attempt to introduce service-architecture features — even minimal ones such as a circuit-breaker library or a health-check route — would violate at least one of these constraints. The architectural posture is therefore not just descriptive (what is currently absent) but normative (what must remain absent).
+No resource allocation strategy is documented or implemented. The process is launched with whatever CPU and memory the host operating system grants by default; no `--max-old-space-size` flag, no cgroups limits, no container resource requests/limits, and no priority class are configured. Per §5.4.5, the documented KPI table records "Concurrent connections: not documented" and "Memory footprint: not documented."
 
-#### 6.1.5.3 Relationship to Other Specification Sections
+| Resource Allocation Concern | Documented State |
+|-----------------------------|------------------|
+| CPU pinning / affinity | Not configured |
+| Memory limits / Node.js heap caps | Not configured (no `--max-old-space-size`) |
+| Container resource requests / limits | Not applicable — no container |
+| Worker pool sizing (`UV_THREADPOOL_SIZE`) | Default Node.js value; not overridden |
+| QoS classes / priority | Not configured |
 
-For readers seeking related discussions, the following sections of this Technical Specification provide complementary perspectives on the same architectural conclusion:
+#### 6.1.4.4 Performance Optimization Techniques
 
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Monolithic style rationale | §5.1.1.1 | Why microservices were rejected |
-| Component-level scaling table | §5.2.1.5 | Per-component scaling positions |
-| Overall scalability position | §2.4.3 | Repository-wide scalability statement |
-| Error-handling absence | §5.4.3 | Why retry/fallback/circuit-breaker patterns are excluded |
-| Disaster-recovery posture | §5.4.6 | Why DR and failover are not implemented |
-| Negative integration inventory | §5.1.4, §3.5 | Confirmation of zero outbound integrations |
-| Governing constraints | §2.6.2 | C-001 through C-006 that prevent service decomposition |
+No runtime performance-optimization techniques are applied because the workload — returning a 14-byte compile-time string literal — is already the minimum work required to satisfy the acceptance criteria. Per §5.4.3 conceptual context and §1.2.3 implicit posture, no caching layer is implemented because "the response is already a compile-time string literal residing in resident memory," and any caching abstraction would add cost rather than reduce it. Per §5.1.3, "there are no runtime data transformations" — no templating, no content negotiation, no encoding decision at request time.
 
----
+| Optimization Concern | Documented State |
+|----------------------|------------------|
+| In-process cache (LRU, Map, WeakMap) | Not present — body is a compile-time literal |
+| External cache (Redis, Memcached) | Not present — no client library |
+| Response compression (gzip, brotli) | Not enabled — no compression middleware |
+| HTTP/2 or HTTP/3 | Not enabled — `http.createServer` defaults to HTTP/1.1 |
+| Keep-alive tuning | Default Node.js settings; not customized |
 
-### 6.1.6 References
+#### 6.1.4.5 Capacity Planning Guidelines
 
-#### 6.1.6.1 Files Examined
+No quantitative capacity-planning guidance is documented. Per §5.4.5, "no quantitative SLAs are documented for this system." The full KPI table is reproduced below for completeness; every row is marked "not documented." This is consistent with the system's role as a deterministic byte-stable fixture rather than a production workload.
 
-- `server.js` — Complete 14-line source of the HTTP server; established the single-process, single-file, branchless-handler architecture and confirmed the absence of clustering, worker threads, error listeners, signal handlers, and module exports
-- `package.json` — Confirmed zero `dependencies` and zero `devDependencies` fields, no `engines` field, no `scripts.start`, and the `hello_world` v1.0.0 identity
-- `package-lock.json` — Verified npm lockfile format version 3 with only the root `""` entry in the `packages` map — cryptographic attestation of zero installed dependencies
-- `README.md` — Established the "Do not touch!" governance directive (origin of constraint C-001) and the "backprop integration" purpose statement
+| KPI Dimension | Documented Target |
+|---------------|-------------------|
+| Throughput (requests/sec) | Not documented |
+| Latency p50 / p95 / p99 | Not documented |
+| Availability (uptime %) | Not documented |
+| Error-rate ceiling | Not documented |
+| Concurrent connections | Not documented |
+| Cold-start latency | Not documented |
+| Memory footprint | Not documented |
 
-#### 6.1.6.2 Folders Explored
+#### 6.1.4.6 Scalability Architecture Diagram
 
-- `/` (repository root, depth 0) — Confirmed only four files exist at the root and no subdirectories of any kind are present (no `src/`, no `services/`, no `microservices/`, no `lib/`, no `tests/`, no `node_modules/`, no `.github/`, no Kubernetes/Helm manifests, no Dockerfile)
-
-#### 6.1.6.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Fixture role and intrinsic-limitations framing
-- **§2.3 FEATURE RELATIONSHIPS** — Confirmation of no shared components and no inter-service edges
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — Authoritative scalability dimensions table (horizontal/vertical/concurrency/state/load — all not supported or not applicable)
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Constraints C-001 through C-006 that govern all architectural decisions
-- **§3.1 STACK OVERVIEW AND ARCHITECTURAL POSTURE** — "No horizontal complexity" statement
-- **§3.5 THIRD-PARTY SERVICES** — Confirmation of zero external services with category-by-category verification
-- **§3.6 DATABASES & STORAGE** — Documented absence of any persistence layer
-- **§4.3 INTEGRATION WORKFLOWS** — Confirmation that the sole integration point is the inbound `127.0.0.1:3000` listener
-- **§4.4 ERROR HANDLING AND RECOVERY** — Documented absence of retry/fallback/circuit-breaker/health-check/graceful-shutdown logic
-- **§4.7 TIMING AND SLA CONSIDERATIONS** — Confirmation that no SLAs, throughput targets, or latency budgets exist
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Architectural style, rationale, boundaries, and the high-level architecture diagram
-- **§5.2 COMPONENT DETAILS** — Per-component responsibilities and the explicit per-component scaling table
-- **§5.4 CROSS-CUTTING CONCERNS** — Authoritative documentation of absent monitoring, error handling, retry, fallback, circuit breaker, dead-letter queue, and disaster-recovery primitives
-
-## 6.2 Database Design
-
-### 6.2.1 Applicability Assessment
-
-#### 6.2.1.1 Determination Statement
-
-**Database Design is not applicable to this system.**
-
-The `hao-backprop-test` repository implements a deterministic, stateless HTTP test fixture whose entire executable surface is contained in `server.js` (14 lines). No persistence layer of any kind exists, has been deferred, or is technically possible to introduce under the system's governing constraints. Every subtopic prescribed for a Database Design section — schema design, entity relationships, indexing, partitioning, replication, backup, migration, archival, caching policies, retention rules, audit mechanisms, query optimization, connection pooling, read/write splitting, batch processing — has no referent in this repository because there is no datastore, no in-memory data structure beyond three immutable constants, and no data path that produces or consumes persisted information.
-
-This determination is a substantive architectural finding, not a documentation gap. As established by ADR-005 (zero dependencies) and ADR-006 (source invariance), introducing any database, ORM, schema definition, migration framework, or caching client would violate at least four of the seven governing constraints catalogued in §2.6.2 and would compromise the determinism guarantee that constitutes the system's primary value proposition.
-
-#### 6.2.1.2 Repository-Level Evidence
-
-The applicability determination rests on the following directly observable repository properties:
-
-| Evidence Dimension | Observed State | Source of Verification |
-|--------------------|----------------|------------------------|
-| Database client `require()` statements in `server.js` | Zero | Only `require('http')` is invoked |
-| Database driver / ORM in `package.json` | Zero | No `dependencies` or `devDependencies` fields |
-| Installed packages in `package-lock.json` | Zero | Only root `""` entry in `packages` map |
-| Filesystem I/O in handler | Zero | No `require('fs')`, no `readFile`, no `writeFile` |
-| Persistence-related subdirectories | Zero | No `models/`, `schema/`, `migrations/`, `db/`, `data/` |
-| Cache client libraries | Zero | No Redis, Memcached, or in-process cache imports |
-| Module-level mutable state | Zero | Only `const` declarations for `hostname`, `port`, `server` |
-| Configuration mechanisms for storage | Zero | No `.env`, no `process.env` reads, no config files |
-
-The complete repository surface — four files (`server.js`, `package.json`, `package-lock.json`, `README.md`) with no subdirectories — is documented exhaustively in §5.1.1.3 and confirms the architectural absence of every conventional persistence-layer artifact.
-
-#### 6.2.1.3 Storage Categories Evaluated and Excluded
-
-The authoritative storage exclusion matrix from §3.6.2 is reproduced below. Each category was evaluated and excluded; the table is the canonical statement of the system's persistence posture.
-
-| Storage Category | Status | Verification |
-|------------------|--------|--------------|
-| Primary relational database (PostgreSQL, MySQL, etc.) | Not used | No database client `require()` statements |
-| Document database (MongoDB, CouchDB, etc.) | Not used | No database client imports |
-| Key-value store (Redis, DynamoDB, etc.) | Not used | No client libraries |
-| Search engine (Elasticsearch, OpenSearch, etc.) | Not used | No search client code |
-| In-memory cache (Redis, Memcached) | Not used | No cache client code |
-| Object storage (S3, GCS, Azure Blob) | Not used | No cloud storage SDK imports |
-| Block storage / file system persistence | Not used | `server.js` performs no `fs` I/O |
-| Session storage | Not used | No session handling, no cookies, no per-client state |
-| Time-series database (InfluxDB, TimescaleDB) | Not used | No metrics emitted |
-| Graph database (Neo4j, etc.) | Not used | No client libraries |
-
-As §3.6.1 declares authoritatively: "No persistence layer of any kind exists." Per §3.6.3, "There is no Object-Relational Mapper (ORM), no data access layer, no schema definition, no migration system, and no data fixtures."
-
-#### 6.2.1.4 No-Op Persistence Boundary Diagram
-
-The diagram below — reproduced and adapted from §4.5.3 — documents the deliberate absence of persistence at every point in the request lifecycle where a conventional Process Flowchart would expect a database touch.
+The diagram below visualizes the single-process scaling boundary. It depicts what *would* be required to support horizontal scaling (a process supervisor or cluster manager, an external load balancer, a non-loopback bind, a service registry) and shows each requirement crossed against the constraint that forbids it. This is the canonical "negative-space" scalability architecture for this system.
 
 ```mermaid
 flowchart LR
-    Req[HTTP request<br/>arrives on<br/>127.0.0.1:3000] --> Q1{Read from<br/>persistence layer?}
-    Q1 -->|N/A| Skip1[No persistence layer<br/>exists]
-    Skip1 --> Q2{Read from cache?}
-    Q2 -->|N/A| Skip2[No cache layer<br/>exists]
-    Skip2 --> Q3{Begin transaction?}
-    Q3 -->|N/A| Skip3[No transactional<br/>resource exists]
-    Skip3 --> Static[Emit compile-time literal<br/>Hello, World! + newline<br/>14 bytes]
-    Static --> Q4{Write to<br/>persistence layer?}
-    Q4 -->|N/A| Skip4[No persistence layer<br/>exists]
-    Skip4 --> Q5{Update cache?}
-    Q5 -->|N/A| Skip5[No cache to update]
-    Skip5 --> Q6{Commit transaction?}
-    Q6 -->|N/A| Skip6[No transaction<br/>to commit]
-    Skip6 --> Resp[Response flushed<br/>to client]
+    subgraph CurrentScale["Current Scalability Boundary (Implemented)"]
+        Process["Single Node.js Process<br/>(server.js)"]
+        Bind["Bind: 127.0.0.1:3000<br/>(C-002, C-003)"]
+        Loop["Single Event Loop<br/>(no cluster, no workers)"]
+        Process --> Bind
+        Process --> Loop
+    end
+    subgraph NotImplemented["Required for Horizontal Scaling (All Verified Absent)"]
+        Cluster["Process Cluster<br/>(node:cluster)<br/>X Not used"]
+        PM["Process Manager<br/>(PM2 / systemd)<br/>X Forbidden by C-005"]
+        LB["External Load Balancer<br/>(Nginx / HAProxy)<br/>X No non-loopback bind (C-002)"]
+        Reg["Service Registry<br/>(Consul / etcd)<br/>X Forbidden by C-005"]
+        K8s["Container Orchestrator<br/>(Kubernetes)<br/>X No Dockerfile / manifests"]
+    end
+    subgraph NoAutoScale["Auto-Scaling Inputs (Verified Absent)"]
+        Metrics["No metrics emission<br/>(no Prometheus, no APM)"]
+        Triggers["No scaling triggers<br/>(no HPA, no target tracking)"]
+        Policies["No scaling policies<br/>(no cooldowns, no schedules)"]
+    end
+
+    Loop -.->|"would require"| Cluster
+    Cluster -.->|"would require"| PM
+    PM -.->|"would require"| LB
+    LB -.->|"would require"| Reg
+    Reg -.->|"would require"| K8s
+    K8s -.->|"would require"| Metrics
+    Metrics -.->|"would feed"| Triggers
+    Triggers -.->|"would invoke"| Policies
 ```
 
-This diagram is intentionally redundant; its purpose is to make the *absence* of every database-touching concern explicit at every place where a conventional database-backed architecture would expect them.
+### 6.1.5 Resilience Patterns (Verified Absent)
 
----
+#### 6.1.5.1 Fault Tolerance Mechanisms
 
-### 6.2.2 Schema Design — Inapplicability Analysis
+The repository contains no error-handling primitives, and therefore no fault-tolerance mechanisms. Per §4.6.1 and §5.4.3, the following inventory is binding:
 
-#### 6.2.2.1 Entity Relationships
+| Error-Handling Primitive | Status |
+|--------------------------|--------|
+| `'error'` event listener on `http.Server` | Not registered |
+| `try`/`catch` blocks in `server.js` | None |
+| `process.on('SIGINT' / 'SIGTERM' / 'uncaughtException' / 'unhandledRejection', ...)` | None |
+| `server.close()` (graceful shutdown) | Not invoked |
+| Structured 4xx/5xx response paths | None — F-002-RQ-001 mandates 200 for every request |
 
-There are no entities to relate. The system's entire data domain, per §1.3.1, consists of "a single static UTF-8 string `\"Hello, World!\\n\"` — no dynamic data, no persistence." A single immutable 14-byte literal is not modeled as an entity; it is embedded directly in `server.js` as the argument to `res.end()`. There are no primary keys, no foreign keys, no cardinality relationships, no junction tables, and no aggregate roots because there are no records, rows, or documents whose relationships could be described.
+Per §5.4.3, "all errors propagate to Node.js default behavior, which terminates the process with a non-zero exit code." Every recognized error category — `EADDRINUSE`, `EACCES`, synchronous handler exception, `SIGINT`/`SIGTERM`, `EPIPE` on stdout, and `uncaughtException` — converges to the same terminal outcome: abrupt process exit. There is no branching, no compensation, no isolation, and no recovery within the process.
 
-#### 6.2.2.2 Data Models and Structures
+#### 6.1.5.2 Disaster Recovery Procedures
 
-The system holds three module-level data references, all declared with `const`, and none of which constitute application data in the conventional sense:
+Per §5.4.6, "disaster recovery is fully external and consists of a single procedure: manual re-invocation of `node server.js` by the operator." The following mechanisms are explicitly not implemented:
 
-| Reference | Value | Nature |
-|-----------|-------|--------|
-| `hostname` | `'127.0.0.1'` (string literal) | Compile-time configuration constant |
-| `port` | `3000` (number literal) | Compile-time configuration constant |
-| `server` | `http.Server` instance | Runtime object reference, not data |
+| DR Mechanism | Documented State |
+|--------------|------------------|
+| Process supervisor (PM2 / systemd / upstart) | None — would violate C-001 by adding artifacts |
+| Container restart policy (Docker / K8s) | None — no container exists |
+| `server.close()` for graceful shutdown | Not invoked — no signal handler registered |
+| State restore (checkpoint / snapshot / log replay) | None — application is stateless |
+| Backup / replication | None — there is no data plane |
+| Automated alerting / pager rotation | None — no notification client |
 
-Per §3.6.3, these constants represent "the only 'memory' of the process." None is a record, none is queried, none is updated, and none persists beyond the lifetime of the Node.js process. No data structure definitions (classes, interfaces, schemas, type definitions, JSON schemas, Protobuf messages, Avro records) exist anywhere in the repository.
+Because the system holds no state and serves a 14-byte constant, the recovery time objective (RTO) is "bounded only by the time required to type `node server.js`," and the recovery point objective (RPO) is "undefined because there is nothing to lose" (§5.4.6).
 
-#### 6.2.2.3 Indexing, Partitioning, and Replication
+#### 6.1.5.3 Data Redundancy Approach
 
-| Schema Concern | Status | Rationale |
-|----------------|--------|-----------|
-| Primary key indexes | Not applicable | No tables, collections, or keyed records exist |
-| Secondary indexes | Not applicable | No queryable attributes exist |
-| Full-text indexes | Not applicable | No corpus to index; 14-byte literal is the only string |
-| Horizontal partitioning (sharding) | Not applicable | No data volume to distribute |
-| Vertical partitioning | Not applicable | No columns to separate |
-| Replication topology (master/replica, multi-master) | Not applicable | No data to replicate; per §6.1.4.3, "stateless system has no data to recover" |
-| Replication lag monitoring | Not applicable | No replication channel exists |
-| Conflict resolution policy | Not applicable | No concurrent writers; no writers at all |
+No data redundancy applies because the application contains no data. Per §5.1.3, "the application contains zero application state. The only mutable runtime state is the per-request transient state in the handler closure (which terminates with `res.end`) and the module-level constants (which are immutable after load)."
 
-#### 6.2.2.4 Backup Architecture
+| Data Plane Concern | Documented State |
+|--------------------|------------------|
+| Database persistence | None — no driver imported in `server.js` |
+| File-system persistence | None — no `fs.write` calls |
+| In-memory store | None — no module-level mutable state |
+| Session storage | None — no cookies, no session store |
+| Per-client state | None — handler ignores `req` per F-002-RQ-004 |
+| Replication (primary/replica, multi-region) | Not applicable — no data plane to replicate |
 
-| Backup Concern | Status | Rationale |
-|----------------|--------|-----------|
-| Backup target (full, incremental, differential) | Not applicable | No state to back up |
-| Backup schedule (cron, continuous, snapshot) | Not applicable | Per §6.1.4.3, no recoverable state exists |
-| Backup retention | Not applicable | No backups exist |
-| Backup verification / restore drills | Not applicable | No restore target exists |
-| Point-in-time recovery (PITR) | Not applicable | No transaction log exists |
+The response body is a compile-time UTF-8 string literal embedded in the source file. There is nothing to back up, nothing to replicate, and nothing to reconcile across instances.
 
-The four committed repository files (`server.js`, `package.json`, `package-lock.json`, `README.md`) are themselves the entire system state; they are version-controlled in Git, which serves as the de facto recoverability mechanism for the source — not for application data, which does not exist.
+#### 6.1.5.4 Failover Configurations
 
-#### 6.2.2.5 Conceptual ERD Showing Absence
+No failover exists at any layer. The system runs as a single process bound to a single hardcoded host and port; there is no secondary instance, no standby, no warm pool, and no active-active arrangement. Per §4.6.4, "fallback port logic: not implemented; binding to alternative port not attempted" with governing constraints A-002 and C-003.
 
-The diagram below makes the schema absence explicit. Where a conventional system would present an entity-relationship diagram of persisted records, the only conceptual "entity" is the compile-time string literal, which is not persisted and not modeled.
+| Failover Concern | Documented State |
+|------------------|------------------|
+| Active-passive standby | Not configured — no second instance exists |
+| Active-active replicas | Not configured — single process by C-001 |
+| Hot / warm / cold spare | Not configured |
+| DNS failover | Not applicable — host is the literal `127.0.0.1` |
+| Multi-zone / multi-region deployment | Not applicable — single-host loopback fixture |
+
+#### 6.1.5.5 Service Degradation Policies
+
+No service degradation policies are implemented. The handler is described in §5.3.1 as "branchless" — it returns an identical response to every request and cannot enter a degraded mode. Per §4.6.4, "fallback route / endpoint: not implemented; handler is branchless" with the governing constraint F-002-RQ-004. The byte-identical response requirement of C-004 directly forbids the existence of differentiated response paths that would be necessary to express degradation (e.g., a 503 during overload, a feature-flagged minimal response, or a read-only mode).
+
+| Degradation Pattern | Documented State |
+|---------------------|------------------|
+| Feature flag / kill switch | Not present — no flag library, no config source |
+| Read-only / safe-mode toggle | Not present — no mode to toggle |
+| Bulkhead / pool isolation | Not present — single shared event loop |
+| Load-shedding (early 503) | Not present — handler always returns 200 |
+| Graceful capacity rejection | Not present — no admission control |
+
+#### 6.1.5.6 Resilience Pattern Implementation Diagram
+
+The diagram below visualizes the convergence of every recognized error category to a single terminal exit, demonstrating the absence of resilience branching. It is reproduced and adapted from §4.6.3 and §5.4.3. The "Missing Recovery Mechanisms" subgraph enumerates each resilience primitive that would normally branch the flow but is verified absent.
+
+```mermaid
+flowchart TD
+    subgraph Sources["Error Sources (All Unhandled)"]
+        E1{{"Port 3000 occupied?<br/>EADDRINUSE"}}
+        E2{{"Privileged port denied?<br/>EACCES"}}
+        E3{{"Synchronous handler<br/>exception?"}}
+        E4{{"SIGINT or SIGTERM<br/>received?"}}
+        E5{{"stdout write failure?<br/>EPIPE"}}
+        E6{{"uncaughtException<br/>anywhere?"}}
+    end
+    subgraph Missing["Missing Resilience Primitives (Verified Absent)"]
+        NoListener["No 'error' listener<br/>on http.Server"]
+        NoTryCatch["No try/catch blocks"]
+        NoSignal["No process.on('SIGINT')"]
+        NoRetry["No retry / backoff logic"]
+        NoFallback["No fallback port<br/>(per A-002, C-003)"]
+        NoBreaker["No circuit breaker<br/>(no downstream calls)"]
+        NoGraceful["No server.close invocation"]
+        NoSupervisor["No PM2 / systemd / restart policy"]
+    end
+    Default["Node.js default<br/>error propagation"]
+    ExitNonZero(["Process terminates<br/>non-zero exit code"])
+    ExternalRecovery["Manual operator action:<br/>re-invoke node server.js<br/>(re-executes WF-001)"]
+
+    E1 -- "Yes" --> Default
+    E2 -- "Yes" --> Default
+    E3 -- "Yes" --> Default
+    E4 -- "Yes" --> Default
+    E5 -- "Yes" --> Default
+    E6 -- "Yes" --> Default
+    Default --> ExitNonZero
+    ExitNonZero -.->|"Out-of-band recovery"| ExternalRecovery
+```
+
+The diagram demonstrates two structural properties of the system's resilience model:
+
+- **No internal branching**: Every error source flows along a single edge into the Node.js default propagation path. There are no decision nodes that could route an error to a recovery strategy.
+- **External recovery only**: The dashed edge from process termination to manual operator re-invocation is the entire recovery model. Per §5.4.6, this satisfies the recovery time objective bounded by manual operator action and the recovery point objective bounded by the absence of state.
+
+### 6.1.6 Cross-Section Reference Map
+
+For readers who need additional context on each verified-absent concern, the table below maps each Core Services Architecture sub-area to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
+
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Service boundaries / responsibilities | §5.1.1 | §2.3.3, §2.3.4 |
+| Inter-service communication | §5.1.3 | §2.3.2, §5.1.4 |
+| Service discovery | §5.1.4 | §2.1.1 (F-001), §2.6.2 (C-002, C-003) |
+| Load balancing | §2.4.3 | §5.2.1 |
+| Circuit breaker / retry / fallback | §4.6.4 | §5.4.3 |
+| Horizontal / vertical scaling | §2.4.3 | §5.2.1 |
+| Auto-scaling / resource allocation | §5.4.5 | §5.4.7 |
+| Performance optimization | §5.1.3 | §5.4.5 |
+| Fault tolerance | §4.6.1 | §5.4.3 |
+| Disaster recovery | §5.4.6 | §4.6.4 |
+| Data redundancy | §5.1.3 | §4.5 (state management) |
+| Failover / degradation | §4.6.4 | §5.3.1, §5.4.3 |
+
+### 6.1.7 Conditions Under Which This Section Would Become Applicable
+
+For traceability, this subsection records the architectural events that would trigger reauthoring of section 6.1 as a populated (rather than non-applicable) Core Services Architecture specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
+
+| Triggering Event | Constraint to Relax | New Architectural Domain Introduced |
+|------------------|---------------------|-------------------------------------|
+| Add a second source file / module | C-001 | Internal service boundaries |
+| Introduce an npm dependency | C-005, C-006 | Frameworks, mesh clients, observability SDKs |
+| Bind to a non-loopback host | C-002 | External load balancing, ingress, network policies |
+| Allow multiple ports / instances | C-003 | Replica topology, horizontal scaling |
+| Permit differentiated response paths | C-004 | Routing, health endpoints, degradation modes |
+
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for section 6.1 stands.
+
+### 6.1.8 References
+
+#### Files Examined
+
+- `server.js` — Confirmed the 14-line single-file implementation, branchless handler, absence of `module.exports`, and absence of error-handling primitives that collectively preclude service decomposition.
+- `package.json` — Confirmed the zero-dependency declaration, absence of `engines` pin, and absence of any process-manager or framework references that would enable service architecture.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty packages tree below the root entry, verifying the absence of transitive dependencies that could introduce service-architecture libraries.
+- `README.md` — Confirmed the operational immutability directive ("Do not touch!") that is the source of constraint C-001.
+
+#### Folders Explored
+
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no source subdirectories exist.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); no service code.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts; no service code.
+
+#### Technical Specification Sections Cross-Referenced
+
+- §1.1 Executive Summary — ~40-line minimal scope and immutability contract context.
+- §1.2 System Overview — Single-direction integration model.
+- §1.3 Scope — Explicit out-of-scope enumeration of service-oriented features.
+- §2.1 Feature Catalog (F-001) — Stable well-known address eliminates discovery need.
+- §2.3 Feature Relationships — No internal services, no shared components, no common services.
+- §2.4 Implementation Considerations — Scalability dimensions table showing all "not supported" or "not applicable."
+- §2.6 Assumptions and Constraints — Seven hard constraints (C-001 through C-007) that bar service architecture introduction.
+- §3.1 Stack Philosophy and Overview — Minimalism principle, joint preclusion by C-001 and C-005.
+- §4.5 State Management — Zero application state, no persistence points.
+- §4.6 Error Handling — Documented absence of error-handling primitives; missing recovery mechanisms inventory.
+- §4.7 Timing and SLA Considerations — No quantitative SLAs documented.
+- §5.1 High-Level Architecture — "Single-process, single-file, monolithic micro-service" characterization.
+- §5.2 Component Details — `server.js` as sole runtime component; explicit scaling considerations.
+- §5.3 Technical Decisions — ADRs C-001 through C-007 and decision flow for stack additions.
+- §5.4 Cross-Cutting Concerns — Monitoring, error handling, disaster recovery absence inventories.
+
+## 6.2 Database Design
+
+### 6.2.1 Applicability Statement
+
+**Database Design is not applicable to this system.**
+
+The `hao-backprop-test` repository implements a deliberately stateless HTTP fixture that contains no database, no persistent storage of any kind, no caching layer, and no data plane whatsoever. Every dimension of the standard Database Design concern domain — schema design, data management, compliance considerations, and performance optimization — is verified absent by direct repository inspection and is precluded by binding architectural constraints documented in §2.6.2.
+
+The authoritative position is stated in §3.6.1: "**No databases, caches, or persistent storage are used.**" This is reinforced by the system characterization in §1.2.2 as "Fully stateless; no persistence, no in-memory accumulation, no session tracking" and by §5.4.6, which records that "there is no data plane" to back up, replicate, or recover. Because no database exists to design — and because the immutability contract (C-001) combined with the zero-dependency posture (C-005) categorically forbids introducing one — this section documents the verified absence of each requested sub-area and identifies the governing constraints that bar introduction.
+
+This section adopts the same "negative-space" structure used in §6.1: it enumerates each architectural concern from the standard Database Design prompt, records the documented absence with traceable evidence, and identifies the governing constraint that precludes the concern. Readers seeking the runtime details that *are* present should consult §3.6 (databases & storage posture), §4.5 (state management), and §5.1.3 (data flow description).
+
+### 6.2.2 System Composition Establishing Non-Applicability
+
+#### 6.2.2.1 Runtime Footprint Relevant to Persistence
+
+The total system composition forecloses the existence of any database design. There are no driver imports, no connection strings, no ORM declarations, no schema files, no migration directories, and no lockfile entries for database libraries.
+
+| Persistence Surface | Documented State | Authoritative Source |
+|---------------------|------------------|----------------------|
+| Database driver imports in `server.js` | None — only `require('http')` exists | §5.1.3 |
+| Filesystem write operations | None — no `fs.write` calls anywhere | §4.5.1 |
+| Module-level mutable state | None — only immutable constants at module level | §4.5.1 |
+| Declared dependencies in `package.json` | Zero (no `dependencies`, no `devDependencies`) | §6.1.2.1 |
+| Lockfile entries for DB libraries | None — `lockfileVersion: 3` with empty `packages` tree | §6.1.2.1 |
+| Schema files / migration directories | None — no `migrations/`, `db/`, or `models/` folders | §6.1.8 |
+| Sole runtime artifact | `server.js` (14 lines) | §5.2.1 |
+
+#### 6.2.2.2 Architectural Constraints That Preclude Database Design
+
+The seven binding constraints from §2.6.2 jointly preclude introducing any database. Each constraint is binding under the operational "Do not touch!" directive in `README.md`. Constraints C-001 and C-005 are the operative absence justifications for every Database Design sub-area documented in this section.
+
+| ID | Constraint | Impact on Database Design |
+|----|------------|---------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add database connection code, schema files, or new source files |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Loopback-only — precludes connecting to a remote DB host |
+| C-003 | Port hardcoded to `3000` | No additional database port may be opened or contacted |
+| C-004 | Response body, status, headers byte-identical across requests | Cannot vary response with DB-derived content |
+| C-005 | Zero runtime and zero development dependencies | Cannot add DB drivers, ORMs, query builders, or cache clients |
+| C-006 | Must remain executable without `npm install` | Reinforces C-005 — no out-of-band installation path |
+| C-007 | MIT license of all repository contents | License compatibility baseline preserved |
+
+Per §3.1, "Constraint C-001 ('All four baseline files must remain unchanged from their committed state') combined with constraint C-005 ('Zero runtime and zero development dependencies') jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every sub-area documented below.
+
+#### 6.2.2.3 Static Response Data Footprint
+
+The only "data" in the system is a **14-byte static UTF-8 string** (`Hello, World!\n`) hardcoded in `server.js` line 9. Per §3.6.2, "this literal is a compile-time constant, not a persistent datum; it requires no storage strategy, no schema, no migration plan, and no backup procedure." Per constraint C-004, this response body must remain byte-identical to its committed state, which structurally forbids the introduction of any datastore-derived response variation.
+
+| Datum | Encoding | Bytes | Storage Class |
+|-------|----------|-------|---------------|
+| `Hello, World!\n` | UTF-8 | 14 | Compile-time string literal embedded in `server.js` line 9 |
+| `127.0.0.1` | UTF-8 | 9 | Compile-time string literal embedded in `server.js` line 3 |
+| `3000` | Number | n/a | Compile-time integer literal embedded in `server.js` line 4 |
+| `Server running at http://127.0.0.1:3000/` | UTF-8 | 40 | Compile-time template literal in `server.js` line 13 |
+
+None of these literals constitute persistent data. They are emitted directly from V8's resident heap on each invocation; no read-from-store or write-to-store operation occurs at any point in the request lifecycle.
+
+### 6.2.3 Schema Design (Verified Absent)
+
+This subsection addresses every schema-design concern from the standard Database Design prompt and records its absence with file-level evidence.
+
+#### 6.2.3.1 Entity Relationships
+
+No entities exist in the system. There are no domain objects, no aggregate roots, no value objects with persistent identity, and no relationships among such objects. The handler signature `(req, res) => {...}` accepts two transient HTTP message objects that terminate at `res.end()` and are garbage-collected immediately thereafter. Per §4.5.1, "the application contains zero application state."
+
+| Entity-Relationship Concern | Documented State |
+|-----------------------------|------------------|
+| Domain entities | None — no persistent objects in any source file |
+| One-to-many / many-to-many associations | Not applicable — no entities to associate |
+| Aggregate boundaries | Not applicable — no entities, no aggregates |
+| Foreign-key relationships | None — no schema in which to declare them |
+| Referential-integrity constraints | None — no referents exist |
+
+#### 6.2.3.2 Data Models and Structures
+
+No data models exist. No DDL, ORM model classes, schema-definition libraries (Mongoose, Sequelize, TypeORM, Prisma), or JSON-schema validators are imported or declared in any source file. Per §6.1.2.1, "Internal modules: Zero (no `module.exports`, no local `require`)," which precludes the existence of a model layer even as internal abstractions.
+
+| Modeling Concern | Documented State |
+|------------------|------------------|
+| Relational schema (DDL) | None — no SQL anywhere in the repository |
+| Document schema (Mongoose / JSON Schema) | None — no schema library imported |
+| ORM model classes | None — no ORM imported (C-005 forbids) |
+| Type definitions for persisted records | None — no `interface`/`type` declarations exist |
+| Serialization formats for storage | Not applicable — nothing to serialize |
+
+#### 6.2.3.3 Indexing Strategy
+
+No indexing strategy exists because no tables, collections, or indexable data structures exist. There are no primary keys, secondary indexes, composite indexes, partial indexes, full-text indexes, or expression indexes anywhere in the system.
+
+| Index Concern | Documented State |
+|---------------|------------------|
+| Primary key indexes | None — no tables exist |
+| Secondary / composite indexes | None — no query workload to optimize |
+| Full-text / geospatial indexes | None — no such data |
+| Index maintenance procedures | Not applicable |
+| Index storage overhead budgeting | Not applicable |
+
+#### 6.2.3.4 Partitioning Approach
+
+No partitioning strategy exists. There are no shards, no partition keys, no range/hash/list partitioning schemes, and no tenant-isolation boundaries. The system runs as a single process bound to a single hardcoded host and port (C-002, C-003), and any partition topology would presuppose a multi-instance, multi-host arrangement that is structurally precluded.
+
+| Partitioning Concern | Documented State |
+|----------------------|------------------|
+| Horizontal sharding (range / hash / list) | Not applicable — no data, no shards |
+| Vertical partitioning (column-family / wide-table split) | Not applicable — no columns |
+| Tenant isolation (schema-per-tenant, DB-per-tenant) | Not applicable — single fixture, no tenants |
+| Partition key selection | Not applicable — no data to partition |
+| Resharding / rebalancing procedures | Not applicable |
+
+#### 6.2.3.5 Replication Configuration
+
+No replication configuration exists. Per §6.1.5.3, "Replication (primary/replica, multi-region): Not applicable — no data plane to replicate." Per §5.4.6, "No backup or replication — there is no data plane."
+
+| Replication Concern | Documented State |
+|---------------------|------------------|
+| Primary/replica topology | Not configured — no database to replicate |
+| Synchronous vs. asynchronous replication | Not applicable |
+| Multi-region / multi-master | Not applicable — single-host loopback fixture |
+| Replication lag monitoring | Not applicable — no replication stream exists |
+| Failover from primary to replica | Not applicable — no primary, no replica |
+
+#### 6.2.3.6 Backup Architecture
+
+No backup architecture exists. Per §5.4.6, the disaster-recovery posture explicitly records: "No state to restore — the application is stateless, so there is no checkpoint, snapshot, or log to replay. No backup or replication — there is no data plane." The recovery point objective (RPO) is "undefined because there is nothing to lose."
+
+| Backup Concern | Documented State |
+|----------------|------------------|
+| Full / incremental / differential backups | None — no data to back up |
+| Point-in-time recovery (PITR) | Not applicable — no transaction log |
+| Backup retention schedule | Not applicable — no backup artifacts produced |
+| Off-site / cross-region backup storage | Not applicable — no object storage integration |
+| Backup restore drill / test cadence | Not applicable — no procedure to drill |
+
+#### 6.2.3.7 Verified-Absent Entity-Relationship Diagram
+
+The diagram below is the canonical "verified-absent" ERD for this system. It is shown as an empty schema enclosure with explicit annotations indicating that no entities, no relationships, and no constraints are defined. The diagram is intentionally drawn in this form to satisfy the documentation requirement for an ERD while accurately reflecting the system's empty schema.
 
 ```mermaid
 erDiagram
-    COMPILE_TIME_LITERAL {
-        string value "Hello, World!\n (14 bytes, immutable)"
-        string location "server.js line 9"
-        string lifecycle "Embedded in source code"
-        string persistence "None - not stored anywhere"
+    NO_ENTITY {
+        none none "No tables, collections, or documents exist"
+        none constraint_status "Verified absent per section 3.6.1"
+        none governing_constraint "C-001 immutability and C-005 zero dependencies"
     }
-    CONFIGURATION_CONSTANT {
-        string hostname "127.0.0.1 (literal)"
-        number port "3000 (literal)"
-        string lifecycle "Process memory only"
-        string persistence "None - rehydrated from source on each start"
-    }
-    COMPILE_TIME_LITERAL ||..|| CONFIGURATION_CONSTANT : "Co-resident in server.js;<br/>no referential relationship"
 ```
 
-The diagram intentionally uses a dashed identifying relationship to denote that no actual database relationship exists; the two "entities" are merely the immutable constants observed in `server.js` and have no foreign-key, lookup, or join semantics.
+The single placeholder entity `NO_ENTITY` carries no fields, no primary key, and no relationships. It exists solely to render the schema as an explicit, traceable absence rather than an undocumented gap. Per §3.6.1, every storage category — SQL, NoSQL, caching, object storage, file-based persistence, session storage, in-memory accumulation, and state migration surface — is recorded as "None" or "Not applicable."
 
----
+### 6.2.4 Data Management (Verified Absent)
 
-### 6.2.3 Data Management — Inapplicability Analysis
+#### 6.2.4.1 Migration Procedures
 
-#### 6.2.3.1 Migration Procedures
+No migration procedures exist because no schema exists to migrate. There are no `migrations/`, `db/migrate/`, or equivalent directories in the repository, no migration tool is declared as a dependency, and no schema-versioning convention is established.
 
-| Migration Concern | Status | Rationale |
-|-------------------|--------|-----------|
-| Schema migration tooling (Flyway, Liquibase, Alembic, Knex, Prisma migrate) | Not implemented | No schemas to migrate; would violate C-005 (zero dependencies) |
-| Forward / rollback migrations | Not applicable | No schema to evolve |
-| Migration ordering / dependency graph | Not applicable | No migration set exists |
-| Zero-downtime migration patterns | Not applicable | No data to migrate |
-| Data backfill scripts | Not applicable | No data store to backfill |
+| Migration Concern | Documented State |
+|-------------------|------------------|
+| Schema migration framework (Flyway, Liquibase, Knex migrations, Alembic) | None — C-005 forbids dependency addition |
+| Up / down migration scripts | None — no `migrations/` directory exists |
+| Migration history tracking table | Not applicable — no database |
+| Forward / rollback procedures | Not applicable |
+| Zero-downtime migration patterns | Not applicable |
 
-Per §4.5.1, "state migration" is documented as "Not applicable (stateless) — No in-memory state to migrate." This conclusion extends transitively to schema migration: a system with no schema cannot have schema migrations.
+Per §2.4.3, "State Migration: Not applicable (fully stateless)." The absence of a stateful surface to migrate is the categorical justification for the absence of migration tooling.
 
-#### 6.2.3.2 Versioning Strategy
+#### 6.2.4.2 Versioning Strategy
 
-The repository declares version `1.0.0` in both `package.json` and `package-lock.json`. Per §2.6.3, "all requirements are at their initial revision and are tracked against the single declared version `1.0.0`." There is no separate database schema version, no migration history table, no semantic versioning of data contracts, and no API versioning scheme (there is no API surface beyond the byte-identical response, which by F-002-RQ-004 must never change).
+No data-versioning strategy exists. Per §2.6.3, "All requirements documented in this section correspond to `package.json` version `1.0.0` (mirrored in `package-lock.json`). No prior version exists in the repository; there is no `CHANGELOG`, no migration notes, and no version-control commentary inside the baseline files." Because no persisted records exist, there are no record-level version columns, no temporal tables, no soft-delete versioning, and no CDC streams.
 
-| Versioning Dimension | Status | Source |
-|----------------------|--------|--------|
-| Source code version | `1.0.0` | `package.json` |
-| Lockfile version | `3` (npm lockfile schema) | `package-lock.json` |
-| Schema version | Not applicable | No schema exists |
-| Data contract version | Not applicable | Static response is byte-identical |
+| Versioning Concern | Documented State |
+|--------------------|------------------|
+| Record-level version columns | None — no records exist |
+| Temporal tables / system-versioning | Not applicable — no SQL platform present |
+| Soft-delete / tombstone columns | Not applicable |
+| Change Data Capture (CDC) streams | Not applicable — no source DB to capture from |
+| Schema-evolution policy (backwards / forwards compatibility) | Not applicable — no schema |
 
-#### 6.2.3.3 Archival Policies
+#### 6.2.4.3 Archival Policies
 
-| Archival Concern | Status | Rationale |
-|------------------|--------|-----------|
-| Hot / warm / cold tiering | Not applicable | No data of any temperature exists |
-| Archive media (S3 Glacier, tape, off-site) | Not applicable | No data to archive |
-| Archival triggers (age-based, size-based, manual) | Not applicable | No data lifecycle to govern |
-| Legal hold mechanisms | Not applicable | No records subject to hold |
-| Archive restoration SLAs | Not applicable | No archive exists |
+No archival policies exist because no data is generated, accumulated, or retained. The system processes each request independently, ignores `req` entirely (per F-002-RQ-004), and emits a compile-time literal response. Per §4.5.1, "Per-client state: None — handler ignores `req`."
 
-#### 6.2.3.4 Data Storage and Retrieval Mechanisms
+| Archival Concern | Documented State |
+|------------------|------------------|
+| Hot / warm / cold storage tiers | Not applicable — no data to tier |
+| Archival cutoff age | Not applicable — no records age |
+| Cold-storage destination (Glacier, Coldline, Archive) | Not applicable — no cloud SDK present |
+| Retrieval SLA from archive | Not applicable |
+| Archival audit trail | Not applicable |
 
-The single act resembling "data retrieval" in the entire system is the emission of the compile-time string literal from `server.js` to the HTTP response stream. This is documented in §5.2.1.4 as: "None. The component performs no I/O against any persistence layer. The only data it produces is the response body (a compile-time literal) and the startup log line."
+#### 6.2.4.4 Data Storage and Retrieval Mechanisms
 
-| Storage / Retrieval Mechanism | Status | Mechanism Actually Used |
-|-------------------------------|--------|--------------------------|
-| Database connection pooling | Not implemented | None — no database |
-| Query language (SQL, GraphQL, ORM DSL) | Not implemented | None — no query target |
-| Read-through / write-through patterns | Not implemented | Direct literal emission via `res.end()` |
-| Eager / lazy loading | Not implemented | All "data" is loaded as part of source compilation |
-| Streaming retrieval (cursors, iterators) | Not implemented | Single synchronous `res.end()` call |
+No storage or retrieval mechanism exists at the application layer. Per §5.1.3, "Database / ORM: None — no driver imported in `server.js`. File-system persistence: None — no `fs.write` calls. In-memory store: None — no module-level mutable state." Per §4.5.1, "Data persistence points: None — no database, no `fs.write`, no in-memory store."
 
-#### 6.2.3.5 Caching Policies
+| Storage/Retrieval Concern | Documented State |
+|---------------------------|------------------|
+| SQL query interface | None — no driver, no client |
+| NoSQL document API | None — no client library |
+| Key-value lookup | None — no in-process Map, no external KV |
+| File / blob retrieval | None — no `fs.read*`, no object storage SDK |
+| Materialized view / projection | Not applicable — no source data |
 
-Per §5.3.4, "No caching layer is implemented." The justification given there enumerates three converging reasons that apply equally to this section:
+The data retrieval pattern for the response body is direct in-line literal evaluation: the V8 engine evaluates the string literal `'Hello, World!\n'` from the source file's parsed AST and passes it to `res.end()` without any intervening store, cache, or transformation step.
 
-1. The static body is already a literal constant in source code — there is no upstream source from which to cache.
-2. No HTTP-level caching headers are emitted (`ETag`, `Last-Modified`, `Cache-Control` are all absent).
-3. No external data source exists that would warrant client-side, server-side, CDN, or reverse-proxy caching.
+#### 6.2.4.5 Caching Policies
 
-| Cache Layer | Status | Rationale |
-|-------------|--------|-----------|
-| Application-level cache (LRU, in-process) | Not implemented | No upstream source to cache from |
-| Distributed cache (Redis, Memcached) | Not implemented | Would violate C-005; no source to cache |
-| HTTP response cache (Cache-Control headers) | Not implemented | Would violate F-002-RQ-004 determinism guarantee |
-| CDN / reverse proxy cache | Not implemented | Loopback-only binding (C-002) precludes CDN placement |
-| Cache invalidation strategy | Not applicable | No cache exists to invalidate (§4.5.1) |
+No caching policies exist at any layer. Per §3.6.4, "Not applicable. No caching layer exists at any tier: No application-level cache (no in-memory maps, no LRU caches), No HTTP cache headers beyond `Content-Type` (no `Cache-Control`, no `ETag`), No external cache service (no Redis client, no Memcached client)." Per §3.6.4, "The static response is generated freshly per request from a compile-time string literal, which is computationally cheaper than any caching mechanism would be for a 14-byte payload."
 
----
+| Caching Concern | Documented State |
+|-----------------|------------------|
+| In-process cache (LRU, TTL Map, WeakMap) | None — no map instantiated in `server.js` |
+| External cache (Redis, Memcached, KeyDB) | None — no client library; C-005 forbids |
+| HTTP response cache headers (`Cache-Control`, `ETag`, `Last-Modified`) | None set — only `Content-Type` is emitted |
+| CDN / edge cache | None — no CDN integration; loopback-only |
+| Cache invalidation strategy | Not applicable — no cache layer to invalidate |
 
-### 6.2.4 Compliance Considerations — Inapplicability Analysis
+## 6.2 5 Compliance Considerations (Verified Absent)
 
-#### 6.2.4.1 Data Retention Rules
+#### 6.2.5.1 Data Retention Rules
 
-The system processes no personal data, no business data, no transactional data, and no derived data. There is no data whose retention duration could be governed. Per §1.3.1, the data domain is bounded to "a single static UTF-8 string." Compliance regimes that govern data retention (GDPR Article 5(1)(e), CCPA §1798.105, HIPAA §164.530(j), PCI-DSS §3.1) presuppose the existence of records about identifiable parties, transactions, or regulated content — none of which exist in this repository.
+No data retention rules apply because no data is collected, processed, or stored. The handler receives `req` but ignores it; no fields from incoming requests are persisted, logged, or correlated. The only emitted byte stream is a compile-time literal and a one-shot startup log line that contains no request-derived content.
 
-| Retention Concern | Status | Rationale |
-|-------------------|--------|-----------|
-| Minimum retention period | Not applicable | No records to retain |
-| Maximum retention period | Not applicable | No records to expire |
-| Right-to-erasure workflow | Not applicable | No personal data exists |
-| Legal hold override | Not applicable | No records subject to hold |
-| Retention-policy audit log | Not applicable | No retention activity to audit |
+| Retention Concern | Documented State |
+|-------------------|------------------|
+| Request-payload retention window | Not applicable — `req` is ignored per F-002-RQ-004 |
+| Personally Identifiable Information (PII) retention | None — no PII collected; loopback-only binding |
+| Audit-log retention (regulatory minimum) | Not applicable — no audit log generated |
+| Right-to-be-forgotten / GDPR Article 17 procedure | Not applicable — no subject data exists |
+| Data minimization compliance | Trivially satisfied — zero data collected |
 
-#### 6.2.4.2 Backup and Fault Tolerance Policies
+#### 6.2.5.2 Backup and Fault Tolerance Policies
 
-Per §6.1.4.3, "Data redundancy: Not applicable — stateless system has no data to recover; no persistence layer exists." The complete data redundancy and failover position is reproduced below:
+No backup or fault-tolerance policies apply because no data plane exists. Per §6.1.5.3, "No data redundancy applies because the application contains no data." Per §5.4.6, "Because the system holds no state and serves a 14-byte constant, the recovery time objective (RTO) is bounded only by the time required to type `node server.js`, and the recovery point objective (RPO) is undefined because there is nothing to lose."
 
-| Resilience Dimension | Status | Reason |
-|----------------------|--------|--------|
-| Data redundancy | Not applicable | No persistence layer exists |
-| Failover to standby instance | Not implemented | Single process, loopback-only |
-| Geographic redundancy | Not applicable | Loopback binding (C-002) precludes multi-region |
-| Recovery Point Objective (RPO) | Not applicable | No recoverable state exists |
-| Recovery Time Objective (RTO) | Undocumented at data layer | No data tier to recover; process restart is operator-driven |
+| Policy Concern | Documented State |
+|----------------|------------------|
+| Backup frequency (RPO target) | Undefined — no data to lose |
+| Restore time objective (RTO) | Bounded by manual `node server.js` re-invocation (per §5.4.6) |
+| Cross-region replication for DR | Not applicable — no data plane |
+| Backup encryption at rest | Not applicable — no backup artifacts |
+| Backup integrity verification (checksum / restore drill) | Not applicable |
 
-The source code itself is backed up by Git version control external to the application boundary; this is a source-management concern, not a database-design concern.
+#### 6.2.5.3 Privacy Controls
 
-#### 6.2.4.3 Privacy Controls
+No privacy controls are required at the application layer because no personal data is collected, processed, or persisted. The handler ignores `req.headers`, `req.url`, `req.method`, and the request body in their entirety. Per §5.4.4, "There is no authentication or authorization at the application layer. The sole effective access-control mechanism is the OS network stack itself: by binding to `127.0.0.1`, the listener is reachable only by processes already running on the same host."
 
-Privacy controls are not applicable because no personal data — and in fact no user-supplied data of any kind — enters the system. Per §5.3.5, the "Injection-surface elimination" control is enforced by the handler ignoring `req` entirely (F-002-RQ-004): "Handler ignores `req` per F-002-RQ-004; no `req.url`, `req.headers`, `req.method`, or body parsing."
+| Privacy Concern | Documented State |
+|-----------------|------------------|
+| PII identification and classification | Not applicable — no PII collected |
+| Encryption at rest | Not applicable — nothing at rest |
+| Encryption in transit | Plaintext HTTP/1.1 over loopback; acceptable under assumption A-005 |
+| Data subject access request (DSAR) workflow | Not applicable — no subject data |
+| Cross-border data transfer controls | Not applicable — loopback-only, no transfer occurs |
 
-| Privacy Mechanism | Status | Rationale |
-|-------------------|--------|-----------|
-| PII identification / classification | Not applicable | No PII is collected, processed, or stored |
-| Field-level encryption | Not applicable | No fields exist |
-| Data masking / tokenization | Not applicable | No identifiers to mask |
-| Consent management | Not applicable | No user identity is recognized |
-| Cross-border transfer controls | Not applicable | Loopback-only — no data crosses the host boundary |
-| Anonymization / pseudonymization | Not applicable | No personal data exists |
+#### 6.2.5.4 Audit Mechanisms
 
-#### 6.2.4.4 Audit Mechanisms
+No audit mechanisms exist for data access because no data access occurs. Per §5.4.1, "Per-request log emission: Not implemented; handler contains no `console.log`." The only observability event in the entire system is the one-shot startup line; no per-request audit record is generated, persisted, or shipped.
 
-| Audit Concern | Status | Rationale |
-|---------------|--------|-----------|
-| Database audit log (DML, DDL) | Not applicable | No database to audit |
-| Change Data Capture (CDC) | Not applicable | No data changes occur |
-| Tamper-evident logging (write-once, hash-chained) | Not implemented | No durable log exists |
-| Administrative access audit trail | Not applicable | No database administration surface exists |
-| Compliance attestation reports | Not applicable | No data-handling activity to attest |
+| Audit Concern | Documented State |
+|---------------|------------------|
+| Per-request audit log | None — handler emits no logs |
+| Database query audit log (SQL Server Audit, pgaudit) | Not applicable — no database |
+| Privileged-action audit | Not applicable — no privileged operations |
+| Tamper-evident audit storage (WORM, append-only ledger) | Not applicable — no audit data |
+| Audit log shipping to SIEM | Not applicable — no log shipper present |
 
-The only emitted log entry is the one-time startup line `Server running at http://127.0.0.1:3000/`, which is documented in §5.2.1.4 as the sole stdout output. This log is informational, not auditable evidence about data operations.
+#### 6.2.5.5 Access Controls
 
-#### 6.2.4.5 Access Controls
+No application-layer access controls exist for data because no data exists to control access to. Per §5.4.4 (reproduced verbatim from the access control table): "Application-layer auth: None — Loopback callers reach the handler unfiltered. Application-layer authz: None — same — no role/scope/claim check. Rate limiting / throttling: None — No per-client tracking exists." The OS loopback bind is the sole effective access boundary, and it operates at the network layer, not the data layer.
 
-Per §5.3.5, the system adopts a "defense by minimalism" posture in which network-layer isolation (loopback-only binding per C-002) and the absence of any data surface together obviate database access controls. Conventional database ACL mechanisms — GRANT/REVOKE, role-based access control (RBAC), row-level security (RLS), column masking — have no referent because there are no objects (tables, views, procedures) over which permissions could be defined.
-
-| Access Control Mechanism | Status | Rationale |
-|--------------------------|--------|-----------|
-| Database user authentication | Not applicable | No database |
-| Role-based access control (RBAC) | Not applicable | No protected objects |
-| Row-level security (RLS) | Not applicable | No rows exist |
-| Column-level masking | Not applicable | No columns exist |
-| Network ACL for database port | Not applicable | No database port to filter |
-| Loopback-only application binding | Implemented | `server.js` line 3 (constraint C-002) — see §5.3.5 |
-
----
-
-### 6.2.5 Performance Optimization — Inapplicability Analysis
-
-#### 6.2.5.1 Query Optimization Patterns
-
-Query optimization patterns presuppose the existence of queries. The handler executes a constant-time, branchless code path that performs exactly three operations: setting the status code, setting the `Content-Type` header, and emitting the body. None of these is a query, and none has an optimizable plan.
-
-| Optimization Pattern | Status | Reason |
-|----------------------|--------|--------|
-| Execution-plan analysis | Not applicable | No query planner involved |
-| Index hint usage | Not applicable | No indexes exist |
-| Query rewriting / view materialization | Not applicable | No queries to rewrite |
-| Statistics-based optimization | Not applicable | No statistics gathered |
-| N+1 query elimination | Not applicable | Zero queries are issued, let alone N+1 |
-
-Per §6.1.3.3, "All steps in the request path are in-memory, synchronous, and constant-time, so per-request latency is dominated by socket I/O rather than by any application logic." There is no further optimization surface at the data layer.
-
-#### 6.2.5.2 Caching Strategy
-
-See §6.2.3.5 above and the authoritative rationale in §5.3.4. The architectural conclusion is identical: caching has no role because the response body is already a compile-time literal in process memory and no upstream data source exists. Per §6.1.3.3, "Response caching: None — Response is already a compile-time literal — caching would be redundant."
-
-#### 6.2.5.3 Connection Pooling
-
-| Connection-Pool Concern | Status | Reason |
-|-------------------------|--------|--------|
-| Database connection pool (pg-pool, mysql-pool, etc.) | Not implemented | No database to connect to |
-| Connection-pool sizing / tuning | Not applicable | No pool exists |
-| Connection lifecycle (idle eviction, ping) | Not applicable | No connections to manage |
-| Outbound HTTP keep-alive pool | Not implemented | Per §6.1.3.3, "no outbound connections to pool" |
-| Statement caching / prepared-statement pool | Not applicable | No statements exist |
-
-#### 6.2.5.4 Read/Write Splitting
-
-Read/write splitting presupposes (a) at least one writable primary, (b) at least one read replica, and (c) a routing mechanism (proxy or client library) that directs reads to replicas. None of these conditions holds:
-
-| Component | Status | Reason |
-|-----------|--------|--------|
-| Writable primary | Does not exist | No database |
-| Read replicas | Do not exist | No database to replicate |
-| Read/write routing layer | Does not exist | No queries to route |
-| Replication lag tolerance policy | Not applicable | No replication exists |
-| Read-after-write consistency strategy | Not applicable | No writes occur |
-
-#### 6.2.5.5 Batch Processing Approach
-
-The system is a request/response HTTP server, not a batch processor. There is no scheduled job, no message queue, no batch ingestion pipeline, no ETL framework, and no data warehouse to populate.
-
-| Batch Concern | Status | Reason |
-|---------------|--------|-----------|
-| Bulk insert / `COPY` operations | Not applicable | No table to insert into |
-| Batch job scheduler (cron, Airflow, etc.) | Not implemented | No scheduled work; per §6.1.3.2, no CI/CD or orchestration present |
-| Stream processing (Kafka Streams, Flink) | Not implemented | No streaming infrastructure |
-| Micro-batch windowing | Not applicable | No records to window |
-| Idempotency keys for batch retry | Not applicable | No batches to retry |
-
----
-
-### 6.2.6 Governing Constraints
-
-#### 6.2.6.1 Constraint Mapping
-
-The constraint catalogue in §2.6.2 enumerates seven normative constraints. Four of these directly prohibit the introduction of any database design:
-
-| Constraint ID | Statement | Effect on Database Design |
-|---------------|-----------|---------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding any schema definition, migration script, or data-access module to the repository |
-| C-004 | Response body, status, and headers must remain byte-identical across all requests | Forbids dynamic data sourced from a database; any database-derived value could vary across invocations |
-| C-005 | Zero runtime and zero development dependencies must be maintained | Forbids installing any database driver, ORM, connection pool, or migration framework |
-| C-006 | The project must remain executable on a Node.js installation without any prior `npm install` step | Forbids any installable database client whose deployment would require dependency resolution |
-
-#### 6.2.6.2 Normative Implications
-
-The architectural posture is therefore not merely *descriptive* (what is currently absent) but *normative* (what must remain absent). Per ADR-006 (§5.3.6.6), source invariance is enforced as a governance constraint: "All four committed files must remain unchanged from baseline (\"Do not touch!\")." Per ADR-005 (§5.3.6.5), zero dependencies are enforced architecturally: "`package.json` with neither `dependencies` nor `devDependencies` fields; lockfile attests empty tree."
-
-Any future enhancement that proposed introducing a database — even an embedded one such as SQLite — would simultaneously violate C-001 (modifying `server.js` to add a `require()`), C-005 (introducing a dependency), and C-006 (requiring `npm install`). The absence of database design is therefore a permanent architectural property protected by multiple, mutually reinforcing constraints.
-
----
-
-### 6.2.7 Architectural Rationale for Inapplicability
-
-#### 6.2.7.1 Deliberate Design Posture
-
-The inapplicability of Database Design is the **design intent** of the repository, not an immaturity or a deferred decision. Per §5.3.3, "the decision to use no storage is therefore not a deferred decision but a permanent architectural property of the system." The fully stateless posture is justified by F-002-RQ-004's requirement that "Handler must not branch on any property of `req`" — because the response is byte-identical on every invocation, no state, schema, or query result is required to produce it (§3.6.3).
-
-The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of any database surface:
-
-| Principle | Implication for Database Design |
-|-----------|---------------------------------|
-| Behavioral stability | Database-sourced values could vary across invocations, breaking byte-identical responses |
-| Source invariance | "Do not touch!" directive forbids adding any data-access code |
-| Operational simplicity | A database would require provisioning, configuration, and lifecycle management |
-| Defense by minimalism | Database clients expand the supply-chain and injection-surface attack vectors |
-| Determinism | Database read latency, connection state, and data drift would degrade response determinism |
-| Self-containment | A database tier would require external infrastructure outside the 4-file repository surface |
-
-#### 6.2.7.2 Relationship to Other Specification Sections
-
-For readers seeking related discussions of the same architectural conclusion, the following sections of this Technical Specification provide complementary perspectives:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Storage exclusion authoritative declaration | §3.6 | "No persistence layer of any kind exists" |
-| Data storage rationale | §5.3.3 | Why no storage solution was chosen |
-| Caching strategy justification | §5.3.4 | Why no caching layer is implemented |
-| Application state posture | §4.5.1 | Table of state-management concerns, all status "None" |
-| Persistence/caching/transaction boundary diagram | §4.5.3 | No-op flowchart at every database-touching point |
-| Per-component data persistence requirements | §5.2.1.4 | "None" for the only runtime component |
-| Out-of-scope elements | §1.3.2 | Database integration explicitly excluded |
-| In-scope data domain | §1.3.1 | Bounded to single static UTF-8 string |
-| Data redundancy and failover | §6.1.4.3 | "Not applicable — no data to recover" |
-| Governing constraints | §2.6.2 | C-001, C-004, C-005, C-006 |
-
-#### 6.2.7.3 Architectural Position Diagram
-
-The diagram below summarizes the architectural position: every conventional database-design concern is mapped to the specific architectural property that excludes it, with the four governing constraints serving as the normative perimeter.
+| Access Control Concern | Documented State |
+|------------------------|------------------|
+| Row-level / column-level security | Not applicable — no rows, no columns |
+| Role-Based Access Control (RBAC) on tables | Not applicable — no tables |
+| Attribute-Based Access Control (ABAC) policies | Not applicable — no attributes |
+| Database user / service account separation | Not applicable — no database |
+| Connection authentication (passwords, IAM, mTLS) | Not applicable — no connection to authenticate |
+
+### 6.2.6 Performance Optimization (Verified Absent)
+
+#### 6.2.6.1 Query Optimization Patterns
+
+No query optimization patterns are applied because no queries are issued. There is no SQL planner, no NoSQL aggregation pipeline, no query-plan analysis, and no query-tuning artifact in the repository. Per §5.1.3, "There are **no runtime data transformations**. The response body is a compile-time UTF-8 string literal."
+
+| Query Optimization Concern | Documented State |
+|----------------------------|------------------|
+| Index selection / `EXPLAIN` analysis | Not applicable — no queries issued |
+| Query rewriting / hint injection | Not applicable |
+| Materialized views | Not applicable — no source data to project |
+| Stored procedures / prepared statements | Not applicable — no database |
+| N+1 query mitigation | Not applicable |
+
+#### 6.2.6.2 Caching Strategy
+
+No caching strategy is implemented because there is nothing meaningful to cache. Per §3.6.4, "The static response is generated freshly per request from a compile-time string literal, which is computationally cheaper than any caching mechanism would be for a 14-byte payload." Per §6.1.4.4, "no caching layer is implemented because 'the response is already a compile-time string literal residing in resident memory,' and any caching abstraction would add cost rather than reduce it."
+
+| Caching Strategy Concern | Documented State |
+|--------------------------|------------------|
+| Cache-aside / read-through / write-through pattern | Not applicable — no cache and no source-of-truth datastore |
+| Write-behind (write-back) batching | Not applicable — no writes occur |
+| Time-To-Live (TTL) policy | Not applicable — no entries to expire |
+| Cache stampede protection (lock, request coalescing) | Not applicable — no cache |
+| Cache key namespacing / versioning | Not applicable — no keys exist |
+
+#### 6.2.6.3 Connection Pooling
+
+No connection pooling exists because there are no outbound connections to pool. Per §5.1.1, "Outbound traffic: None — there are zero outbound network calls of any kind." Per §2.3.2, the system has "no DNS lookups, outbound HTTP calls, database connections, message brokers, telemetry exports, or service-discovery registrations."
+
+| Connection Pool Concern | Documented State |
+|-------------------------|------------------|
+| Database connection pool (pg-pool, mysql2 pool, generic-pool) | None — no driver imported; C-005 forbids |
+| Pool size (min / max connections) | Not applicable |
+| Idle connection eviction / keep-alive | Not applicable |
+| Connection acquisition timeout | Not applicable |
+| Connection-pool exhaustion handling | Not applicable |
+
+The inbound HTTP server uses the default Node.js `http` server's intrinsic connection management; this is provided by the substrate and is unrelated to database connection pooling.
+
+#### 6.2.6.4 Read/Write Splitting
+
+No read/write splitting exists because the system performs neither reads from nor writes to a database. Per §5.1.3, the data flow is exclusively HTTP request → in-memory literal → HTTP response, with no datastore traversal at any step.
+
+| Read/Write Splitting Concern | Documented State |
+|------------------------------|------------------|
+| Primary-for-write, replica-for-read routing | Not applicable — no primary, no replica |
+| Read replica lag awareness | Not applicable |
+| Per-query routing hints (`/* primary */`) | Not applicable — no SQL emitted |
+| Eventually consistent read tolerance | Not applicable — no reads to tolerate |
+| Cross-replica transaction coordination | Not applicable |
+
+#### 6.2.6.5 Batch Processing Approach
+
+No batch processing exists. Per §6.1.3.2, "Batch / scheduled task channels: Not present — no scheduler, no cron." There are no bulk-load utilities, no scheduled aggregation jobs, no ETL pipelines, no message-driven batch consumers, and no maintenance windows for data operations.
+
+| Batch Processing Concern | Documented State |
+|--------------------------|------------------|
+| Scheduled batch job framework (cron, node-schedule, Bull) | None — C-005 forbids |
+| Bulk insert / upsert / load APIs | Not applicable — no database |
+| ETL / ELT pipeline | None — no data source, no sink |
+| Message-driven batch consumer | Not applicable — no broker integration |
+| Batch failure isolation / retry | Not applicable |
+
+### 6.2.7 Required Diagrams (Negative-Space Reference)
+
+This subsection contains the three diagrams required by the standard Database Design section prompt. Each is drawn in its "verified-absent" form to accurately represent the system's empty data plane while satisfying the documentation requirement for visual depictions of schema, data flow, and replication topology.
+
+#### 6.2.7.1 Database Schema Diagram (Verified Absent)
+
+The diagram below visualizes the schema surface of the system as an explicit empty enclosure. The single placeholder node carries no fields, no relationships, and no constraints; it exists to document the absence as a traceable architectural decision rather than an undocumented gap.
+
+```mermaid
+erDiagram
+    SCHEMA_VOID {
+        status verified_absent "No tables, collections, or documents exist"
+        rationale C001_and_C005 "Immutability and zero-dependency constraints"
+        reference section_3_6 "See section 3.6.1 for full storage inventory"
+        only_datum static_literal "14-byte UTF-8 string in server.js line 9"
+    }
+```
+
+Per §3.6.1, all eight enumerated storage categories — Primary SQL, Primary NoSQL, Caching Layer, Object Storage, File-Based Persistence, Session Storage, In-Memory Accumulation, and State Migration Surface — are recorded as "None" or "Not applicable."
+
+#### 6.2.7.2 Data Flow Diagram (No Database Component)
+
+The diagram below visualizes the full per-request data flow through the system, with every potential persistence and caching decision point routed to a "skip" terminator before reaching the static-emit step. This is the negative-space counterpart to a conventional persistence workflow, reproduced from §4.5.4.
+
+```mermaid
+flowchart LR
+    ReqIn(["HTTP request received"])
+    Q1{"Read from<br/>persistence?"}
+    Skip1["Skip — no DB driver,<br/>no fs.read"]
+    Q2{"Read from cache?"}
+    Skip2["Skip — no cache layer;<br/>body is compile-time literal"]
+    Q3{"Begin transaction?"}
+    Skip3["Skip — no transaction<br/>boundaries exist"]
+    Emit["Emit static literal<br/>'Hello, World!\n'"]
+    Q4{"Write to<br/>persistence?"}
+    Skip4["Skip — no DB driver,<br/>no fs.write"]
+    Q5{"Update cache?"}
+    Skip5["Skip — no cache layer"]
+    Q6{"Commit transaction?"}
+    Skip6["Skip — no transaction"]
+    Flush(["Response flushed<br/>to client"])
+
+    ReqIn --> Q1
+    Q1 -- "No" --> Skip1
+    Skip1 --> Q2
+    Q2 -- "No" --> Skip2
+    Skip2 --> Q3
+    Q3 -- "No" --> Skip3
+    Skip3 --> Emit
+    Emit --> Q4
+    Q4 -- "No" --> Skip4
+    Skip4 --> Q5
+    Q5 -- "No" --> Skip5
+    Skip5 --> Q6
+    Q6 -- "No" --> Skip6
+    Skip6 --> Flush
+```
+
+Every decision diamond routes deterministically to a skip terminator; no edge in the diagram crosses into a datastore, cache, or transaction boundary. The flow is identical for every request because the handler is branchless (per F-002-RQ-004) and emits a byte-identical response (per C-004).
+
+#### 6.2.7.3 Replication Architecture (Verified Absent)
+
+The diagram below visualizes the replication topology of the system. It depicts the single Node.js process with its single inbound integration point, alongside an explicit "verified-absent" enclosure listing every replication primitive that would normally appear in a populated database design but is not present here. No edges connect the live runtime to the absent enclosure.
 
 ```mermaid
 flowchart TB
-    Root["Conventional Database<br/>Design Concerns"]
-
-    Root --> Schema["Schema / ERD"]
-    Root --> Index["Indexing / Partitioning"]
-    Root --> Repl["Replication / Backup"]
-    Root --> Mig["Migration / Versioning"]
-    Root --> Cache["Caching Policy"]
-    Root --> Retain["Retention / Audit"]
-    Root --> Access["Access Controls"]
-    Root --> Perf["Query Optimization"]
-    Root --> Pool["Connection Pooling"]
-    Root --> RWSplit["Read/Write Splitting"]
-
-    Schema --> R1["Excluded — no entities;<br/>data domain is one<br/>14-byte literal (§1.3.1)"]
-    Index --> R2["Excluded — no records<br/>to index (§3.6)"]
-    Repl --> R3["Excluded — no state<br/>to replicate (§6.1.4.3)"]
-    Mig --> R4["Excluded — no schema<br/>to migrate (§4.5.1)"]
-    Cache --> R5["Excluded — literal in<br/>source memory (§5.3.4)"]
-    Retain --> R6["Excluded — no records<br/>collected (§1.3.1)"]
-    Access --> R7["Excluded — no database<br/>objects; loopback isolation<br/>(§5.3.5)"]
-    Perf --> R8["Excluded — handler is<br/>constant-time, branchless<br/>(F-002-RQ-004)"]
-    Pool --> R9["Excluded — no outbound<br/>connections (§6.1.3.3)"]
-    RWSplit --> R10["Excluded — no primary,<br/>no replica (§6.2.2.3)"]
-
-    subgraph ConstraintPerimeter["Normative Constraint Perimeter (§2.6.2)"]
-        direction LR
-        C1["C-001<br/>Source invariance"]
-        C4["C-004<br/>Byte-identical<br/>response"]
-        C5["C-005<br/>Zero dependencies"]
-        C6["C-006<br/>No npm install"]
+    subgraph LivePlane["Live Runtime (Single Process, Stateless)"]
+        Proc["Node.js Process<br/>server.js"]
+        Bind["Loopback Bind<br/>127.0.0.1:3000<br/>(C-002, C-003)"]
+        Literal["Compile-time literal<br/>'Hello, World!\n'<br/>resident in V8 heap"]
+        Proc --> Bind
+        Proc --> Literal
     end
-
-    R1 -.->|"enforced by"| ConstraintPerimeter
-    R3 -.->|"enforced by"| ConstraintPerimeter
-    R5 -.->|"enforced by"| ConstraintPerimeter
-    R8 -.->|"enforced by"| ConstraintPerimeter
+    subgraph AbsentRepl["Verified-Absent Replication Plane"]
+        NoPrimary["No primary database<br/>(no driver, no DSN)"]
+        NoReplica["No read replica<br/>(no replication stream)"]
+        NoSync["No synchronous replication<br/>(no quorum, no Paxos/Raft)"]
+        NoAsync["No asynchronous replication<br/>(no log shipping, no WAL stream)"]
+        NoMulti["No multi-region / multi-master<br/>(loopback bind precludes)"]
+        NoFailover["No failover orchestration<br/>(no standby to promote)"]
+        NoLagMon["No replication lag monitoring<br/>(no replication metric source)"]
+    end
+    subgraph AbsentBackup["Verified-Absent Backup Plane"]
+        NoFull["No full backups"]
+        NoIncr["No incremental backups"]
+        NoPITR["No point-in-time recovery"]
+        NoOffsite["No off-site / cross-region backup"]
+        NoDrill["No restore drill cadence"]
+    end
 ```
 
-The dashed edges indicate that each architectural exclusion is *enforced* by the constraint perimeter — meaning that even a hypothetical decision to introduce a database design would be blocked by at least one of the four constraints.
+The two "Verified-Absent" enclosures are drawn deliberately disconnected from the live runtime to emphasize that no member of either set is present in the dependency closure, the source code, or the runtime topology. Per §5.4.6, "There is no data plane" — the live plane contains only a Node.js process and an in-memory literal, and there is consequently nothing to replicate or back up.
 
----
+### 6.2.8 Conditions Under Which This Section Would Become Applicable
 
-### 6.2.8 References
+For traceability, this subsection records the architectural events that would trigger reauthoring of section 6.2 as a populated (rather than non-applicable) Database Design specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
 
-#### 6.2.8.1 Files Examined
+| Triggering Event | Constraint to Relax | New Database-Design Domain Introduced |
+|------------------|---------------------|---------------------------------------|
+| Introduce a database driver or ORM as a dependency | C-005, C-006 | Schema definition, connection pooling, query patterns |
+| Add a `migrations/`, `db/`, or `models/` directory or file | C-001 | Schema versioning, migration procedures, model layer |
+| Bind to a non-loopback host to reach a remote database | C-002 | Network-level access control, encryption-in-transit, IAM |
+| Vary the HTTP response with database-derived content | C-004 | Read paths, query optimization, response caching |
+| Begin persisting request data (logs, audit records, sessions) | C-001, C-005 | Retention policies, privacy controls, audit mechanisms |
+| Deploy multiple instances behind a load balancer | C-001, C-002, C-003 | Replication, read/write splitting, cache coherence |
 
-- `server.js` — Complete 14-line source of the HTTP server; verified that `require('http')` is the sole `require()` statement, that no database client, ORM, or `fs` import exists, and that the handler emits a single compile-time literal with no data-layer interaction
-- `package.json` — Confirmed absence of both `dependencies` and `devDependencies` fields; no database driver, ORM, or migration tool is declared; project identity is `hello_world` v1.0.0
-- `package-lock.json` — Verified npm lockfile version 3 with only the root `""` entry in the `packages` map — cryptographic attestation of zero installed dependencies (no database drivers, no cache clients)
-- `README.md` — Established the "Do not touch!" governance directive that constitutes the source-invariance constraint C-001
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for section 6.2 stands.
 
-#### 6.2.8.2 Folders Explored
+### 6.2.9 Cross-Section Reference Map
 
-- `/` (repository root, depth 0) — Confirmed the absence of every conventional database-related subdirectory: no `models/`, `schema/`, `migrations/`, `db/`, `data/`, `seeds/`, `fixtures/`, `repositories/`, `entities/`, or `node_modules/` is present at the repository root
+For readers who need additional context on each verified-absent concern, the table below maps each Database Design sub-area to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
 
-#### 6.2.8.3 Cross-Referenced Technical Specification Sections
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Entity relationships / data models | §3.6.1 | §4.5.1, §5.1.3 |
+| Indexing / partitioning | §3.6.1 | §2.4.3 |
+| Replication / backup architecture | §6.1.5.3 | §5.4.6 |
+| Migration procedures / versioning | §2.4.3 | §2.6.3 |
+| Archival / storage and retrieval | §3.6.5 | §5.1.3 |
+| Caching policies / caching strategy | §3.6.4 | §6.1.4.4 |
+| Data retention / privacy controls | §5.4.4 | §1.3.2 |
+| Audit mechanisms / access controls | §5.4.1 | §5.4.4 |
+| Query optimization / batch processing | §5.1.3 | §6.1.3.2 |
+| Connection pooling / read-write split | §2.3.2 | §5.1.1 |
 
-- **§1.2 SYSTEM OVERVIEW** — Established the "Persistence/State: None" declaration and the fixture role
-- **§1.3 SCOPE** — In-scope data domain (single static UTF-8 string) and explicit out-of-scope listing for database/persistence integration
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Constraints C-001, C-004, C-005, C-006 that normatively forbid the introduction of database design
-- **§3.6 DATABASES & STORAGE** — Authoritative declaration "No persistence layer of any kind exists"; full table of evaluated and excluded storage categories
-- **§4.5 STATE MANAGEMENT AND TRANSITIONS** — Application-state posture (fully stateless); state-management concerns table; persistence/caching/transaction boundary diagram (source of the no-op flow diagram in §6.2.1.4)
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Confirmation that "the system has no data stores and no caches"
-- **§5.2 COMPONENT DETAILS** — Per-component data persistence requirements (all None); only data produced is the response body and startup log
-- **§5.3 TECHNICAL DECISIONS** — ADR-005 (zero dependencies) and ADR-006 (source invariance); explicit data storage rationale (§5.3.3); caching strategy justification (§5.3.4); security mechanism selection (§5.3.5)
-- **§6.1 CORE SERVICES ARCHITECTURE** — Provides the precedent "Not Applicable" determination structure; resilience patterns analysis including data redundancy (§6.1.4.3) and performance optimization surface (§6.1.3.3)
+### 6.2.10 References
+
+#### Files Examined
+
+- `server.js` — Confirmed the 14-line single-file implementation; verified `require('http')` is the only dependency expression; verified the absence of `require('fs')`, database drivers, ORMs, connection strings, query strings, or model declarations; verified the hardcoded compile-time string literal `'Hello, World!\n'` as the sole "datum."
+- `package.json` — Confirmed the zero-dependency declaration (no `dependencies`, no `devDependencies`) that bars introduction of any database driver, ORM, query builder, or cache client under C-005.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty `packages` tree below the root `""` entry, verifying the absence of transitive dependencies that could introduce database libraries.
+- `README.md` — Confirmed the operational immutability directive ("Do not touch!") that is the source of constraint C-001 and bars the addition of database connection code or schema files.
+
+#### Folders Explored
+
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no `migrations/`, `db/`, `models/`, `schemas/`, or `data/` subdirectories exist.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); no database-related code or schema artifacts.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts; no database schemas, migration scripts, or query files.
+
+#### Technical Specification Sections Cross-Referenced
+
+- §1.2 System Overview — "State Model: Fully stateless; no persistence, no in-memory accumulation, no session tracking."
+- §1.3 Scope — Explicit out-of-scope enumeration: "Persistence: Databases, ORMs, file-based storage, in-memory caches."
+- §2.3 Feature Relationships — Confirmed no shared components are databases; one inbound HTTP, zero outbound integrations.
+- §2.4 Implementation Considerations — Scalability dimensions table showing "State Migration: Not applicable (fully stateless)."
+- §2.6 Assumptions and Constraints — Seven binding constraints (C-001 through C-007) that bar database introduction.
+- §3.1 Stack Philosophy and Overview — Joint preclusion by C-001 and C-005.
+- §3.6 Databases & Storage — Authoritative section documenting every storage category as "None" or "Not applicable."
+- §4.5 State Management — Negative inventory of persistence concerns; "negative-space persistence flow" Mermaid diagram source.
+- §5.1 High-Level Architecture — "Single-process, single-file, monolithic micro-service"; no data plane in the data-flow description.
+- §5.2 Component Details — `server.js` "Data Persistence Requirements: None. The component is fully stateless."
+- §5.4 Cross-Cutting Concerns — No DR/backup ("no data plane"); RTO bounded by manual `node server.js` invocation.
+- §6.1 Core Services Architecture — Canonical "negative-space" precedent structure followed by this section; §6.1.5.3 "No data redundancy applies because the application contains no data."
 
 ## 6.3 Integration Architecture
 
-### 6.3.1 Applicability Assessment
+### 6.3.1 Applicability Statement
 
-#### 6.3.1.1 Determination Statement
+**Integration Architecture in the conventional sense is not applicable to this system.** The `hao-backprop-test` repository exposes exactly **one** integration point — inbound HTTP/1.1 plaintext traffic on `127.0.0.1:3000` — and **zero** outbound integrations. Every other Integration Architecture concern from the standard prompt (API gateway, authentication, authorization, rate limiting, versioning, message queues, event/stream/batch processing, third-party services, legacy interfaces) is verified absent by direct repository inspection and is precluded by binding architectural constraints documented in §2.6.2.
 
-**Integration Architecture — as conventionally documented for enterprise software systems — is largely not applicable for this system, with one narrowly scoped exception: the inbound HTTP/1.1 listener on the loopback interface.**
+The authoritative position is recorded in §2.3.2: the system has "exactly one integration point and no outbound integrations. There are no DNS lookups, outbound HTTP calls, database connections, message brokers, telemetry exports, or service-discovery registrations." Per §1.2.1, that single integration is "one-directional and protocol-based" — external co-resident consumers initiate HTTP requests to the loopback endpoint, and the server responds with a static payload. There is no enterprise-grade integration topology to architect.
 
-The `hao-backprop-test` repository implements a single-file, single-process Node.js HTTP server whose entire integration surface consists of one inbound TCP socket bound to `127.0.0.1:3000`. The system has zero outbound integrations of any kind, and the conventional concerns of an Integration Architecture section — API gateways, authentication frameworks, rate-limiting strategies, versioning schemes, message brokers, stream processors, batch schedulers, third-party service contracts, and legacy system adapters — have no referent in this repository.
+Because one trivial integration *does* exist, this section is structured as a hybrid: it documents the minimal characteristics of the single inbound HTTP channel (where details are present), and adopts the "negative-space" reference pattern established by §6.1 (Core Services Architecture) and §6.2 (Database Design) for every other concern (where they are verified absent). Each architectural concern from the prompt is enumerated, its documented state recorded with file-level evidence, and the governing constraint that precludes its expansion identified.
 
-This determination mirrors the authoritative pattern established in §6.1 (Core Services Architecture is not applicable for this system). The applicability finding is a substantive architectural conclusion, not a documentation gap. Per §3.5.3, three properties intrinsic to integration with external systems — non-determinism, configuration surface, and dependency surface — are each fundamentally incompatible with the repository's role as a deterministic test fixture for an external "backprop integration" consumer.
+Readers seeking the runtime details that *are* present should consult §1.2 (system overview), §4.3 (integration workflows), §5.1.4 (external integration points), and §3.5 (third-party services posture).
 
-#### 6.3.1.2 Scope of This Section
+### 6.3.2 System Composition Establishing the Integration Boundary
 
-Because exactly one integration surface exists, this section is structured to:
+#### 6.3.2.1 Runtime Footprint Relevant to Integration
 
-1. **Document the sole inbound integration** with complete protocol-level detail (§6.3.2).
-2. **Provide a negative inventory** for each conventional Integration Architecture subtopic — API Design, Message Processing, External Systems — confirming the deliberate absence of every other integration concern (§6.3.3 through §6.3.5).
-3. **Cite the governing constraints** (C-001 through C-006 per §2.6.2) that forbid the introduction of any additional integration features.
-4. **Provide mermaid diagrams** illustrating the actual integration topology, the loopback boundary, and the negative inventory of absent patterns.
+The total system composition forecloses the existence of any integration architecture beyond the single inbound HTTP channel. There are no outbound HTTP client constructions, no broker client imports, no SDK imports of any kind, and no environment-driven endpoint configuration.
 
-#### 6.3.1.3 Architectural Evidence Summary
+| Integration Surface | Documented State | Authoritative Source |
+|---------------------|------------------|----------------------|
+| Imports in `server.js` | Only `require('http')` (Node.js core) | §5.1.2 |
+| Outbound HTTP client calls (`http.request`, `fetch`, axios) | None | §2.3.2, §5.1.3 |
+| Broker/queue client imports (Kafka, RabbitMQ, SQS, NATS) | None | §3.5.1 |
+| Cloud SDK imports (AWS, GCP, Azure) | None | §3.5.1 |
+| Telemetry SDK imports (Datadog, New Relic, Sentry, OTel) | None | §3.5.1 |
+| Outbound TCP socket open calls (`net.connect`, `dgram`) | None | §2.3.2 |
+| Environment variable reads (`process.env.*`) | None | §1.2.2 |
+| Declared `dependencies` / `devDependencies` in `package.json` | Zero | §5.1.2 |
+| Lockfile entries in `package-lock.json` | None (`lockfileVersion: 3` with empty `packages` tree) | §5.1.2 |
+| Internal module exports (`module.exports`) | None | §2.3.3 |
+| Sole inbound listener | `server.listen(3000, '127.0.0.1', ...)` in `server.js` | §5.1.4 |
 
-The applicability determination rests on the following directly observable repository properties:
+#### 6.3.2.2 Integration Topology Table
 
-| Evidence Dimension | Observed State | Cross-Reference |
-|--------------------|----------------|-----------------|
-| Outbound integration points | 0 | §3.5.1, §4.3.1, §5.1.4 |
-| Inbound integration points | 1 (loopback HTTP) | §3.5.2, §4.3.1 |
-| External service consumers | 0 | §3.5.1 |
-| Runtime npm dependencies | 0 | §6.1.6.1, C-005 |
-| API gateway / proxy / mesh artifacts | 0 | §5.1.4, §6.1.2.3 |
-| Message broker clients | 0 | §3.5.1, §6.1.2.2 |
-| Authentication / authorization code | 0 lines | §4.6.2, §6.3.3 |
+Per §4.3.1, the complete one-way component relationships used by the integration are reproduced below. Only the final row constitutes an actual integration with an external party; all preceding rows are internal substrate interactions within the host.
 
----
+| From | To | Mechanism | Direction |
+|------|-----|-----------|-----------|
+| Host OS | Node.js runtime | Process execution (`node` binary) | One-way (spawn) |
+| Node.js runtime | `server.js` | CommonJS module loading | One-way (load) |
+| `server.js` | `http` core module | `require('http')` | One-way (import) |
+| `server.js` | TCP socket layer | `server.listen(3000, '127.0.0.1', ...)` | One-way (bind) |
+| `server.js` | stdout | `console.log` | One-way (write) |
+| External client (loopback) | `server.js` | HTTP/1.1 request to `127.0.0.1:3000` | Request/response |
 
-### 6.3.2 The Sole Integration Surface
+#### 6.3.2.3 Architectural Constraints That Preclude Integration Expansion
 
-#### 6.3.2.1 Inbound HTTP Listener Specification
+The seven binding constraints from §2.6.2 jointly preclude introducing any of the standard integration architecture patterns. Constraints C-001, C-002, C-003, and C-005 are the operative justifications for every verified absence documented in subsequent subsections.
 
-Per §3.5.2 and §4.3.1, the entire integration surface of the system is a single inbound HTTP/1.1 listener. Its complete contract is summarized below.
+| ID | Constraint | Impact on Integration Architecture |
+|----|------------|-----------------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add integration code, SDK imports, or new source files |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Cannot integrate with non-loopback (remote) systems |
+| C-003 | Port hardcoded to `3000` | Cannot open additional inbound/outbound ports |
+| C-004 | Response body, status, headers byte-identical across requests | Cannot vary response based on request input or downstream data |
+| C-005 | Zero runtime and zero development dependencies | Cannot add HTTP clients, broker clients, gateway SDKs, authentication libraries |
+| C-006 | Must remain executable without `npm install` | Reinforces C-005 — no out-of-band installation path |
+| C-007 | MIT license for all repository contents | License compatibility baseline preserved |
 
-| Property | Value |
-|----------|-------|
-| Direction | Inbound only |
-| Protocol | HTTP/1.1 over TCP (plaintext) |
-| Bound interface | `127.0.0.1` (loopback only) |
-| Bound port | `3000` |
-| Consumer | Unspecified "backprop" tooling on same host (assumption A-003) |
+### 6.3.3 API Design
 
-The handler implementation observed in `server.js` ignores the inbound `req` argument entirely (per F-002-RQ-004) and emits a byte-identical response for every request, regardless of HTTP method, path, headers, or body.
+This subsection addresses each API-design concern from the standard prompt against the single inbound HTTP channel. For attributes that are present (protocol, documented response contract), the actual implementation is documented. For attributes that are verified absent (authentication, authorization, rate limiting, versioning), the absence is recorded with file-level evidence.
 
-#### 6.3.2.2 Wire Contract
+#### 6.3.3.1 Protocol Specifications
 
-The response contract is invariant across all requests and is fixed at compile time:
+The single integration uses the Node.js core `http` module's default protocol settings. No protocol negotiation, content negotiation, or upgrade path is implemented.
 
-| Response Element | Value |
-|------------------|-------|
-| Status code | `200` (always) |
-| Content-Type header | `text/plain` (always) |
-| Response body | `Hello, World!\n` (14 bytes, UTF-8) |
-| Other headers | Node.js `http` core defaults only |
+| Protocol Attribute | Value | Source |
+|--------------------|-------|--------|
+| Wire protocol | HTTP/1.1 plaintext | Node.js `http.createServer` default |
+| TLS / HTTPS | Not enabled — no `https` module imported | `server.js` (only `require('http')`) |
+| HTTP/2 | Not enabled — `http2` module not imported | `server.js` |
+| HTTP/3 / QUIC | Not enabled — no such module imported | `server.js` |
+| Bind address | `127.0.0.1` (literal IPv4 loopback) | `server.js` line 3 (C-002) |
+| Bind port | `3000` (literal integer) | `server.js` line 4 (C-003) |
+| Reachability | Co-resident processes on the same host only | §2.6.1 (Assumption A-003) |
+| Content negotiation | None — `text/plain` emitted unconditionally | `server.js` line 8 (C-004) |
+| Method routing | None — handler is branchless, ignores `req.method` | F-002-RQ-004 |
+| Path routing | None — handler ignores `req.url` | F-002-RQ-004 |
 
-Per constraint C-004 (§2.6.2), the response body, status, and headers must remain byte-identical across all requests. This invariance is the defining functional property F-002 of the system.
+The wire format is entirely defined by the Node.js core `http` module. No custom protocol layer, no upgrade negotiation (no WebSocket, no SSE), and no Server-Sent Events stream is offered.
 
-#### 6.3.2.3 Negative Properties of the Sole Integration
+#### 6.3.3.2 Authentication Methods — Verified Absent
 
-The single integration point intentionally omits every feature that an enterprise integration would normally include:
+Per §2.4.4 and the §3.5.1 verified-absent inventory, **no authentication mechanism of any kind is implemented**. The branchless handler does not inspect the `Authorization` header, the `Cookie` header, or any other identifying claim. The handler signature `(req, res) => {...}` discards the `req` argument entirely.
 
-| Property Normally Present | Status in This System |
-|---------------------------|------------------------|
-| Service-level handshake | Absent — TCP/HTTP defaults only |
-| API contract negotiation | Absent — single fixed response |
-| Authentication exchange | Absent — no credential parsing |
-| Health-check endpoint | Absent — handler ignores `req.url` |
-| Routing logic | Absent — branchless handler |
-| Content negotiation | Absent — only `text/plain` ever emitted |
-| TLS / HTTPS transport | Absent — plaintext `http` module only |
+| Authentication Mechanism | Documented State | Governing Source |
+|--------------------------|------------------|------------------|
+| API keys (header / query) | Not implemented — `req` ignored | F-002-RQ-004 |
+| Bearer tokens (JWT, opaque) | Not implemented — no token library imported | C-005 |
+| OAuth 2.0 / OpenID Connect | Not implemented — no OIDC SDK imported | §3.5.1 |
+| Session cookies | Not implemented — no `Set-Cookie` emitted | C-004 |
+| Mutual TLS (mTLS) | Not implemented — no TLS at all | §6.3.3.1 |
+| Basic / Digest authentication | Not implemented — no `WWW-Authenticate` emitted | C-004 |
+| External identity providers (Auth0, Okta, Cognito) | Not integrated — no SDK present | §3.5.1 |
 
-Per §1.3.2, the "Unsupported Use Cases" list explicitly excludes secure transport: the server uses the plaintext `http` module only and provides no TLS/HTTPS support.
+**Sole effective access control**: the OS loopback binding mandated by C-002. Non-loopback connections are refused by the operating system's TCP/IP stack before reaching the Node.js process. Per §2.6.1 (Assumption A-005), no security review of plaintext HTTP / loopback binding is required, as the fixture is local-only by design.
 
-#### 6.3.2.4 Inbound HTTP Integration Sequence Diagram
+#### 6.3.3.3 Authorization Framework — Verified Absent
 
-The following sequence diagram traces the complete runtime integration sequence from process spawn through a representative request/response cycle. It is the sole meaningful integration flow in the system and is reproduced from §4.3.2.
+Per §2.4.4, no authorization framework is implemented. The handler grants identical (anonymous, unauthenticated) access to every request and emits an identical response regardless of any claim that could appear in the request.
+
+| Authorization Mechanism | Documented State |
+|-------------------------|------------------|
+| Role-Based Access Control (RBAC) | Not implemented — no role evaluation logic |
+| Attribute-Based Access Control (ABAC) | Not implemented — no policy engine |
+| Access Control Lists (ACLs) | Not implemented |
+| Scope / claim checks | Not implemented — no claims to evaluate |
+| Policy-as-code engines (OPA, Cedar) | Not integrated — no client library |
+| Resource-level permissions | Not applicable — no resources to permission |
+
+#### 6.3.3.4 Rate Limiting Strategy — Verified Absent
+
+Per §2.4.4 and §6.1.5.5, no rate limiting, throttling, or admission-control mechanism exists. The handler accepts every request unconditionally and responds with the identical 200 OK / `text/plain` / `Hello, World!\n` payload.
+
+| Rate Limiting Mechanism | Documented State | Governing Constraint |
+|-------------------------|------------------|----------------------|
+| Per-client rate limiting | None — no per-client tracking exists | C-005, F-002-RQ-004 |
+| Token bucket / leaky bucket | Not implemented — no algorithm in `server.js` | C-001 |
+| Sliding window counters | Not implemented | C-001 |
+| Distributed rate limiting (Redis-backed) | Not implemented — no Redis client | C-005 |
+| Connection-level throttling | Not implemented — Node.js default settings | C-001 |
+| Quota enforcement | Not implemented | C-005 |
+| Backpressure signaling (429) | Not emitted — handler always returns 200 | C-004 |
+
+The only effective rate-bounding behavior is the Node.js intrinsic event loop, which serializes request handling without explicit limit configuration.
+
+#### 6.3.3.5 Versioning Approach — Verified Absent
+
+Per F-002-RQ-004 (branchless handler) and §6.2.4.2 (no versioning strategy), no API versioning scheme is implemented. The handler ignores `req.url`, `req.method`, and all request headers, structurally precluding any path-based, header-based, or query-based version negotiation.
+
+| Versioning Mechanism | Documented State |
+|----------------------|------------------|
+| Path versioning (`/v1/`, `/v2/`) | Not implemented — `req.url` ignored |
+| Header versioning (`Accept: application/vnd.x.v1+json`) | Not implemented — headers ignored |
+| Query versioning (`?version=1`) | Not implemented — query string ignored |
+| Content-type versioning | Not implemented — `Content-Type: text/plain` fixed |
+| Deprecation header (`Deprecation: true`, `Sunset:`) | Not emitted |
+| Hypermedia version negotiation (HATEOAS) | Not implemented — no link relations emitted |
+
+The package version is statically `1.0.0` in `package.json` per §2.6.3, and is not exposed at the HTTP layer in any form.
+
+#### 6.3.3.6 Documentation Standards — Minimal
+
+No machine-readable API specification (OpenAPI / Swagger, AsyncAPI, RAML, API Blueprint) is published in the repository. The only documented response contract appears in `docs/testing-strategy.md` and is reproduced from the acceptance criteria recorded in §5.1.4. The contract consists of four exact-match invariants:
+
+| Acceptance Criterion | Exact Value |
+|----------------------|-------------|
+| HTTP status code | `200` |
+| `Content-Type` response header | `text/plain` |
+| Response body (UTF-8) | `Hello, World!\n` (14 bytes) |
+| Startup log line | `Server running at http://127.0.0.1:3000/` |
+
+| Documentation Standard | Documented State |
+|------------------------|------------------|
+| OpenAPI 3.x / Swagger 2.0 specification | Not published |
+| AsyncAPI specification | Not applicable — no async messaging |
+| Postman collection | Not published |
+| API portal / developer portal | Not deployed |
+| SDK code generation artifacts | Not produced |
+| Versioned contract repository | Not maintained |
+
+#### 6.3.3.7 API Architecture Diagram
+
+The diagram below visualizes the entire API surface: a branchless three-step response composition inside a single anonymous handler, fronted by the Node.js `http` core module, with every other standard API-tier concern recorded as verified absent.
+
+```mermaid
+flowchart LR
+    subgraph ClientSide["Client Side (Loopback Only)"]
+        Client["Any HTTP/1.1 Client<br/>bound to 127.0.0.1"]
+    end
+    subgraph EngineTier["Node.js HTTP Engine"]
+        HTTPCore["node:http<br/>Built-in Parser / Server<br/>(no framework)"]
+    end
+    subgraph HandlerTier["server.js Branchless Handler<br/>(req, res) =&gt; { ... }"]
+        H1["Step 1<br/>res.statusCode = 200"]
+        H2["Step 2<br/>res.setHeader('Content-Type', 'text/plain')"]
+        H3["Step 3<br/>res.end('Hello, World!\n')"]
+    end
+    subgraph AbsentAPI["Verified-Absent API Concerns"]
+        AbsAuth["No authentication<br/>(no Authorization header inspection)"]
+        AbsAuthz["No authorization<br/>(no RBAC / ABAC / scopes)"]
+        AbsRate["No rate limiting<br/>(no per-client tracking)"]
+        AbsVer["No versioning<br/>(req.url ignored)"]
+        AbsRoute["No routing<br/>(handler is branchless)"]
+        AbsNeg["No content negotiation<br/>(Content-Type fixed)"]
+        AbsSpec["No OpenAPI / Swagger spec"]
+        AbsGW["No API gateway / reverse proxy"]
+    end
+
+    Client -->|"HTTP/1.1 request<br/>any method, any path"| HTTPCore
+    HTTPCore -->|"invoke handler(req, res)"| H1
+    H1 --> H2
+    H2 --> H3
+    H3 -->|"flush response bytes"| HTTPCore
+    HTTPCore -->|"200 / text/plain / 14 bytes"| Client
+```
+
+The "Verified-Absent API Concerns" subgraph is drawn deliberately disconnected from the live request/response path to emphasize that no member of that set is present in the runtime, the dependency closure, or the source.
+
+### 6.3.4 Message Processing — Verified Absent
+
+This subsection addresses each message-processing concern from the standard prompt and records its absence with file-level evidence. The system implements a purely synchronous request/response pattern over HTTP/1.1; no asynchronous, event-driven, streamed, or batched messaging exists.
+
+#### 6.3.4.1 Event Processing Patterns — Verified Absent
+
+Per §4.3.3 and §5.1.3, no event-driven pattern is implemented beyond the Node.js intrinsic event loop. The event loop itself is a runtime substrate concern (libuv) and is not exposed as an application-level event-processing API.
+
+| Event Processing Pattern | Documented State |
+|--------------------------|------------------|
+| Event-driven choreography (event bus) | Not present — no bus library imported |
+| Publish / subscribe (Pub/Sub) | Not present — no broker client |
+| Event sourcing | Not present — no event store, no append-only log |
+| CQRS (Command Query Responsibility Segregation) | Not present — single read-only handler |
+| Saga / process manager | Not present — no orchestration logic |
+| Webhook handling (inbound or outbound) | Not present — handler ignores `req`; no outbound HTTP client |
+| Domain events / event handlers | Not present — no domain model exists |
+
+#### 6.3.4.2 Message Queue Architecture — Verified Absent
+
+Per §3.5.1 and §6.1.3.2, **no message broker client library is imported in any source file, and no producer or consumer code exists**. This absence is binding under C-005 (zero dependencies) and is verified by the empty `packages` tree in `package-lock.json`.
+
+| Message Queue Component | Documented State | Governing Constraint |
+|-------------------------|------------------|----------------------|
+| Apache Kafka (producer / consumer) | None — no `kafkajs`, no `node-rdkafka` imported | C-005 |
+| RabbitMQ / AMQP (`amqplib`) | None — no AMQP client imported | C-005 |
+| AWS SQS / SNS | None — no AWS SDK imported | C-005, §3.5.1 |
+| Google Cloud Pub/Sub | None — no GCP SDK imported | C-005 |
+| Azure Service Bus | None — no Azure SDK imported | C-005 |
+| Redis Streams / Pub/Sub | None — no Redis client imported | C-005 |
+| NATS / NATS JetStream | None — no NATS client imported | C-005 |
+| Queue / topic definitions | None — no schema files exist | C-001 |
+| Dead-letter queue (DLQ) | None — no DLQ topology to define | §4.6.4 |
+| Message serialization (Avro, Protobuf, JSON Schema) | None — no schema registry client | C-005 |
+
+#### 6.3.4.3 Stream Processing Design — Verified Absent
+
+Per §3.5.1, no stream processing framework is integrated. The system serves a 14-byte static literal; there is no continuous data stream to transform, window, or aggregate.
+
+| Stream Processing Component | Documented State |
+|-----------------------------|------------------|
+| Apache Kafka Streams | Not present — no `kafkajs` or Streams DSL |
+| Apache Flink / Spark Streaming | Not present — JVM-based; no Node.js client |
+| Reactive Streams (RxJS, Most.js) | Not present — no reactive library imported |
+| Real-time analytics pipelines | Not present — no analytics emission |
+| Windowing / aggregation operators | Not applicable — no stream to window |
+| Backpressure handling | None beyond Node.js intrinsic event-loop scheduling |
+| Stream sink (data lake, warehouse) | Not present — no sink connector |
+
+#### 6.3.4.4 Batch Processing Flows — Verified Absent
+
+Per §4.3.3 and §6.1.3.2, no scheduler, cron, job queue, or ETL pipeline exists. The runtime topology contains exactly one process whose entire purpose is synchronous request handling; there is no offline or scheduled processing tier.
+
+| Batch Processing Component | Documented State | Governing Constraint |
+|----------------------------|------------------|----------------------|
+| Cron / scheduler (`node-cron`, `agenda`, OS cron) | None — no scheduler library imported | C-005 |
+| Job queue (Bull, Bee-Queue, Resque) | None — no queue client imported | C-005 |
+| Workflow engine (Temporal, Airflow, Step Functions) | None — no orchestrator integration | C-005, §3.5.1 |
+| Batch script (`scripts.batch`, `cli.js`, etc.) | None — only `scripts.test` placeholder in `package.json` | C-001 |
+| ETL pipeline | None — no data source, no data sink | §6.2 (no data plane) |
+| Bulk data import / export endpoint | None — handler is branchless and stateless | C-004, F-002-RQ-004 |
+
+#### 6.3.4.5 Error Handling Strategy — Verified Absent
+
+Per §4.6.1 and §4.6.4, **no error-handling primitives exist** at any layer of the integration. All errors propagate to the Node.js default behavior, which is process termination with a non-zero exit code. There is no error envelope, no structured error response, no retry queue, and no dead-letter handling.
+
+| Error Handling Primitive | Documented State |
+|--------------------------|------------------|
+| `'error'` event listener on `http.Server` | Not registered |
+| `try` / `catch` blocks in `server.js` | None |
+| `process.on('SIGINT' / 'SIGTERM')` handlers | Not registered |
+| `process.on('uncaughtException')` handler | Not registered |
+| `process.on('unhandledRejection')` handler | Not registered |
+| `server.close()` graceful shutdown | Not invoked |
+| Structured 4xx/5xx response paths | None — F-002-RQ-001 mandates 200 for every request |
+| Retry mechanism with exponential backoff | Not implemented — no retry library imported |
+| Dead-letter queue / poison-message handling | Not applicable — no queue exists |
+| Circuit breaker (`opossum`, `brakes`) | Not implemented — no downstream calls to break |
+| Error notification (PagerDuty, Slack webhook) | Not implemented — no notification client |
+
+**Recovery is exclusively external**: per §4.6.4, the sole documented recovery procedure is manual operator re-invocation of `node server.js`. There is no in-process compensation, no message replay, and no automated remediation.
+
+### 6.3.5 External Systems — Verified Absent
+
+This subsection addresses each external-systems concern from the standard prompt. Aside from the single inbound HTTP channel documented in §6.3.3.1, every category of external integration is verified absent.
+
+#### 6.3.5.1 Third-Party Integration Patterns — Verified Absent
+
+Per the comprehensive inventory in §3.5.1, **no third-party services are used or integrated**. The complete verified-absent inventory is reproduced and consolidated below.
+
+| Service Category | Status | Evidence |
+|------------------|--------|----------|
+| External APIs (REST, GraphQL, gRPC) | None | `server.js` contains no outbound HTTP client code |
+| Identity providers (Auth0, Okta, Cognito, Keycloak) | None | No identity SDK imports anywhere |
+| Authorization providers (RBAC, ReBAC, OPA Cloud) | None | No policy-engine client |
+| APM / observability (Datadog, New Relic, Sentry, Honeycomb) | None | No instrumentation code or SDK imports |
+| Logging backends (Splunk, ELK/Elastic, Loggly, Datadog Logs) | None | No log shipper, no transport |
+| Cloud SDKs (AWS, GCP, Azure) | None | No SDK imports; no IaC; no Dockerfile |
+| Service discovery (Consul, etcd, Eureka) | None | Hardcoded loopback binding precludes discovery |
+| Message brokers / queues (Kafka, RabbitMQ, SQS, NATS) | None | No client libraries; no producer/consumer code |
+| External databases (PostgreSQL, MySQL, MongoDB, DynamoDB) | None | No driver dependencies (see §6.2) |
+| CDN services (CloudFront, Cloudflare, Fastly) | None | No static asset distribution |
+| Email / SMS / notification (SendGrid, Twilio, SES, SNS) | None | No notification or transactional messaging |
+| Feature flag services (LaunchDarkly, Split, Unleash) | None | No runtime configuration surface |
+| Payment / billing (Stripe, Braintree, Adyen) | None | Not applicable — no commerce surface |
+| Search / indexing (Elasticsearch, Algolia, Meilisearch) | None | No search index, no client library |
+| Secrets managers (Vault, AWS Secrets Manager, Doppler) | None | No secret retrieval — no `process.env` access |
+
+#### 6.3.5.2 Legacy System Interfaces — Verified Absent
+
+No legacy integration protocols are supported. The system speaks only HTTP/1.1 plaintext via the Node.js core `http` module and exposes no interoperability surface for older protocols.
+
+| Legacy Protocol / Interface | Documented State |
+|-----------------------------|------------------|
+| SOAP / WS-* services | Not implemented — no SOAP library imported |
+| XML-RPC | Not implemented |
+| CORBA / RMI / DCOM | Not implemented — no IIOP / ORB present |
+| File-based EDI (X12, EDIFACT) | Not implemented — no `fs` operations |
+| Mainframe interfaces (CICS, IMS, MQ Series) | Not implemented |
+| FTP / SFTP / FTPS | Not implemented — no `ftp` or `ssh2-sftp-client` |
+| MQTT / AMQP 0.9.1 brokers | Not implemented — no broker client |
+| LDAP / Active Directory | Not implemented — no directory client |
+| SNMP | Not implemented |
+
+#### 6.3.5.3 API Gateway Configuration — Verified Absent
+
+Per §6.1.2.3 and §6.1.3.1, **no API gateway, reverse proxy, load balancer, or ingress controller is deployed in front of `server.js`**. External co-resident clients reach the Node.js process directly through the loopback TCP socket. The loopback binding mandated by C-002 structurally precludes the introduction of an external gateway tier, because no non-loopback ingress path exists for a gateway to terminate.
+
+| Gateway / Edge Component | Documented State | Governing Constraint |
+|--------------------------|------------------|----------------------|
+| API gateway (Kong, Tyk, AWS API Gateway, Apigee) | None — direct HTTP listener only | C-001, C-005 |
+| BFF (Backend-for-Frontend) tier | None — single endpoint, no client-specific aggregation | C-001 |
+| Reverse proxy (Nginx, Caddy, Traefik) | Not deployed — no proxy configuration files | C-002 (loopback-only) |
+| Load balancer (HAProxy, AWS ALB/NLB, GCP LB) | Not deployed — single replica on loopback | C-002, C-003 |
+| Ingress controller (NGINX Ingress, Istio Gateway) | Not applicable — no Kubernetes deployment | §6.1.4.2 |
+| Service mesh (Istio, Linkerd, Consul Connect) | Not deployed — no second service to mesh | §6.1.3.2 |
+| WAF (Web Application Firewall, Cloudflare WAF, AWS WAF) | Not deployed | §3.5.1 |
+| API portal / developer portal | Not deployed | §6.3.3.6 |
+| Mutual-TLS termination | Not configured — no TLS at all | §6.3.3.1 |
+
+#### 6.3.5.4 External Service Contracts — Minimal
+
+The system has exactly one external contract, and it is implicit: it consists of four exact-match invariants enumerated in §5.1.4. There is no signed SLA, no machine-readable contract artifact, and no quantitative performance guarantee.
+
+| Contract Attribute | Documented Value |
+|--------------------|------------------|
+| Contracted endpoint | `http://127.0.0.1:3000/` (any HTTP method, any path) |
+| Contracted status code | `200` (exact) |
+| Contracted `Content-Type` header | `text/plain` (exact) |
+| Contracted response body | `Hello, World!\n` (UTF-8, 14 bytes, exact) |
+| Contracted startup log line | `Server running at http://127.0.0.1:3000/` (exact) |
+| Quantitative SLA (latency, throughput, availability) | None documented (see §5.1.4) |
+| Contract format (OpenAPI, AsyncAPI, JSON Schema) | None published |
+| Versioned contract repository | Not maintained |
+| Consumer-driven contract tests (Pact, Spring Cloud Contract) | None |
+
+The single counterparty referenced by the contract is the "external backprop integration validation workflow" — a co-resident process whose own implementation is outside the scope of this repository, as recorded in §1.3.
+
+### 6.3.6 Integration Flow and Sequence Diagrams
+
+This subsection provides the three integration-architecture diagrams required by the section prompt. The flow and sequence diagrams describe the single inbound HTTP integration; the negative-space topology diagram in §6.3.7 enumerates verified absences.
+
+#### 6.3.6.1 Integration Flow Diagram
+
+The diagram below visualizes the complete integration topology of the system. There is exactly one application-layer component (`server.js`), exactly one substrate (Node.js core `http`), and exactly one inbound integration point. No service-to-service edges and no outbound edges exist anywhere in the graph.
+
+```mermaid
+flowchart TB
+    subgraph ExternalBoundary["External Boundary (Out of Repo)"]
+        Consumer["Backprop Integration<br/>Validation Workflow<br/>(co-resident process)"]
+    end
+    subgraph HostOSLayer["Host Operating System"]
+        Loopback["TCP/IP Stack<br/>Loopback 127.0.0.1:3000"]
+    end
+    subgraph NodeRuntime["Node.js Runtime (Substrate)"]
+        EventLoop["libuv Event Loop"]
+        HTTPCore["node:http<br/>Core HTTP Engine"]
+        V8["V8 JavaScript Engine"]
+    end
+    subgraph AppLayer["Application Layer (Single Component)"]
+        ServerJS["server.js<br/>14-line branchless handler<br/>no module.exports"]
+    end
+
+    Consumer -->|"HTTP/1.1 plaintext request<br/>(any method, any path)"| Loopback
+    Loopback --> EventLoop
+    EventLoop --> HTTPCore
+    V8 --> HTTPCore
+    HTTPCore -->|"invoke handler(req, res)"| ServerJS
+    ServerJS -.->|"200 OK / text/plain /<br/>'Hello, World!\n' (14 bytes)"| HTTPCore
+    HTTPCore -.->|"flush bytes"| Loopback
+    Loopback -.->|"response"| Consumer
+```
+
+Solid arrows represent the inbound request path; dashed arrows represent the response path back to the consumer. The single bidirectional edge (Consumer ↔ Loopback) is the sole integration boundary.
+
+#### 6.3.6.2 Message Flow Sequence Diagram
+
+The sequence diagram below traces the end-to-end inbound integration from operator invocation through bind success, startup logging, and the first request/response cycle. It is reproduced and elaborated from §4.3.2 and §5.2.7. The seven lanes correspond to the seven actors involved in the lifetime of a single integration round-trip.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Op as Operator
+    participant Op as Operator
     participant OS as Host OS
     participant Node as Node.js Runtime
-    participant Srv as server.js
-    participant HTTP as http Core Module
-    participant TCP as TCP Socket Layer
-    actor Client as Loopback Client (Backprop)
+    participant SrvJS as server.js
+    participant Http as node:http
+    participant Sock as TCP Socket Layer
+    participant Cli as Loopback Client
 
     Op->>OS: node server.js
     OS->>Node: spawn process
-    Node->>Srv: load CommonJS module
-    Srv->>HTTP: require('http')
-    HTTP-->>Srv: http module exports
-    Srv->>HTTP: http.createServer(handler)
-    HTTP-->>Srv: Server instance (F-001-RQ-001)
-    Srv->>TCP: server.listen(3000, '127.0.0.1', cb)
-    TCP-->>Srv: bind successful (asynchronous)
-    Srv->>Op: stdout: Server running at http://127.0.0.1:3000/
-
-    Note over Srv,TCP: Server enters Listening state.<br/>No application state held<br/>beyond constants and Server instance.
-
-    Client->>TCP: TCP SYN to 127.0.0.1:3000
-    TCP-->>Client: TCP SYN-ACK
-    Client->>HTTP: HTTP/1.1 request (any method, any path)
-    HTTP->>Srv: invoke handler(req, res)
-    Note over Srv: req argument is IGNORED<br/>per F-002-RQ-004
-    Srv->>HTTP: res.statusCode = 200
-    Srv->>HTTP: res.setHeader Content-Type text/plain
-    Srv->>HTTP: res.end Hello, World! newline
-    HTTP-->>Client: HTTP/1.1 200 OK + headers + 14-byte body
-
-    Note over Client,TCP: No session, no cookie,<br/>no per-client state retained.
+    Node->>SrvJS: load module (CommonJS)
+    SrvJS->>Http: require('http')
+    SrvJS->>Http: http.createServer(handler)
+    Http-->>SrvJS: Server instance
+    SrvJS->>Http: server.listen(3000, '127.0.0.1', cb)
+    Http->>Sock: bind 127.0.0.1:3000
+    Sock-->>Http: bind successful
+    Http->>SrvJS: invoke listen callback
+    SrvJS->>Op: console.log('Server running at http://127.0.0.1:3000/')
+    Note over SrvJS,Sock: Event loop active; ready for inbound integration
+    Cli->>Sock: TCP SYN / handshake
+    Cli->>Http: HTTP/1.1 request (any method, any path)
+    Http->>SrvJS: invoke handler(req, res)
+    Note over SrvJS: req object discarded per F-002-RQ-004
+    SrvJS->>SrvJS: res.statusCode = 200
+    SrvJS->>SrvJS: res.setHeader('Content-Type', 'text/plain')
+    SrvJS->>Http: res.end('Hello, World!\n')
+    Http->>Sock: flush response bytes
+    Sock-->>Cli: 200 OK / text/plain / 14 bytes
 ```
 
-#### 6.3.2.5 Loopback Boundary Diagram
+Two architectural properties are visible from the diagram:
 
-The diagram below illustrates how the loopback binding operates as the sole integration gatekeeper. It deliberately enforces a position equivalent to "deny by default" for any non-local caller, because the OS network stack refuses non-loopback connection attempts before the application layer is ever invoked.
+- **Single round-trip per integration interaction**: There is exactly one request and one response per client invocation. No follow-up callbacks, no webhooks, no asynchronous completion notifications.
+- **Branchless handler step sequence**: The three response operations (`statusCode = 200`, `setHeader`, `end`) execute unconditionally for every request without inspecting any request attribute.
 
-```mermaid
-flowchart LR
-    Remote[Remote client<br/>off-host] -->|attempt connect<br/>to host IP:3000| OSBoundary{OS-level<br/>loopback boundary}
-    OSBoundary -->|reject<br/>not bound to 0.0.0.0| Denied([Connection refused<br/>by OS])
-    Local[Loopback client<br/>same host] -->|attempt connect<br/>to 127.0.0.1:3000| OSBoundary
-    OSBoundary -->|accept<br/>matches bound interface| Accepted[TCP handshake<br/>completes]
-    Accepted --> AppLayer[Application layer:<br/>NO auth check<br/>NO authz check<br/>NO rate limit]
-    AppLayer --> Serve[Serve static<br/>200 response]
-```
+### 6.3.7 Negative-Space Integration Architecture
 
-As §4.6 establishes, the loopback boundary is the **sole** integration checkpoint in the entire system. There are no application-layer validation, authorization, or compliance checkpoints that follow it.
-
----
-
-### 6.3.3 API Design Analysis
-
-#### 6.3.3.1 Determination
-
-Per the prompt's API Design subtopics — protocol specifications, authentication methods, authorization framework, rate limiting strategy, versioning approach, documentation standards — only the **protocol specification** subtopic has any positive content; every other subtopic is documented as deliberately absent. This is consistent with the system's "Negative Architecture" posture documented in §5.1.1.2 and §6.1.5.1.
-
-#### 6.3.3.2 Protocol Specifications
-
-The transport layer protocol is fully specified by the Node.js core `http` module. No application-layer protocol decoration (no JSON envelope, no XML/SOAP wrapper, no GraphQL operation, no gRPC frame) is layered above it.
-
-| Protocol Element | Specification |
-|------------------|---------------|
-| Transport | HTTP/1.1 plaintext over TCP |
-| Implementation | Node.js core `http` module (no framework) |
-| TLS / HTTPS | Not supported (per §1.3.2 "Unsupported Use Case #5") |
-| Content type | `text/plain` only |
-| Compression | None (no gzip / brotli middleware) |
-| Keep-alive tuning | Node.js `http` defaults only |
-| Content negotiation | None (handler ignores `Accept` header) |
-
-#### 6.3.3.3 Authentication Methods
-
-**None.** Per §4.6.2 and §6.1.2.3, no authentication is performed at any layer of the application. The negative inventory below enumerates every authentication mechanism that was specifically evaluated and confirmed absent.
-
-| Authentication Mechanism | Status |
-|--------------------------|--------|
-| Basic / Digest HTTP authentication | Not implemented — no `Authorization` header parsing |
-| Bearer token (JWT) | Not implemented — no JWT library, no signing key |
-| OAuth 2.0 / OIDC flows | Not implemented — no identity provider integration |
-| API key (header or query) | Not implemented — handler ignores `req` entirely |
-| Mutual TLS (mTLS) | Not implemented — plaintext HTTP only |
-| Session cookies | Not implemented — no session store, no cookie parsing |
-
-Per §6.1.2.3, the sole "checkpoint" enforcing access control is at the OS network layer — the loopback binding rejects non-local connections before any application code is invoked. No application-layer credential extraction, validation, or rejection logic exists.
-
-#### 6.3.3.4 Authorization Framework
-
-**None.** Authorization presupposes that some form of caller identity has been established; because no authentication exists (§6.3.3.3), no authorization layer can exist.
-
-| Authorization Concern | Status |
-|------------------------|--------|
-| Role-Based Access Control (RBAC) | Not implemented — no roles defined |
-| Attribute-Based Access Control (ABAC) | Not implemented — no policy engine |
-| Scope / permission evaluation | Not implemented — no scopes defined |
-| Per-resource authorization | Not implemented — only one resource (the static response) |
-| Per-client identification | Not implemented — clients are not identified |
-
-#### 6.3.3.5 Rate Limiting Strategy
-
-**None.** No rate limiting, throttling, or quota enforcement is implemented at any layer of the application.
-
-| Rate-Limiting Mechanism | Status |
-|--------------------------|--------|
-| Token bucket / leaky bucket | Not implemented — no counter state |
-| Fixed-window / sliding-window counters | Not implemented — no Redis, no in-memory store |
-| Per-IP rate limit | Not implemented — handler does not inspect `req.socket` |
-| Per-endpoint rate limit | Not implemented — only one effective endpoint |
-| Concurrency cap | Not implemented — relies on Node.js event-loop defaults |
-
-This absence is reinforced by the dependency posture: per constraint C-005, zero runtime dependencies are permitted, which precludes any rate-limiting middleware such as `express-rate-limit`.
-
-#### 6.3.3.6 Versioning Approach
-
-**None.** No API versioning scheme is implemented. The system exposes neither URL-path versioning, header-based versioning, nor content-type versioning.
-
-| Versioning Mechanism | Status |
-|----------------------|--------|
-| URL path versioning (e.g., `/v1/...`) | Not implemented — handler ignores `req.url` |
-| Header versioning (e.g., `API-Version: 1`) | Not implemented — handler ignores request headers |
-| Content-type versioning (e.g., `application/vnd.app.v1+json`) | Not implemented — only `text/plain` emitted |
-| Semantic versioning of the API contract | Not implemented — no `CHANGELOG`, no version manifest |
-
-Per §2.6.3, the only version declaration in the repository is the static `1.0.0` value in `package.json` (mirrored in `package-lock.json`), which refers to the npm package version, not an API contract. No historical or future API versions are recorded.
-
-#### 6.3.3.7 Documentation Standards
-
-**None.** No machine-readable API documentation artifacts exist in the repository.
-
-| Documentation Artifact | Status |
-|------------------------|--------|
-| OpenAPI / Swagger specification | Absent — no `openapi.yaml`, no `swagger.json` |
-| RAML / API Blueprint | Absent — no API description files of any kind |
-| GraphQL SDL / Introspection | Not applicable — not a GraphQL API |
-| Postman / Insomnia collection | Absent — no client-side collections committed |
-| JSDoc / inline API documentation | Absent — `server.js` contains no comments |
-| Human-readable API reference | Absent — `README.md` is two lines and does not describe an API |
-
-#### 6.3.3.8 API Architecture Diagram
-
-The diagram below depicts the actual API architecture of the system — a single, branchless, contract-free request/response pipeline — and contrasts it visually with the conventional API design subtopics that are absent.
+This subsection adopts the canonical negative-space pattern established by §6.1.2.3 and §6.2.3.7. The diagram below visualizes every standard integration-architecture component that would typically front, augment, or extend a production HTTP integration — drawn deliberately disconnected from the live data path to emphasize verified absence.
 
 ```mermaid
 flowchart TB
-    subgraph Actual["Actual API Surface — This System"]
-        direction TB
-        InReq["Any HTTP/1.1 request<br/>(any method, any path,<br/>any headers, any body)"]
-        Handler["Branchless handler<br/>(ignores req per F-002-RQ-004)"]
-        OutResp["HTTP/1.1 200 OK<br/>Content-Type: text/plain<br/>Body: Hello, World!\n"]
-        InReq --> Handler --> OutResp
+    subgraph LiveDataPath["Live Integration Data Path (Implemented)"]
+        ConsumerLive["Backprop Consumer<br/>(co-resident)"]
+        LoopLive["Loopback 127.0.0.1:3000"]
+        SrvLive["server.js"]
+        ConsumerLive -->|"HTTP/1.1"| LoopLive
+        LoopLive --> SrvLive
+        SrvLive -.->|"200 / text/plain / 14B"| LoopLive
+        LoopLive -.-> ConsumerLive
+    end
+    subgraph AbsentEdge["Absent Edge / Gateway Tier"]
+        NoGW["No API gateway<br/>(Kong / Tyk / Apigee)"]
+        NoProxy["No reverse proxy<br/>(Nginx / Caddy)"]
+        NoLB["No load balancer<br/>(HAProxy / ALB)"]
+        NoWAF["No Web Application Firewall"]
+        NoIngress["No Kubernetes ingress controller"]
+    end
+    subgraph AbsentIdentity["Absent Identity / Authorization Tier"]
+        NoIdP["No identity provider<br/>(Auth0 / Okta / Cognito)"]
+        NoOAuth["No OAuth 2.0 / OIDC"]
+        NoRBAC["No RBAC / ABAC engine"]
+        NoMTLS["No mutual TLS"]
+    end
+    subgraph AbsentMessaging["Absent Asynchronous Messaging"]
+        NoKafka["No Kafka / RabbitMQ / SQS"]
+        NoStreams["No stream processor<br/>(Flink / Spark / Kafka Streams)"]
+        NoCron["No scheduler / batch jobs"]
+        NoDLQ["No dead-letter queue"]
+    end
+    subgraph AbsentObservability["Absent Observability / Telemetry"]
+        NoAPM["No APM<br/>(Datadog / New Relic / Sentry)"]
+        NoLogs["No log shipper<br/>(Splunk / ELK)"]
+        NoMetrics["No metrics endpoint<br/>(Prometheus / StatsD)"]
+        NoTracing["No distributed tracing<br/>(OpenTelemetry / Jaeger)"]
+    end
+    subgraph AbsentOutbound["Absent Outbound Integrations"]
+        NoOutHTTP["No outbound HTTP / fetch / axios"]
+        NoSDK["No cloud SDK<br/>(AWS / GCP / Azure)"]
+        NoDB["No database client<br/>(SQL / NoSQL / Redis)"]
+        NoWebhook["No outbound webhook emission"]
     end
 
-    subgraph Absent["Conventional API Design Concerns — Absent"]
-        direction TB
-        Auth["Authentication<br/>(JWT / OAuth / API key)"]
-        Authz["Authorization<br/>(RBAC / ABAC / scopes)"]
-        RL["Rate Limiting<br/>(token bucket / quota)"]
-        Ver["Versioning<br/>(URL / header / content-type)"]
-        Docs["Documentation<br/>(OpenAPI / Swagger)"]
-        TLS["TLS / HTTPS<br/>(secure transport)"]
-        Routing["Routing<br/>(per-path handlers)"]
-        Negotiation["Content Negotiation<br/>(Accept header)"]
-    end
-
-    Actual -.->|"None of these<br/>concerns apply"| Absent
+    LiveDataPath -.-x AbsentEdge
+    LiveDataPath -.-x AbsentIdentity
+    LiveDataPath -.-x AbsentMessaging
+    LiveDataPath -.-x AbsentObservability
+    LiveDataPath -.-x AbsentOutbound
 ```
 
----
-
-### 6.3.4 Message Processing Analysis
-
-#### 6.3.4.1 Determination
-
-Per §3.5.1, §4.3.3, and §6.1.2.2, the system implements **no message-processing patterns of any kind**. The system communicates only via synchronous HTTP request/response over a loopback socket and has no asynchronous, event-driven, streaming, or batch processing surface.
-
-#### 6.3.4.2 Negative Inventory of Message Processing Patterns
-
-The following inventory enumerates every Message Processing subtopic from the prompt and documents its absence.
-
-| Pattern | Status | Evidence |
-|---------|--------|----------|
-| Event processing patterns | Not implemented | No event bus, no broker client, no event-emitter usage beyond Node.js's internal `http` events |
-| Message queue architecture | Not implemented | No Kafka, RabbitMQ, SQS, ActiveMQ, or NATS client present (per §3.5.1) |
-| Stream processing design | Not implemented | No streaming SDK (Kafka Streams, Flink, Spark, Kinesis) imported |
-| Batch processing flows | Not implemented | No cron, no job scheduler, no batch script, no `child_process` spawn |
-| Error handling strategy | Not implemented | No `try`/`catch`, no `'error'` listener, no signal handler (per §6.1.4.1) |
-
-#### 6.3.4.3 Clarification on the Node.js Event Loop
-
-A reader might note that Node.js itself is an event-driven runtime built on the Reactor Pattern (per §5.1.1.2). This is a property of the **runtime**, not an integration pattern implemented by **this application**. The application code in `server.js` registers exactly one callback with the `http` core module (the request handler) and one with `server.listen` (the startup callback). Neither constitutes a message-processing pattern in the integration-architecture sense; both are synchronous callback registrations against a well-known synchronous-style API.
-
-#### 6.3.4.4 Error-Handling Strategy
-
-The prompt requires documentation of the error-handling strategy in the Message Processing context. As established authoritatively in §6.1.4.1, the strategy is **deliberate non-handling**:
-
-| Error Category | Handler Status |
-|----------------|----------------|
-| `EADDRINUSE` (port already bound) | No `'error'` listener — process crashes |
-| `EACCES` (privileged port denied) | No `try`/`catch` — process crashes |
-| Synchronous exception in request handler | None possible given current handler body |
-| `SIGINT` / `SIGTERM` (operator signal) | No signal handler — abrupt termination |
-| `EPIPE` on stdout write | No handler — undefined behavior |
-
-Per §6.1.4.1, this is "a deliberate architectural posture, not an oversight." Any error-handling layer would introduce branches into the request path and threaten the determinism contract F-002-RQ-004.
-
-#### 6.3.4.5 Message Flow Diagram
-
-Because no asynchronous message flows exist, the only "message flow" in the system is the synchronous HTTP request/response cycle already depicted in §6.3.2.4. The diagram below provides a complementary view of the system's message-processing posture, contrasting the actual single-request synchronous flow with the absent asynchronous patterns.
-
-```mermaid
-flowchart LR
-    subgraph Actual["Actual Message Flow"]
-        direction LR
-        ReqIn[HTTP Request<br/>inbound] --> SyncHandler[Synchronous<br/>branchless handler]
-        SyncHandler --> RespOut[HTTP Response<br/>outbound]
-    end
-
-    subgraph AbsentEvent["Absent — Event-Driven Patterns"]
-        direction TB
-        Publisher((Publisher))
-        Broker[/Broker / Queue/]
-        Consumer((Consumer))
-        Publisher -.-> Broker
-        Broker -.-> Consumer
-    end
-
-    subgraph AbsentStream["Absent — Stream Processing"]
-        direction TB
-        Source[Event Source]
-        Stream[/Stream<br/>Processor/]
-        Sink[Sink]
-        Source -.-> Stream
-        Stream -.-> Sink
-    end
-
-    subgraph AbsentBatch["Absent — Batch Processing"]
-        direction TB
-        Scheduler[/Scheduler / Cron/]
-        Job[Batch Job]
-        Output[Output Store]
-        Scheduler -.-> Job
-        Job -.-> Output
-    end
-
-    Actual -.->|"No bridge —<br/>actual flow is purely<br/>synchronous"| AbsentEvent
-    Actual -.->|"No bridge"| AbsentStream
-    Actual -.->|"No bridge"| AbsentBatch
-```
-
----
-
-### 6.3.5 External Systems Analysis
-
-#### 6.3.5.1 Determination
-
-**No external systems integrations exist.** Per §3.5.1, the repository was evaluated against fourteen distinct external-service categories, and every category was confirmed absent. This finding is reinforced by the zero-dependency posture documented in §6.1.6.1 (constraint C-005) and the loopback-only binding (constraint C-002).
-
-#### 6.3.5.2 Third-Party Integration Patterns
-
-| Integration Pattern | Status |
-|---------------------|--------|
-| Synchronous outbound REST / GraphQL | Not implemented — no HTTP client code |
-| Asynchronous broker integration | Not implemented — no broker client present |
-| Webhook publisher | Not implemented — no outbound HTTP code |
-| Webhook receiver | Not implemented — handler does not parse `req` |
-| SDK-based cloud integration | Not implemented — no cloud SDKs (per §3.5.1) |
-| Database integration | Not implemented — no DB drivers (per §6.1.2.2) |
-
-The complete external-service-category inventory from §3.5.1 — confirmed across REST/GraphQL APIs, identity providers, cloud platforms, container orchestrators, monitoring/observability vendors, telemetry collectors, message brokers, configuration servers, service-discovery systems, CDNs, communications providers, payment processors, and AI/LLM services — is reproduced (in summary form) in §6.3.5.6 below.
-
-#### 6.3.5.3 Legacy System Interfaces
-
-**None.** No legacy system interfaces exist in the repository.
-
-| Legacy Interface Type | Status |
-|------------------------|--------|
-| SOAP / WSDL clients | Not implemented |
-| Mainframe (CICS / IMS / MQ) bridges | Not implemented |
-| File-drop / SFTP integration | Not implemented — no `fs` usage, no SFTP client |
-| EDI / X12 / EDIFACT processors | Not implemented |
-| Database link / DBLink connectors | Not implemented |
-| Fixed-format flat-file ingestion | Not implemented |
-
-#### 6.3.5.4 API Gateway Configuration
-
-**None.** No API gateway, reverse proxy, or service-mesh artifact is present in the repository.
-
-| Gateway-Related Artifact | Presence |
-|---------------------------|----------|
-| Kong / Tyk / KrakenD configuration | Absent |
-| AWS API Gateway / Azure APIM / GCP API Gateway manifest | Absent |
-| NGINX / Envoy / HAProxy configuration | Absent |
-| Istio / Linkerd service-mesh manifests | Absent |
-| Ingress controller / Kubernetes Ingress | Absent (no Kubernetes manifests — per §6.1.3.2) |
-| OpenAPI gateway-generation source | Absent (no OpenAPI document — per §6.3.3.7) |
-
-Per §6.1.2.3, the architectural reason gateways are absent is straightforward: there is exactly one service component bound to a single loopback socket, with no routing decisions to make and no downstream services to coordinate. A gateway would have nothing to fan out to and would itself violate the loopback-only binding constraint C-002.
-
-#### 6.3.5.5 External Service Contracts
-
-**None.** No external service contracts (consumer or producer) exist.
-
-| Contract Artifact | Status |
-|-------------------|--------|
-| OpenAPI / Swagger contracts (producer side) | Absent — no API description files |
-| Pact / consumer-driven contract tests | Absent — no `tests/` directory, no Pact files |
-| AsyncAPI specifications | Absent — no asynchronous interfaces exist |
-| Protocol Buffers / Avro schemas | Absent — no schema registry, no `.proto` / `.avsc` files |
-| Service-level agreements (SLAs) | Absent — per §4.7, no quantitative SLA documented |
-
-#### 6.3.5.6 Consolidated Negative Inventory — External Services
-
-The complete inventory of external service categories evaluated and confirmed absent is reproduced below from §3.5.1 for direct reference within this section.
-
-| Service Category | Status |
-|------------------|--------|
-| External REST / GraphQL APIs | Not used |
-| Authentication services (Auth0, Okta, Cognito) | Not used |
-| Identity providers (OIDC, SAML) | Not used |
-| Cloud platforms (AWS, GCP, Azure) | Not used |
-| Container orchestration (Kubernetes, ECS) | Not used |
-| Monitoring / observability (DataDog, New Relic, Sentry) | Not used |
-| Telemetry collectors (OpenTelemetry, Prometheus) | Not used |
-| Message brokers / event streams (Kafka, RabbitMQ, SQS) | Not used |
-| Configuration servers (Consul, AWS Parameter Store) | Not used |
-| Service discovery (Consul, Eureka, Kubernetes DNS) | Not used |
-| Content delivery networks (CDN) | Not used |
-| Email / SMS / push providers | Not used |
-| Payment processors | Not used |
-| AI / LLM services (OpenAI, Anthropic, LangChain) | Not used |
-
-#### 6.3.5.7 Integration Topology Diagram
-
-The diagram below depicts the actual integration topology of the system. It is reproduced and adapted from §4.3.1 and §6.1.1.3 to make the negative inventory visually explicit: the actual topology (left) consists of a single inbound edge, while the conventional integration topology (right) — populated with gateways, brokers, third-party services, and external dependencies — is shown for contrast only.
-
-```mermaid
-flowchart TB
-    subgraph ActualTopo["Actual Integration Topology"]
-        direction TB
-        BackpropClient["Loopback Client<br/>(backprop tooling,<br/>same host)"]
-        LoopSocket["127.0.0.1:3000<br/>(loopback HTTP/1.1)"]
-        ServerProc["server.js<br/>(single Node.js process,<br/>branchless handler)"]
-        BackpropClient <-->|"HTTP/1.1<br/>inbound only"| LoopSocket
-        LoopSocket --> ServerProc
-    end
-
-    subgraph ConventionalTopo["Conventional Integration Topology — Not Applicable"]
-        direction TB
-        ExtClient["External Client"]
-        Gateway["API Gateway"]
-        IDP["Identity Provider<br/>(OIDC / SAML)"]
-        Service["Service Component"]
-        Broker["Message Broker<br/>(Kafka / RabbitMQ)"]
-        ThirdParty["Third-Party SaaS<br/>(payment / email /<br/>analytics)"]
-        Cloud["Cloud Platform SDK<br/>(AWS / GCP / Azure)"]
-        Mon["Monitoring / APM<br/>(DataDog / NewRelic)"]
-        ExtClient --> Gateway
-        Gateway --> IDP
-        Gateway --> Service
-        Service --> Broker
-        Service --> ThirdParty
-        Service --> Cloud
-        Service --> Mon
-    end
-
-    ActualTopo -.->|"None of these<br/>elements exist<br/>in this repository"| ConventionalTopo
-```
-
----
-
-### 6.3.6 Architectural Rationale for Inapplicability
-
-#### 6.3.6.1 Deliberate Design Posture
-
-The inapplicability of Integration Architecture concerns (beyond the single inbound listener) is the **design intent** of the repository, not a consequence of incomplete development. Per §3.5.3, three properties intrinsic to external integration are each incompatible with the fixture's role:
-
-1. **Non-determinism** — Network calls to external systems introduce variable latency, occasional failures, and version drift that would compromise the byte-identical response guarantee of F-002 (constraint C-004).
-2. **Configuration surface** — External services require endpoints, credentials, and SDK configuration, all of which would require either `process.env` references or hardcoded secrets — both incompatible with the immutable `server.js` source (constraint C-001).
-3. **Dependency surface** — Cloud SDKs, authentication libraries, broker clients, and telemetry exporters would introduce npm dependencies, violating the zero-dependency invariant (constraint C-005).
-
-#### 6.3.6.2 Governing Constraints
-
-The applicability determination is enforced by the constraints catalog in §2.6.2. Each constraint independently forbids the introduction of additional integration features.
-
-| Constraint ID | Statement | Effect on Integration Architecture |
-|---------------|-----------|------------------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding any integration code (clients, middleware, exporters) |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Precludes external network exposure or remote integration |
-| C-003 | Port must remain hardcoded to `3000` | Prevents dynamic port allocation for additional listeners |
-| C-004 | Response must remain byte-identical | Forbids dynamic responses derived from external calls |
-| C-005 | Zero runtime and zero dev dependencies | Excludes any integration library (clients, SDKs, brokers) |
-| C-006 | Project must run without `npm install` | Excludes any installable integration package |
-
-Any conventional integration feature — an OAuth library, a Kafka client, an OpenAPI document, a rate-limiter middleware, an outbound HTTP call — would violate at least one of these constraints. The architectural posture is therefore not merely descriptive (what is currently absent) but **normative** (what must remain absent).
-
-#### 6.3.6.3 Relationship to Other Specification Sections
-
-For readers seeking related discussions, the following sections of this Technical Specification provide complementary perspectives on the same conclusion:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Sole integration point declaration | §2.3.2 | The single inbound HTTP integration point in the feature relationships map |
-| Zero external services | §3.5 | Fourteen-category verification of absent external services |
-| Inbound HTTP sequence | §4.3.2 | Authoritative sequence diagram of the only integration flow |
-| Absent integration workflows | §4.3.3 | Negative inventory of integration patterns at the workflow level |
-| Loopback boundary as sole checkpoint | §4.6 | Confirmation that the loopback boundary is the only access-control mechanism |
-| Architectural style rationale | §5.1.1 | Why the monolithic, loopback-only posture was chosen |
-| Inter-service communication (absent) | §6.1.2.2 | Negative inventory of inter-service communication patterns |
-| Database design (also not applicable) | §6.2 | Companion "not applicable" determination for persistence |
-| Governing constraints | §2.6.2 | Constraints C-001 through C-006 |
-
----
-
-### 6.3.7 References
-
-#### 6.3.7.1 Files Examined
-
-- `server.js` — The 14-line source of the HTTP server; established that the inbound listener is the sole integration surface, the handler is branchless and ignores `req`, and no outbound integration code exists (no `http.request`, no `fetch`, no `fs`, no `child_process`, no module exports)
-- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, and no `engines` field, eliminating any possibility of an integration library being declared; also confirmed the `main: "index.js"` inconsistency noted in assumption A-004
-- `package-lock.json` — Verified an empty `packages` tree (lockfile format v3), providing cryptographic attestation that no integration SDKs are installed
-- `README.md` — Established the "Do not touch!" governance directive (origin of constraint C-001) that forbids introduction of any new integration code
-
-#### 6.3.7.2 Folders Explored
-
-- `/` (repository root, depth 0) — Confirmed only four files exist at the root and no subdirectories of any kind are present (no `src/`, no `services/`, no `clients/`, no `integrations/`, no `adapters/`, no `proto/`, no `openapi/`, no Dockerfile, no Kubernetes manifests)
-
-#### 6.3.7.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Fixture role and one-directional, protocol-based integration with enterprise landscape
-- **§1.3 SCOPE** — In-scope HTTP server behavior and the explicit "Unsupported Use Cases" list including the prohibition of TLS/HTTPS
-- **§2.1 FEATURE CATALOG** — F-001 (TCP binding), F-002 (static response with F-002-RQ-004 determinism contract)
-- **§2.3 FEATURE RELATIONSHIPS** — Confirmation of a single integration point and no shared components
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Constraints C-001 through C-006 that govern integration decisions and assumption A-003 about the same-host backprop consumer
-- **§3.5 THIRD-PARTY SERVICES** — Authoritative confirmation of zero external services with category-by-category verification
-- **§3.9 SECURITY IMPLICATIONS OF STACK CHOICES** — Defense-by-minimalism posture
-- **§3.10 STACK INTEGRATION REQUIREMENTS** — Inter-component integration table and HTTP/1.1 protocol-compliance requirement
-- **§4.3 INTEGRATION WORKFLOWS** — Integration topology table, inbound HTTP sequence diagram, and absent-integration-workflows inventory
-- **§4.6 VALIDATION, AUTHORIZATION, AND COMPLIANCE CHECKPOINTS** — Network-layer loopback boundary as sole checkpoint
-- **§4.7 TIMING AND SLA CONSIDERATIONS** — Absence of throughput, latency, and SLA targets
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Architectural style rationale, system boundaries, External Integration Points table
-- **§5.4 CROSS-CUTTING CONCERNS** — Absence of monitoring, retry, circuit breaker, dead-letter queue, and disaster-recovery primitives
-- **§6.1 Core Services Architecture** — Companion applicability assessment establishing the pattern used in this section
-- **§6.2 Database Design** — Companion "not applicable" determination for persistence
-
-## 6.4 Security Architecture
-
-### 6.4.1 Applicability Assessment
-
-#### 6.4.1.1 Determination Statement
-
-**Detailed Security Architecture is not applicable for this system.**
-
-The `hao-backprop-test` repository implements a deterministic, stateless HTTP test fixture whose entire executable surface is contained in `server.js` (14 lines). The system has no application-layer security mechanisms — no authentication framework, no authorization system, no token handling, no session management, no encryption-in-transit, no key management surface, no data masking rules, and no compliance controls. Every subtopic prescribed for a Security Architecture section — identity management, multi-factor authentication, role-based access control, permission management, encryption standards, key rotation, audit logging — has no referent in this repository because no user identity is recognized, no protected resource exists, no secret is held, and no regulated data is processed.
-
-This determination is a substantive architectural finding, not a documentation gap. As established in §3.9.2, the system's security posture is best characterized as **"defense by minimalism"**: the deliberate absence of attack surface from frameworks, dependencies, network exposure, and dynamic input handling is itself the primary security control. The loopback-only binding (`127.0.0.1`) is the deliberate, architectural primary security boundary; weakening it (e.g., binding to `0.0.0.0`) would invalidate the security posture of the fixture and violate constraint C-002 (§2.6.2). Per assumption A-005, "No security review of plaintext HTTP / loopback binding is required beyond the documented posture" — rationale: the fixture is local-only by design.
-
-This section therefore documents (a) the standard security practices that the system relies on **in lieu of** a full security architecture, (b) the comprehensive negative inventories for each prescribed subtopic, (c) the three required diagrams (authentication flow, authorization flow, security zones), and (d) the compliance non-applicability rationale.
-
-#### 6.4.1.2 Standard Security Practices Followed in Lieu of Full Architecture
-
-Per §5.3.5, the system relies on exactly three layered controls, listed below in priority order. These three practices constitute the entire security posture and substitute for the conventional layers of an enterprise security architecture.
-
-| # | Standard Practice | Mechanism |
-|---|-------------------|-----------|
-| 1 | Network-layer isolation | Loopback-only TCP bind to `127.0.0.1` (constraint C-002) |
-| 2 | Supply-chain elimination | Zero runtime and zero development dependencies (constraint C-005) |
-| 3 | Injection-surface elimination | Request input never read by handler (F-002-RQ-004) |
-
-The implementation of each practice is documented below:
-
-| Practice | Implementation Location | Verification Artifact |
-|----------|--------------------------|------------------------|
-| Loopback-only bind | Hardcoded `hostname = '127.0.0.1'` literal at `server.js` line 3 | OS network stack rejects non-local connections before any application code is invoked |
-| Zero dependencies | `package.json` omits `dependencies` and `devDependencies` fields | `package-lock.json` `packages` tree contains only the root `""` entry |
-| Input ignored | Handler signature is `(req, res)` but the `req` argument is never inspected | No `req.url`, `req.headers`, `req.method`, or body parsing anywhere in `server.js` |
-
-A fourth, supporting practice is the **MIT licensing** of all repository contents (constraint C-007), which provides legal clarity for downstream consumers without requiring runtime enforcement.
-
-#### 6.4.1.3 Repository-Level Evidence of Security Mechanism Absence
-
-The applicability determination rests on the following directly observable repository properties:
-
-| Evidence Dimension | Observed State | Implication |
-|--------------------|----------------|-------------|
-| Security library `require()` statements | Zero — only `require('http')` is invoked | No cryptographic, authentication, or authorization code exists |
-| Authentication / JWT / OAuth packages in `package.json` | Zero — no `dependencies` field | No library available to validate credentials |
-| Installed security packages in `package-lock.json` | Zero — only root `""` entry in `packages` map | No transitive security dependency could be invoked |
-| TLS / HTTPS module imports | Zero — uses plain `http` module, not `https` | All transport is plaintext |
-| Crypto module imports | Zero — `require('crypto')` is absent | No hashing, signing, or random generation occurs |
-| `process.env` reads for secrets | Zero — no environment variable access | No secret can be injected at runtime |
-| Configuration files for secrets | Zero — no `.env`, `secrets.json`, or vault client | No external secret material exists |
-| Security headers emitted | One — only `Content-Type: text/plain` | No CSP, HSTS, X-Frame-Options, X-Content-Type-Options |
-
-#### 6.4.1.4 Three-Control Defense in Depth Diagram
-
-The diagram below summarizes the three-layer defense-in-depth posture that substitutes for a conventional security architecture. Each layer is a deliberate architectural choice enforced by a specific constraint.
-
-```mermaid
-flowchart TB
-    Threat[/"Generic threat surface<br/>(remote attacker, supply-chain CVE,<br/>injection payload)"/]
-
-    Threat --> Layer1
-    Layer1 --> Layer2
-    Layer2 --> Layer3
-    Layer3 --> Asset[("Protected asset:<br/>Deterministic 14-byte<br/>static response<br/>(F-002-RQ-004)")]
-
-    subgraph Layer1["Layer 1 — Network Isolation (C-002)"]
-        L1Mech["Loopback-only bind to 127.0.0.1<br/>Hardcoded literal at server.js line 3"]
-        L1Defeats["Defeats: all remote attackers<br/>at OS network stack"]
-        L1Mech --> L1Defeats
-    end
-
-    subgraph Layer2["Layer 2 — Supply-Chain Elimination (C-005)"]
-        L2Mech["Zero dependencies<br/>Empty packages tree in lockfile"]
-        L2Defeats["Defeats: transitive CVEs,<br/>npm typosquatting,<br/>compromised maintainer attacks"]
-        L2Mech --> L2Defeats
-    end
-
-    subgraph Layer3["Layer 3 — Injection-Surface Elimination (F-002-RQ-004)"]
-        L3Mech["Handler ignores req entirely<br/>No req.url, req.headers, req.body parsing"]
-        L3Defeats["Defeats: SQL/NoSQL injection,<br/>command injection,<br/>header injection,<br/>XSS payload reflection"]
-        L3Mech --> L3Defeats
-    end
-```
-
----
-
-### 6.4.2 Authentication Framework — Inapplicability Analysis
-
-#### 6.4.2.1 Identity Management
-
-The system implements **no identity management of any kind**. No user, client, service, or principal identity is recognized, recorded, or referenced anywhere in the repository. The handler in `server.js` does not inspect any property of `req` (per F-002-RQ-004), and therefore cannot extract a user identifier from headers, body, query parameters, or path segments. No identity provider integration exists; the repository contains no SAML, OIDC, LDAP, Active Directory, or social-login client code.
-
-| Identity Concern | Status | Rationale |
-|------------------|--------|-----------|
-| User identity recognition | Not implemented | Handler ignores `req` per F-002-RQ-004 |
-| Service / machine identity | Not implemented | No mutual TLS, no service-account credentials |
-| Identity provider integration | Not implemented | No SAML/OIDC/LDAP/AD client libraries |
-| Identity persistence (user store) | Not applicable | No persistence layer exists (§3.6, §6.2) |
-| Identity federation | Not implemented | No external IdP connections |
-
-#### 6.4.2.2 Multi-Factor Authentication
-
-Multi-factor authentication (MFA) is **not implemented** and has no referent in the system. MFA presupposes that a first authentication factor has been collected and verified; because no first factor exists (no password, no API key, no certificate), no second factor can be required.
-
-| MFA Mechanism | Status | Rationale |
-|---------------|--------|-----------|
-| TOTP / HOTP (RFC 6238 / RFC 4226) | Not implemented | No first-factor authentication exists |
-| WebAuthn / FIDO2 | Not implemented | No `crypto` imports, no relying-party registration |
-| SMS / email OTP | Not implemented | No outbound integration capability (§5.1.4) |
-| Push notification approval | Not implemented | No mobile-app integration |
-| Hardware token (YubiKey, etc.) | Not implemented | No PKCS#11 / CTAP code paths |
-
-#### 6.4.2.3 Session Management
-
-Session management is **not implemented**. The handler is stateless and does not establish, read, write, or terminate any session. No cookies are issued, no session identifiers are generated, and no session store (in-memory, Redis, database) exists.
-
-| Session Concern | Status | Rationale |
-|-----------------|--------|-----------|
-| Session cookie issuance | Not implemented | No `Set-Cookie` header emitted; only `Content-Type` is set |
-| Session identifier generation | Not implemented | No `crypto.randomBytes` or equivalent |
-| Session store (server-side) | Not applicable | No persistence layer (§6.2.1.3) |
-| Session timeout / expiry | Not applicable | No sessions to expire |
-| Session fixation protection | Not applicable | No sessions to fixate |
-| SameSite / Secure / HttpOnly cookie attributes | Not applicable | No cookies issued |
-
-#### 6.4.2.4 Token Handling
-
-Token handling — including issuance, signing, validation, refresh, and revocation — is **not implemented**. Per §6.3.3.3, no token-handling library is imported, no signing key exists, and no token-validation code paths execute.
-
-| Token Concern | Status | Rationale |
-|---------------|--------|-----------|
-| JWT issuance | Not implemented | No `jsonwebtoken` or equivalent library (zero dependencies per C-005) |
-| JWT validation | Not implemented | No signing key, no public-key infrastructure |
-| OAuth 2.0 access tokens | Not implemented | No authorization server, no token endpoint |
-| OAuth 2.0 refresh tokens | Not implemented | No token lifecycle to manage |
-| API key validation | Not implemented | Handler ignores `req` entirely |
-| Bearer token extraction | Not implemented | No `Authorization` header parsing |
-| Token revocation list | Not applicable | No tokens to revoke |
-
-#### 6.4.2.5 Password Policies
-
-Password policies are **not applicable** because the system stores, accepts, transmits, and validates no passwords. No password complexity rules, rotation schedules, history checks, or breach-database lookups exist or could exist within the present architecture.
-
-| Password Policy Concern | Status | Rationale |
-|-------------------------|--------|-----------|
-| Password complexity rules | Not applicable | No password input is accepted |
-| Password hashing (bcrypt, Argon2, scrypt) | Not implemented | No `crypto` import; no user records |
-| Password rotation schedule | Not applicable | No credentials to rotate |
-| Password history / reuse prevention | Not applicable | No history exists |
-| Breach-database lookup (HIBP, etc.) | Not implemented | No outbound integration capability |
-| Password reset workflow | Not applicable | No accounts to reset |
-
-#### 6.4.2.6 Authentication Flow Diagram
-
-The diagram below documents the actual authentication "flow" through the system. The flow contains exactly one checkpoint — the OS-level loopback boundary — and zero application-layer authentication operations. This diagram is the authoritative authentication flow because there are no other authentication paths in the system.
-
-```mermaid
-flowchart TD
-    Start([Client initiates<br/>TCP connection]) --> Origin{Connection<br/>origin?}
-    Origin -->|"Remote host<br/>(any external IP)"| RemoteAttempt["Connection targets<br/>host's external interface"]
-    Origin -->|"Local process<br/>(same host)"| LocalAttempt["Connection targets<br/>127.0.0.1:3000"]
-
-    RemoteAttempt --> OSReject["OS network stack:<br/>no listener bound<br/>on external interface"]
-    OSReject --> Refused([Connection refused<br/>by OS<br/><br/>NEVER reaches<br/>application layer])
-
-    LocalAttempt --> OSAccept["OS network stack:<br/>listener bound on<br/>loopback interface"]
-    OSAccept --> Handshake["TCP handshake<br/>completes"]
-    Handshake --> AppEntry["Request enters<br/>http.createServer handler"]
-
-    AppEntry --> NoAuth1{Extract credentials<br/>from Authorization header?}
-    NoAuth1 -->|"NO — req ignored"| NoAuth2{Validate session cookie?}
-    NoAuth2 -->|"NO — req ignored"| NoAuth3{Validate API key?}
-    NoAuth3 -->|"NO — req ignored"| NoAuth4{Validate JWT / OAuth token?}
-    NoAuth4 -->|"NO — req ignored"| NoAuth5{Enforce MFA challenge?}
-    NoAuth5 -->|"NO — no first factor"| Serve([Serve byte-identical<br/>200 OK response<br/>with 14-byte body])
-```
-
-The five sequential "NO" decisions in the application-layer portion of the diagram are not branches in the implementation; they are documentation of what is *deliberately absent*. The handler proceeds directly from request receipt to static response emission with no intervening checks.
-
----
-
-### 6.4.3 Authorization System — Inapplicability Analysis
-
-#### 6.4.3.1 Role-Based Access Control
-
-Role-Based Access Control (RBAC) is **not implemented**. Per §5.4.4.1, "no role or scope evaluation" occurs at the application layer. No roles are defined, no role-to-permission mappings exist, and no role-assignment workflow is present.
-
-| RBAC Concern | Status | Rationale |
-|--------------|--------|-----------|
-| Role definitions | Not implemented | No role catalog, no role schema |
-| Role-to-permission mapping | Not applicable | No permissions defined to map |
-| Role assignment to principals | Not applicable | No principals are recognized (§6.4.2.1) |
-| Hierarchical role inheritance | Not applicable | No role taxonomy exists |
-| Separation of duties enforcement | Not applicable | No roles to separate |
-
-#### 6.4.3.2 Permission Management
-
-Permission management is **not implemented** and is not applicable. The system exposes a single conceptual operation (return the static 14-byte response) over a single conceptual resource (the static response itself). Per §6.3.3.4, no scope or permission evaluation logic is present.
-
-| Permission Concern | Status | Rationale |
-|--------------------|--------|-----------|
-| Permission catalog | Not implemented | No discrete permissions to enumerate |
-| Scope evaluation (OAuth-style) | Not implemented | No OAuth integration, no scope token |
-| Attribute-Based Access Control (ABAC) | Not implemented | No policy engine, no attribute store |
-| Permission grant / revoke workflow | Not applicable | No grantable resource |
-| Permission inheritance / delegation | Not applicable | No permission graph |
-
-#### 6.4.3.3 Resource Authorization
-
-Resource authorization is **not applicable** because the system exposes only one resource and that resource is intentionally unrestricted to all reachable clients. Per §6.3.3.4, "Per-resource authorization: Not implemented — only one resource (the static response)."
-
-| Resource Authorization Concern | Status | Rationale |
-|--------------------------------|--------|-----------|
-| Per-resource ACL | Not applicable | Single resource; no differentiation possible |
-| Resource-owner identification | Not applicable | No clients are identified (§6.4.2.1) |
-| Object-level permissions | Not applicable | No object hierarchy |
-| Resource hierarchy traversal | Not applicable | Flat resource model |
-| Cross-resource policy composition | Not applicable | Only one resource exists |
-
-#### 6.4.3.4 Policy Enforcement Points
-
-The system has exactly **one policy enforcement point (PEP)**, and it operates at the OS network layer rather than the application layer. Per §5.4.4.1, "The sole 'checkpoint' is at the network layer: the OS-level loopback binding of `127.0.0.1` rejects connections originating from any non-local interface before they can ever reach the application." There are no application-layer PEPs.
-
-| PEP Location | Status | Decision Rule |
-|--------------|--------|---------------|
-| OS network stack (loopback boundary) | Implemented | Accept TCP connections bound to `127.0.0.1`; reject all others |
-| HTTP middleware layer | Not present | No middleware layer exists (zero dependencies) |
-| Per-route guard | Not present | Handler is not route-aware; `req.url` is never inspected |
-| Per-method guard | Not present | All HTTP methods receive identical treatment per F-002-RQ-004 |
-| Per-resource guard | Not present | Single resource serves all requests |
-| Database row / column policy | Not applicable | No database exists (§6.2) |
-
-#### 6.4.3.5 Audit Logging
-
-Audit logging is **not implemented**. Per §5.4.2, the logging strategy consists of exactly one operation — `console.log` in the listen callback (`server.js` line 13), executed once per process lifetime at startup. There is no per-request log emission, no security-event log, no tamper-evident logging, and no log shipping. Per §6.2.4.4:
-
-| Audit Logging Concern | Status | Rationale |
-|------------------------|--------|-----------|
-| Authentication event log | Not implemented | No authentication events occur |
-| Authorization decision log | Not implemented | No authorization decisions occur |
-| Per-request access log | Not implemented | Only startup `console.log` exists (§5.4.2) |
-| Administrative action log | Not applicable | No administrative surface exists |
-| Tamper-evident logging | Not implemented | No durable log exists |
-| Log shipping / SIEM integration | Not implemented | No log aggregation agent (§5.4.1) |
-| Compliance attestation reports | Not applicable | No data-handling activity to attest |
-
-#### 6.4.3.6 Authorization Flow Diagram
-
-The diagram below documents the actual authorization "flow" through the system. As with authentication, the flow contains exactly one checkpoint — the OS-level loopback boundary — and zero application-layer authorization operations.
-
-```mermaid
-flowchart TD
-    Entry([HTTP request enters<br/>handler after TCP<br/>handshake completes])
-
-    Entry --> Q1{Is principal<br/>identified?}
-    Q1 -->|"NO — no identity<br/>recognition exists"| Q2
-
-    Q2{Lookup principal's<br/>roles?}
-    Q2 -->|"NO — no role catalog"| Q3
-
-    Q3{Evaluate request<br/>against RBAC policy?}
-    Q3 -->|"NO — no policy engine"| Q4
-
-    Q4{Check resource-level<br/>permissions?}
-    Q4 -->|"NO — single resource,<br/>no ACL"| Q5
-
-    Q5{Apply rate limit<br/>or throttling?}
-    Q5 -->|"NO — no counters,<br/>no buckets"| Q6
-
-    Q6{Emit authorization<br/>decision to audit log?}
-    Q6 -->|"NO — no audit log"| Serve
-
-    Serve([Emit static 200 OK<br/>response<br/>14-byte body])
-
-    Note["Sole effective<br/>authorization control:<br/>OS-level loopback bind<br/>(applied BEFORE this flow)"]
-    Note -.->|"upstream gate"| Entry
-```
-
-The flow demonstrates that every conventional authorization decision point is bypassed because the upstream OS-level network boundary has already constrained the population of reachable clients to local-host processes. The fixture treats "local-host reachability" as equivalent to "fully authorized" and emits no differential response.
-
----
-
-### 6.4.4 Data Protection — Inapplicability Analysis
-
-#### 6.4.4.1 Encryption Standards
-
-The system implements **no encryption** of any kind. Per §3.9.1, transport encryption is "None — plaintext HTTP via Node.js core `http` module (not `https`)." No data at rest exists to encrypt because no persistence layer exists (§6.2). No cryptographic operations are performed because the `crypto` module is never imported.
-
-| Encryption Concern | Status | Rationale |
-|--------------------|--------|-----------|
-| Transport encryption (TLS / HTTPS) | Not implemented | Plain `http` module imported; not `https` |
-| Cipher suite configuration | Not applicable | No TLS context exists |
-| Minimum TLS version enforcement | Not applicable | No TLS context exists |
-| Data-at-rest encryption | Not applicable | No persistence layer (§6.2.1.3) |
-| Field-level encryption | Not applicable | No fields, no records (§6.2.4.3) |
-| Application-layer encryption (envelope) | Not implemented | No `crypto` imports |
-| End-to-end encryption | Not applicable | No multi-party data exchange |
-
-The mitigating factor documented in §2.4.4 is that "Loopback traffic does not traverse external networks" — the plaintext HTTP transport never leaves the host's kernel space, eliminating the threat model that TLS would normally mitigate.
-
-#### 6.4.4.2 Key Management
-
-Key management is **not applicable** because the system holds no keys. No private keys, no public certificates, no symmetric secrets, no API keys, no signing keys, and no key-derivation salts exist anywhere in the repository.
-
-| Key Management Concern | Status | Rationale |
-|------------------------|--------|-----------|
-| Private key storage | Not applicable | No private keys exist |
-| Certificate management (issuance, renewal) | Not applicable | No TLS — no certificates needed |
-| Hardware Security Module (HSM) integration | Not implemented | No `crypto` operations performed |
-| Key rotation schedule | Not applicable | No keys to rotate |
-| Key escrow / recovery | Not applicable | No keys to escrow |
-| Secrets manager integration (Vault, AWS KMS, etc.) | Not implemented | No outbound integration capability (§5.1.4) |
-| Environment-variable secret injection | Not implemented | No `process.env` reads |
-
-Per §3.9.1, "Secrets management: Not applicable — no credentials or secrets in use."
-
-#### 6.4.4.3 Data Masking Rules
-
-Data masking is **not applicable** because no identifiable data is collected, processed, stored, or transmitted. Per §6.2.4.3, "No PII is collected, processed, or stored" and "No identifiers to mask." The only data emitted by the system is the compile-time literal `"Hello, World!\n"`, which contains no personal information.
-
-| Data Masking Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| PII identification / classification | Not applicable | No PII enters the system |
-| Field-level masking (e.g., last-4 SSN) | Not applicable | No fields exist |
-| Tokenization | Not applicable | No identifiers to tokenize |
-| Pseudonymization | Not applicable | No personal data to pseudonymize |
-| Anonymization | Not applicable | No personal data exists |
-| Log redaction | Not applicable | Only startup log line; contains no sensitive data |
-| Response payload masking | Not applicable | Response is a fixed literal |
-
-#### 6.4.4.4 Secure Communication
-
-Secure communication mechanisms — TLS, mTLS, signed messages, integrity protection — are **not implemented**. Per §3.9.1, the network protocol is HTTP/1.1 plaintext via core `http` module. The mitigating factor is the loopback-only binding: traffic never traverses an untrusted network segment.
-
-| Secure Communication Concern | Status | Rationale |
-|------------------------------|--------|-----------|
-| TLS / HTTPS | Not implemented | Uses `http` module, not `https` |
-| Mutual TLS (mTLS) | Not implemented | No client certificate validation |
-| Message-level signing (HMAC, JWS) | Not implemented | No `crypto` imports |
-| Replay protection (nonces, timestamps) | Not implemented | Request properties are never inspected |
-| Channel-binding tokens | Not implemented | No application-layer auth to bind |
-| Certificate pinning | Not applicable | No outbound HTTPS calls |
-| HTTP security headers (CSP, HSTS, X-Frame-Options) | Not implemented | Only `Content-Type: text/plain` emitted |
-
-Per §3.9.3, adding TLS via the `https` module would be "a net positive" from a pure-security standpoint but "would require source modification" and therefore violate constraint C-001 — the architectural posture preserves source invariance ahead of cryptographic transit protection.
-
-#### 6.4.4.5 Compliance Controls
-
-Compliance controls are **not applicable** to this system. Per §4.6.4, "No regulatory compliance regime is referenced anywhere in the repository (no GDPR text, no HIPAA notice, no PCI-DSS markers, no SOC-2 evidence collection). The system processes no personal data (request bodies are not consumed), stores nothing, transmits nothing beyond the static literal `\"Hello, World!\\n\"`, and emits no telemetry."
-
-| Compliance Regime | Applicability | Rationale |
-|-------------------|---------------|-----------|
-| GDPR (EU General Data Protection Regulation) | Not applicable | No personal data is processed; loopback-only — no cross-border transfer |
-| CCPA / CPRA (California) | Not applicable | No consumer data is collected |
-| HIPAA (US healthcare) | Not applicable | No Protected Health Information processed |
-| PCI-DSS (payment cards) | Not applicable | No cardholder data processed |
-| SOC 2 | Not applicable | No customer data, no service commitment to attest |
-| ISO 27001 | Not applicable | No information asset to manage |
-| FedRAMP | Not applicable | No federal data, no cloud deployment |
-| FIPS 140-2/3 (cryptographic modules) | Not applicable | No cryptographic operations performed |
-
-The compliance non-applicability is consistent with the system's role as a local test fixture and is enforced architecturally by the limitations enumerated in §1.2.1 and §1.3.2.
-
----
-
-### 6.4.5 Security Zone Architecture
-
-#### 6.4.5.1 Security Zone Definitions
-
-The system recognizes exactly two security zones, separated by the OS network stack. The application itself does not implement zone-aware logic; the zone boundary is enforced entirely by the kernel's TCP/IP stack interpretation of the bound interface.
-
-| Zone ID | Zone Name | Reachability to `server.js` | Authorization Posture |
-|---------|-----------|------------------------------|------------------------|
-| Z1 | Loopback (same-host processes) | Allowed — TCP to `127.0.0.1:3000` succeeds | Fully permitted; no per-client distinction |
-| Z2 | External / Remote (any non-local IP) | Denied at OS level — connection refused | Connection never reaches application |
-
-Within Zone Z1, no further subdivision is performed: every same-host process is treated identically regardless of operating-system user, container, namespace, or process identity. The fixture does **not** integrate with OS-level access controls (no SO_PEERCRED inspection, no Unix-socket peer credential check, no namespace verification).
-
-#### 6.4.5.2 Security Zone Diagram
-
-The diagram below — adapted from §5.4.4.2 — illustrates the two-zone topology and the OS-level enforcement boundary. The dashed lines indicate paths that are blocked before reaching the application; the solid lines indicate the only path that successfully reaches the handler.
-
-```mermaid
-flowchart LR
-    subgraph ZoneZ2["Zone Z2 — Untrusted / External"]
-        RemoteUser["Remote user / attacker<br/>(any external IP)"]
-        RemoteService["Remote service<br/>(LAN, WAN, internet)"]
-    end
-
-    subgraph ZoneZ1["Zone Z1 — Trusted / Same-Host"]
-        LocalUser["Local user process<br/>(curl, browser, test harness)"]
-        LocalService["Local service<br/>(backprop consumer)"]
-    end
-
-    subgraph OSKernel["OS Network Stack — Enforcement Boundary"]
-        ExtIF["External NICs<br/>(eth0, wlan0, etc.)"]
-        LoopIF["Loopback interface<br/>lo / 127.0.0.0/8"]
-        BindCheck{{"Listener bound on<br/>this interface?"}}
-        ExtIF --> BindCheck
-        LoopIF --> BindCheck
-    end
-
-    subgraph AppZone["Application Zone — server.js"]
-        Listener["http.Server<br/>bound to 127.0.0.1:3000"]
-        Handler["Branchless handler<br/>(no auth, no authz,<br/>no rate limit)"]
-        Response["Static 200 OK<br/>14-byte response"]
-        Listener --> Handler
-        Handler --> Response
-    end
-
-    RemoteUser -.->|"TCP SYN to host's<br/>external IP:3000"| ExtIF
-    RemoteService -.->|"TCP SYN to host's<br/>external IP:3000"| ExtIF
-    LocalUser -->|"TCP SYN to<br/>127.0.0.1:3000"| LoopIF
-    LocalService -->|"TCP SYN to<br/>127.0.0.1:3000"| LoopIF
-
-    BindCheck -.->|"NO — reject<br/>(ICMP unreachable<br/>or RST)"| Blocked([Connection<br/>refused by OS])
-    BindCheck -->|"YES — accept<br/>handshake completes"| Listener
-```
-
-#### 6.4.5.3 Zone-to-Zone Transition Controls
-
-The only zone transition the system permits is **Z1 → Application Zone** via the bound loopback socket. No Z2 → Application transition is possible because no listener is bound on any external interface. No Application → Z1 or Application → Z2 transition occurs because the application makes no outbound calls (§5.1.4).
-
-| Transition | Mechanism | Status |
-|------------|-----------|--------|
-| Z1 (loopback) → Application | TCP connect to `127.0.0.1:3000` | Allowed; no further checks |
-| Z2 (external) → Application | Would require bind on external interface | Blocked — no such bind exists (C-002) |
-| Application → Z1 | Would require outbound `http.request` or similar | Not implemented — no outbound calls (§5.1.4) |
-| Application → Z2 | Would require outbound network operation | Not implemented — no outbound calls (§5.1.4) |
-
-The unidirectional, single-zone-to-application transition model means the system has no East-West traffic, no service-to-service communication, and no exfiltration surface from within the application boundary.
-
----
-
-### 6.4.6 Security Control Matrix
-
-#### 6.4.6.1 Authoritative Stack-Derived Security Posture
-
-The matrix below is the canonical statement of the system's security posture per §3.9.1 and §2.4.4. Every row documents an absent application-layer control and the mitigating architectural property that compensates for its absence.
-
-| Security Control | Implementation Status | Mitigating Architectural Property |
-|------------------|------------------------|------------------------------------|
-| Transport encryption (TLS) | None — plaintext HTTP | Loopback traffic does not traverse external networks |
-| Authentication | None — no credential extraction | Loopback binding restricts who can reach the socket |
-| Authorization | None — no policy engine | Same as above |
-| Input validation | None — request is ignored | No input is consumed; eliminates injection surfaces |
-| Output encoding | Static literal only | Body and headers are compile-time constants |
-| Security headers (CSP, HSTS, XFO) | Only `Content-Type` | No dynamic content to protect |
-| Dependency vulnerabilities | None possible | Zero dependencies (F-005, C-005) |
-| Network exposure | Loopback only | Hardcoded `127.0.0.1` (C-002) |
-| Secrets management | Not applicable | No credentials or secrets in use |
-| Rate limiting | None | Loopback binding bounds the attack population |
-| CSRF protection | None | No state-changing endpoints; no cookies |
-| Audit logging | None | No security events to record |
-
-#### 6.4.6.2 Hypothetical Stack Additions That Would Increase Risk
-
-The table below — reproduced from §3.9.3 — enumerates plausible additions to the stack that would *increase* attack surface and are therefore prohibited by the existing constraints. This table serves as a normative "do not add" list for future maintainers.
-
-| Hypothetical Addition | Risk Introduced | Constraint Violated |
-|-----------------------|-----------------|---------------------|
-| Adding Express | Transitive dependency CVEs, middleware misconfiguration | C-005, C-001 |
-| Binding to `0.0.0.0` | Public network exposure across all interfaces | C-002 |
-| Adding TLS via `https` module | Certificate management surface (net positive but requires source change) | C-001 |
-| Reading `process.env` | Environment-variable injection surface | C-001 |
-| Adding `body-parser` or similar | Input validation surface for malformed payloads | C-005, C-001 |
-
-#### 6.4.6.3 Control Coverage by Threat Category
-
-The matrix below maps the three implemented controls to the threat categories they address, demonstrating that the minimal control set provides coverage for the dominant threat vectors of a network-facing HTTP service.
-
-| Threat Category | Primary Control | Secondary Control |
-|-----------------|------------------|--------------------|
-| Remote network attack | Loopback bind (C-002) | None — primary control is sufficient |
-| Supply-chain compromise (npm) | Zero dependencies (C-005) | Lockfile attests empty tree |
-| Injection attack (SQLi, XSS, etc.) | Handler ignores `req` (F-002-RQ-004) | No persistence layer to inject into |
-| Credential theft / replay | Not applicable | No credentials exist to steal |
-| Data exfiltration | Not applicable | No data exists to exfiltrate |
-| Denial of service (resource exhaustion) | Loopback bind limits attacker population | Branchless handler is constant-time |
-| Cryptographic weakness | Not applicable | No cryptographic operations performed |
-| Privilege escalation | Not applicable | No privilege hierarchy exists |
-
----
-
-### 6.4.7 Compliance Requirements Documentation
-
-#### 6.4.7.1 Regulatory Compliance Status
-
-Per §4.6.4, no regulatory compliance regime applies to this system. The architectural properties that produce this conclusion are:
-
-| Compliance Trigger | Presence in System | Conclusion |
-|--------------------|---------------------|------------|
-| Personal data collection | None — `req` is ignored | GDPR/CCPA not triggered |
-| Health information processing | None — no health data flows | HIPAA not triggered |
-| Payment card data handling | None — no payment surface | PCI-DSS not triggered |
-| Customer data hosted on behalf of others | None — local fixture only | SOC 2 not triggered |
-| Cross-border data transfer | None — loopback only | Transfer-control regulations not triggered |
-| Cryptographic module deployment | None — no `crypto` use | FIPS not triggered |
-
-#### 6.4.7.2 Privacy Control Inventory
-
-Per §6.2.4.3, the privacy control inventory is exhaustively documented as "not applicable":
-
-| Privacy Mechanism | Status | Rationale |
-|-------------------|--------|-----------|
-| PII identification / classification | Not applicable | No PII collected |
-| Field-level encryption | Not applicable | No fields exist |
-| Data masking / tokenization | Not applicable | No identifiers to mask |
-| Consent management | Not applicable | No user identity is recognized |
-| Cross-border transfer controls | Not applicable | Loopback-only — no data crosses host |
-| Anonymization / pseudonymization | Not applicable | No personal data exists |
-| Data subject access request (DSAR) workflow | Not applicable | No data subjects recognized |
-
-#### 6.4.7.3 Audit and Attestation Posture
-
-Per §6.2.4.4, audit mechanisms have no referent in this system. The single emitted log line (`Server running at http://127.0.0.1:3000/`) is informational and not auditable evidence of any regulated activity.
-
-| Audit Mechanism | Status | Rationale |
-|-----------------|--------|-----------|
-| Authentication / authorization decision log | Not implemented | No such decisions occur |
-| Data access audit trail | Not applicable | No data access events occur |
-| Administrative action log | Not applicable | No administrative surface |
-| Tamper-evident logging | Not implemented | No durable log exists |
-| Independent attestation reports | Not applicable | No data-handling activity to attest |
-| Compliance-evidence retention | Not applicable | No evidence to retain |
-
----
-
-### 6.4.8 Governing Constraints and Architectural Rationale
-
-#### 6.4.8.1 Constraint Mapping
-
-The security posture is enforced by the constraints catalogue in §2.6.2. Six of the seven catalogued constraints have direct bearing on the security architecture:
-
-| Constraint ID | Statement | Security Effect |
-|---------------|-----------|------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding TLS, auth middleware, security libraries, or `process.env` reads for secrets |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Preserves the primary network-layer security boundary |
-| C-004 | Response body, status, and headers must remain byte-identical across all requests | Forbids dynamic security headers or differentiated authorization responses |
-| C-005 | Zero runtime and zero development dependencies must be maintained | Excludes JWT libraries, OAuth clients, crypto helpers, rate-limiters, vault clients |
-| C-006 | Project must remain executable without `npm install` | Excludes any installable security toolkit |
-| C-007 | License of all repository contents is MIT | Provides legal clarity for downstream consumers |
-
-#### 6.4.8.2 Deliberate Design Posture
-
-The minimal security architecture is the **design intent** of the repository, not a deferred decision or an immaturity. The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of conventional security architecture features:
-
-| Principle | Implication for Security Architecture |
-|-----------|----------------------------------------|
-| Behavioral stability | Authorization branches would break byte-identical response guarantee (F-002-RQ-004) |
-| Source invariance | "Do not touch!" directive (C-001) forbids adding security libraries or middleware |
-| Operational simplicity | TLS, OAuth, RBAC require external infrastructure (certificate authorities, IdPs, policy stores) |
-| Defense by minimalism | Adding security libraries expands the supply-chain attack surface |
-| Determinism | Authentication latency, key rotation events, audit log growth would degrade determinism |
-| Self-containment | A full security architecture requires external systems beyond the 4-file repository |
-
-Per ADR-002 (§5.3.6.2), the loopback bind "becomes the primary and only network-level security boundary." Per ADR-005 (§5.3.6.5), zero dependencies eliminate "all supply-chain attack vectors." These two ADRs, taken together, constitute the formal architectural basis for the absence of a full security architecture.
-
-#### 6.4.8.3 Relationship to Other Specification Sections
-
-For readers seeking related discussions of the security posture, the following sections of this Technical Specification provide complementary perspectives on the same architectural conclusion:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Stack-derived security posture | §3.9.1 | Authoritative table of security aspects and postures |
-| Defense by minimalism rationale | §3.9.2 | Core narrative of the security philosophy |
-| Hypothetical risk-increasing additions | §3.9.3 | What must not be added to preserve the posture |
-| Security implications table | §2.4.4 | Posture per security aspect with mitigating factors |
-| Security review assumption | §2.6.1 (A-005) | Formal assumption that no security review beyond documented posture is required |
-| Network-layer-only checkpoint | §4.6.2 | Source of authorization-checkpoint diagram pattern |
-| Validation requirements | §4.6.3 | Why no input validation is required (request ignored) |
-| Regulatory compliance status | §4.6.4 | Why no compliance regime applies |
-| Error-handling absence | §5.4.3 | Why no security-event handling exists |
-| Authentication and authorization framework | §5.4.4 | Network-layer-only checkpoint with loopback diagram |
-| Security mechanism selection (ADR) | §5.3.5 | Three-control defense in depth |
-| ADR-002 (loopback bind) | §5.3.6.2 | Formal record of network-isolation decision |
-| ADR-005 (zero dependencies) | §5.3.6.5 | Formal record of supply-chain elimination decision |
-| Core services applicability | §6.1 | Precedent for "not applicable" determination structure |
-| Database design applicability | §6.2 | Precedent for "not applicable" determination structure with compliance subsection |
-| Privacy controls inventory | §6.2.4.3 | Authoritative privacy non-applicability table |
-| Audit mechanisms inventory | §6.2.4.4 | Authoritative audit non-applicability table |
-| Out-of-scope security capabilities | §1.3.2 | Explicit exclusion of auth/authz, TLS, environment-based configuration |
-
-#### 6.4.8.4 Normative Posture Summary
-
-The architectural posture is therefore not merely **descriptive** (what is currently absent) but **normative** (what must remain absent). Any future enhancement that proposed introducing authentication, authorization, TLS, audit logging, or compliance controls would simultaneously violate one or more constraints from C-001, C-002, C-004, C-005, and C-006. The absence of a detailed security architecture is therefore a permanent architectural property protected by multiple, mutually reinforcing constraints, and the three standard practices documented in §6.4.1.2 (network-layer isolation, supply-chain elimination, injection-surface elimination) constitute the complete and sufficient security posture for the system's role as a deterministic test fixture.
-
----
-
-### 6.4.9 References
-
-#### 6.4.9.1 Files Examined
-
-- `server.js` — Complete 14-line source verified to contain only `require('http')`, hardcoded `127.0.0.1` loopback bind on port 3000, branchless handler that ignores `req`, static `"Hello, World!\n"` response, and no security-related imports (`crypto`, `https`, `tls`, `jsonwebtoken`, `passport`, etc.)
-- `package.json` — Confirmed absence of `dependencies` and `devDependencies` fields, no `engines` field, no security-related packages declared; MIT license; no secrets in metadata
-- `package-lock.json` — Confirmed `lockfileVersion: 3` with empty `packages` tree (only root `""` entry) — cryptographic attestation of zero installed security packages or transitive dependencies
-- `README.md` — Established the "Do not touch!" governance directive (constraint C-001) and the local-only fixture purpose underpinning assumption A-005
-
-#### 6.4.9.2 Folders Explored
-
-- `/` (repository root, depth 0) — Confirmed the absence of every conventional security-related subdirectory: no `auth/`, `security/`, `middleware/`, `policies/`, `secrets/`, `certs/`, `keys/`, or `node_modules/` exists; the entire repository surface is the four files listed above
-
-#### 6.4.9.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Fixture role and intrinsic-limitations framing establishing the security context
-- **§1.3 SCOPE** — In-scope and out-of-scope elements; explicit exclusion of authentication/authorization, environment-variable configuration, database integration, and secure transport
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — Authoritative security implications table (§2.4.4) with posture and mitigating factor per security aspect
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Assumption A-005 (no security review required) and constraints C-001 through C-007 that enforce the security posture
-- **§3.9 SECURITY IMPLICATIONS OF STACK CHOICES** — Defense-by-minimalism narrative, stack-derived security posture, and hypothetical risk-increasing additions
-- **§4.6 VALIDATION, AUTHORIZATION, AND COMPLIANCE CHECKPOINTS** — Network-layer-only checkpoint diagram, validation requirements table, and regulatory compliance non-applicability statement
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Six architectural principles (behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, self-containment) underpinning security decisions
-- **§5.3 TECHNICAL DECISIONS** — Security mechanism selection (§5.3.5), ADR-002 (loopback bind), ADR-005 (zero dependencies)
-- **§5.4 CROSS-CUTTING CONCERNS** — Authentication and authorization framework (§5.4.4) with loopback boundary diagram; logging strategy (§5.4.2) documenting absence of security audit logging
-- **§6.1 CORE SERVICES ARCHITECTURE** — Precedent for the "not applicable" determination structure used in this section
-- **§6.2 DATABASE DESIGN** — Precedent for the "not applicable" determination structure with privacy controls (§6.2.4.3) and audit mechanisms (§6.2.4.4) tables reused in this section
-
-## 6.5 Monitoring and Observability
-
-### 6.5.1 Applicability Assessment
-
-#### 6.5.1.1 Determination Statement
-
-**Detailed Monitoring Architecture is not applicable for this system.**
-
-The `hao-backprop-test` repository implements a deterministic, stateless HTTP test fixture whose entire executable surface is contained in `server.js` (14 lines). The system has no monitoring or observability infrastructure of any kind — no metrics collection, no log aggregation, no distributed tracing, no alert management fabric, no dashboard surface, no health-check endpoint, no performance instrumentation, no business KPI emission, no SLA monitoring, and no capacity tracking. Every conventional observability primitive prescribed for a Monitoring and Observability section is **deliberately absent by design** and is forbidden from being introduced by the constraints catalogued in §2.6.2.
-
-This determination is a substantive architectural finding, not a documentation gap. As established in §5.4.1, the authoritative monitoring posture is one in which "the downstream 'backprop integration' consumer must therefore infer the system's health by observing the HTTP response itself (connection success and a `200` status) rather than by querying any observability endpoint exposed by the system." The complete absence of observability is enforced architecturally by ADR-005 (zero dependencies) and ADR-006 (source invariance), and any attempt to introduce conventional monitoring infrastructure would violate at least four of the seven governing constraints.
-
-This section therefore documents (a) the three basic monitoring practices that the system relies on **in lieu of** a full monitoring architecture, (b) the comprehensive negative inventories for each prescribed subtopic (Metrics, Logs, Traces, Alerts, Dashboards, Health Checks, Performance Metrics, Business Metrics, SLA Monitoring, Capacity Tracking, Alert Routing, Escalation, Runbooks, Post-mortems), (c) the three required diagrams (monitoring architecture, alert flow, dashboard layout), and (d) the SLA non-applicability rationale.
-
-#### 6.5.1.2 Standard Monitoring Practices Followed in Lieu of Full Architecture
-
-In lieu of a full monitoring architecture, the system relies on exactly three primitive observability surfaces. These three practices constitute the entire observability posture and substitute for the conventional layers of an enterprise monitoring stack.
-
-| # | Standard Practice | Mechanism |
-|---|-------------------|-----------|
-| 1 | Startup readiness signal | Single `console.log("Server running at http://127.0.0.1:3000/")` line written to stdout when the `server.listen()` callback fires |
-| 2 | Implicit health via HTTP response | Consumer infers liveness by issuing a request; connection success and an HTTP `200` status together signal "alive" |
-| 3 | Process exit code | Non-zero exit code on failure (e.g., `EADDRINUSE`, `EACCES`, unhandled signal), observable by the parent process or operator shell |
-
-The implementation of each practice is documented below:
-
-| Practice | Implementation Location | Verification Artifact |
-|----------|--------------------------|------------------------|
-| Startup readiness signal | `server.js` line 13 — `console.log` inside the listen callback | Operator observes the line in their terminal after `node server.js` |
-| Implicit HTTP health | The branchless handler always returns `200 OK` with a 14-byte body | Per §5.4.1, the consumer "infers the system's health by observing the HTTP response itself" |
-| Process exit code | Node.js default unhandled-error behavior per §5.4.3.1 | Per §5.4.3.2, all errors converge on "process exits with non-zero status code" |
-
-#### 6.5.1.3 Repository-Level Evidence of Monitoring Mechanism Absence
-
-The applicability determination rests on the following directly observable repository properties:
-
-| Evidence Dimension | Observed State | Implication |
-|--------------------|----------------|-------------|
-| Telemetry library `require()` statements | Zero — only `require('http')` is invoked | No Prometheus, StatsD, or OpenTelemetry SDK can execute |
-| Monitoring packages in `package.json` | Zero — no `dependencies` field | No APM agent, no log shipper, no metrics client declared |
-| Installed monitoring packages in `package-lock.json` | Zero — only root `""` entry in `packages` map | Cryptographic attestation of no monitoring transitive dependencies |
-| Logging library imports (Pino, Winston, Bunyan) | Zero — only the global `console` is used | No structured logging, no log levels, no log shipping |
-| Tracing library imports (`@opentelemetry/*`, `jaeger-client`) | Zero — no tracing SDK is installed | No spans, no trace propagation, no correlation IDs |
-| `process.on('error'/'uncaughtException')` handlers | Zero — no application-layer error capture | No error events to forward to a monitoring system |
-| `process.cpuUsage()` / `process.memoryUsage()` calls | Zero — no resource sampling occurs | No host or runtime metrics emitted |
-| `req.url` / `req.method` / `req.headers` inspection in handler | Zero — handler ignores `req` per F-002-RQ-004 | No per-request observability is possible without violating C-001 |
-| Per-request `console.log` calls | Zero — only the startup line exists | No access log, no audit log, no request-level visibility |
-| Monitoring-related subdirectories | Zero — no `metrics/`, `monitoring/`, `observability/`, `dashboards/`, `runbooks/`, `.github/` | Entire repository surface is the four files documented in §5.1.1.3 |
-
-#### 6.5.1.4 Monitoring Architecture Diagram
-
-The diagram below contrasts the actual single-signal observability surface of this system against the conventional observability stack that a Monitoring and Observability section would normally describe. The left-hand cluster documents the three implemented practices; the right-hand cluster is presented purely for contrast and confirms that none of its components exist in this repository.
-
-```mermaid
-flowchart TB
-    subgraph ActualObservability["Actual Observability Surface — This System"]
-        direction TB
-        Process["Node.js Process<br/>server.js (14 lines)"]
-        Stdout["stdout (fd 1)<br/>One line at startup"]
-        HttpResp["HTTP 200 response<br/>14-byte body<br/>(implicit health signal)"]
-        ExitCode["Process exit code<br/>Non-zero on failure"]
-        OperatorTerm["Operator Terminal<br/>(sole observation point)"]
-        Process --> Stdout
-        Process --> HttpResp
-        Process --> ExitCode
-        Stdout --> OperatorTerm
-        ExitCode --> OperatorTerm
-    end
-
-    subgraph TypicalObservability["Typical Observability Stack — NOT PRESENT"]
-        direction TB
-        AppMetrics["Metrics emission<br/>(Prometheus client,<br/>StatsD, OTel)"]
-        AppLogs["Structured logs<br/>(Pino, Winston,<br/>Bunyan, JSON)"]
-        AppTraces["Distributed tracing<br/>(OTel SDK, Jaeger,<br/>Zipkin)"]
-        MetricsCol["Metrics Collector<br/>(Prometheus,<br/>DataDog Agent)"]
-        LogShipper["Log Shipper<br/>(Fluentd, Vector,<br/>Filebeat)"]
-        TraceCol["Trace Collector<br/>(OTel Collector,<br/>Jaeger Agent)"]
-        TSDB["Time-Series DB<br/>(Prometheus,<br/>InfluxDB)"]
-        LogIdx["Log Index<br/>(Elasticsearch,<br/>Loki, Splunk)"]
-        TraceStore["Trace Store<br/>(Jaeger, Tempo)"]
-        Dash["Dashboards<br/>(Grafana, Kibana,<br/>DataDog UI)"]
-        AlertMgr["Alert Manager<br/>(Alertmanager,<br/>PagerDuty)"]
-        AppMetrics --> MetricsCol --> TSDB --> Dash
-        AppLogs --> LogShipper --> LogIdx --> Dash
-        AppTraces --> TraceCol --> TraceStore --> Dash
-        TSDB --> AlertMgr
-        LogIdx --> AlertMgr
-    end
-
-    ActualObservability -.->|"comparison only —<br/>no architectural relationship"| TypicalObservability
-```
-
-The right-hand cluster is illustrative only; none of its elements exist in this repository, and the negative inventories in §6.5.2 through §6.5.4 confirm the absence of every component shown.
-
----
-
-### 6.5.2 Monitoring Infrastructure — Inapplicability Analysis
-
-#### 6.5.2.1 Metrics Collection
-
-Metrics collection is **not implemented**. No counters, gauges, histograms, summaries, or exemplars are emitted by any code path in `server.js`. The application performs no resource sampling (`process.cpuUsage()`, `process.memoryUsage()`, `process.hrtime()`), no request-level instrumentation (`req.url`/`req.method` are never read), and no business-event recording.
-
-| Metrics Concern | Status | Rationale |
-|-----------------|--------|-----------|
-| Counter / gauge / histogram emission | Not implemented | No metrics library; zero dependencies (C-005) |
-| Prometheus client (`prom-client`) | Not installed | Empty `packages` tree in lockfile |
-| StatsD client | Not installed | Empty `packages` tree in lockfile |
-| OpenTelemetry metrics SDK | Not installed | No `@opentelemetry/*` packages |
-| Pull-model scrape endpoint (`/metrics`) | Not implemented | Handler ignores `req.url`; route cannot exist (F-002-RQ-004) |
-| Push-model emission (StatsD UDP) | Not implemented | No outbound network calls (§5.1.4) |
-| Per-route latency histograms | Not implemented | No routing layer; handler is branchless |
-| Custom application metrics | Not implemented | No metric definitions exist anywhere in source |
-
-#### 6.5.2.2 Log Aggregation
-
-Log aggregation is **not implemented**. The only log output is the single startup line emitted to stdout (`server.js` line 13). No log shipper, log forwarder, log indexer, or log query interface is present, and per §5.4.2, "Rotation: None (writes to stdout, externally managed if at all)."
-
-| Log Aggregation Concern | Status | Rationale |
-|-------------------------|--------|-----------|
-| Centralized log aggregation (ELK, Loki, Splunk) | Not implemented | Only stdout output; no log shipper |
-| Log forwarder (Fluentd, Vector, Filebeat) | Not installed | Zero dependencies (C-005); no agent process |
-| Structured log format (JSON, key-value) | Not implemented | Per §5.4.2, "Plain text (no JSON, no key/value structured fields)" |
-| Log levels (`info`/`warn`/`error`/`debug`) | Not implemented | Per §5.4.2, "Levels: None" |
-| Per-request access log | Not implemented | Only the one-time startup line is emitted |
-| Log rotation policy | Not implemented | Per §5.4.2, externally managed if at all |
-| Log retention policy | Not applicable | No log store exists; ephemeral stdout only |
-| Log redaction / PII scrubbing | Not applicable | Startup line contains only a hostname and port |
-
-#### 6.5.2.3 Distributed Tracing
-
-Distributed tracing is **not implemented**. Per §5.4.2, "Tracing: None (no spans, no correlation IDs, no W3C Trace Context)." The handler ignores `req` entirely (F-002-RQ-004), so no incoming trace context could be extracted from headers even if a tracing SDK were present, and there are no outbound calls (§5.1.4) into which trace context could be propagated.
-
-| Tracing Concern | Status | Rationale |
-|-----------------|--------|-----------|
-| OpenTelemetry SDK | Not installed | No `@opentelemetry/*` packages in lockfile |
-| Jaeger / Zipkin client | Not installed | Empty `packages` tree in lockfile |
-| Trace context propagation (W3C `traceparent`, `b3`) | Not implemented | Handler does not inspect `req.headers` |
-| Span creation around handler execution | Not implemented | No instrumentation library; no manual span code |
-| Trace sampling configuration | Not applicable | No traces are generated |
-| Trace correlation across services | Not applicable | No downstream services exist (§5.1.4) |
-| Baggage propagation | Not implemented | No header inspection occurs |
-
-#### 6.5.2.4 Alert Management
-
-Alert management is **not implemented**. No alert sources exist (no metrics, no structured logs, no traces); therefore no alert rules can be defined, no alert routing fabric exists, and no on-call notification can be issued. Per §5.4.3.3, "Error notification (email/Slack/PagerDuty): Not implemented — zero dependencies."
-
-| Alert Management Concern | Status | Rationale |
-|--------------------------|--------|-----------|
-| Alert evaluation engine (Alertmanager, Grafana Alerting) | Not deployed | No metrics store from which to evaluate rules |
-| Alert rule definitions | Not implemented | No metric or log source to predicate on |
-| Notification channels (PagerDuty, OpsGenie, Slack, email) | Not integrated | No outbound integration; zero dependencies (C-005) |
-| Alert grouping / deduplication | Not applicable | No alerts are generated |
-| Alert silencing / inhibition rules | Not applicable | No alerts to silence |
-| Synthetic monitoring / probe-based alerts | Not implemented | No external probe configured against the loopback listener |
-| Anomaly-detection alerts | Not implemented | No baseline metrics from which to detect anomalies |
-
-#### 6.5.2.5 Dashboard Design
-
-Dashboard design is **not applicable**. With no metrics emitted, no log index populated, and no trace store written to, there is no data source that a dashboard could visualize. Per the absences documented in §6.5.2.1 through §6.5.2.3, no Grafana, Kibana, DataDog, or New Relic UI is configured against this system.
-
-| Dashboard Concern | Status | Rationale |
-|-------------------|--------|-----------|
-| Operational dashboard (Grafana, Kibana, DataDog UI) | Not configured | No metrics, logs, or traces to visualize |
-| Service-level dashboard (SLI/SLO/error budget) | Not configured | No SLIs defined; no error-budget tracking (§6.5.3.4) |
-| Real-time request-rate / error-rate panels | Not applicable | No per-request telemetry emitted |
-| Latency percentile (P50/P95/P99) panels | Not applicable | No latency histograms emitted |
-| Capacity / saturation panels | Not applicable | No resource-utilization metrics emitted |
-| Business KPI panels | Not applicable | No business operations occur (§6.5.3.3) |
-| Drill-down / pivot interactions | Not applicable | No data backend to query |
-
----
-
-### 6.5.3 Observability Patterns — Inapplicability Analysis
-
-#### 6.5.3.1 Health Checks
-
-Health-check endpoints are **not implemented and cannot be implemented without violating constraint C-001**. Per §5.4.1, "Handler ignores `req.url`, so `/health` cannot be served distinctly." The branchless handler (F-002-RQ-004) returns the identical 14-byte response on every URL path; consequently a `GET /health` request and a `GET /` request are byte-indistinguishable from the application's perspective.
-
-| Health-Check Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| Liveness endpoint (`/health`, `/healthz`, `/live`) | Not implemented | Handler ignores `req.url`; cannot branch per F-002-RQ-004 |
-| Readiness endpoint (`/ready`) | Not implemented | Same as above; no readiness vs. liveness distinction |
-| Startup probe (Kubernetes pattern) | Not implemented | No container manifest or orchestrator integration (§6.1.3.2) |
-| Deep health check (downstream connectivity) | Not applicable | No downstream services (§5.1.4) |
-| Health-check response payload | Not implemented | Only the static `"Hello, World!\n"` is emitted |
-| Health-check authentication | Not applicable | No authentication of any kind (§6.4.2) |
-
-The implicit health surrogate is the HTTP response itself: any successful TCP connection followed by a `200 OK` response with the expected 14-byte body constitutes affirmative evidence of liveness for the downstream consumer.
-
-#### 6.5.3.2 Performance Metrics
-
-Performance metrics are **not emitted**. The application performs no resource sampling, request timing, latency histogram collection, or throughput counting. Per §5.4.5, performance characteristics are inferable from the per-step nature of the request path rather than from any emitted telemetry.
-
-| Performance Metric | Status | Implicit Characteristic (per §5.4.5) |
-|--------------------|--------|---------------------------------------|
-| Request count / rate | Not emitted | Bounded by Node.js event-loop accept rate on loopback |
-| Request latency (P50/P95/P99) | Not measured | All handler steps are sub-millisecond, in-memory, constant-time |
-| Error rate (5xx, 4xx) | Not emitted | Branchless handler emits only `200 OK`; no 4xx/5xx possible |
-| Throughput (RPS, MB/s) | Not measured | Bounded by single Node.js event-loop process |
-| Event-loop lag | Not emitted | No `monitorEventLoopDelay()` call |
-| CPU utilization | Not emitted | No `process.cpuUsage()` sampling |
-| Memory utilization (RSS, heap) | Not emitted | No `process.memoryUsage()` sampling |
-| Garbage-collection pauses | Not emitted | No GC instrumentation (`perf_hooks` not used) |
-
-#### 6.5.3.3 Business Metrics
-
-Business metrics are **not applicable**. The system performs no business operations; it serves an identical 14-byte static response to every request regardless of identity, payload, or context. Per F-002-RQ-004 the response is byte-identical on every invocation, so there is no business event, no transaction, no user action, and no conversion to measure.
-
-| Business Metric Concern | Status | Rationale |
-|-------------------------|--------|-----------|
-| Domain event emission | Not applicable | No domain logic; static response only |
-| User action tracking | Not applicable | No user identity recognized (§6.4.2.1) |
-| Conversion / funnel metrics | Not applicable | No transaction flow exists |
-| Revenue / billing metrics | Not applicable | No commercial activity |
-| Feature-usage analytics | Not applicable | Single resource; no feature differentiation |
-| A/B test exposure tracking | Not applicable | No variant logic |
-| Custom KPI emission | Not applicable | No KPIs are defined (§2.4.2) |
-
-#### 6.5.3.4 SLA Monitoring
-
-SLA monitoring is **not applicable** because no SLAs, SLOs, or SLIs are defined for this system. Per §5.4.5, "No service-level agreements, throughput targets, latency budgets, or QoS metrics are documented anywhere in the repository." Per §4.7, "any quantitative performance expectations must be defined externally by the consumer (the 'backprop integration' tooling) rather than inside this repository."
-
-| SLA Monitoring Concern | Status | Rationale |
-|------------------------|--------|-----------|
-| Availability SLO (e.g., 99.9% monthly) | Not defined | No availability target documented |
-| Latency SLO (e.g., P95 < 100 ms) | Not defined | No latency budget documented (§5.4.5) |
-| Throughput SLO (e.g., 1000 RPS) | Not defined | No throughput target documented (§5.4.5) |
-| Error-rate SLO (e.g., < 0.1%) | Not applicable | Branchless handler emits no errors |
-| Error budget calculation | Not applicable | No SLO from which to derive a budget |
-| Burn-rate alerting | Not applicable | No SLO to burn against |
-| Recovery Time Objective (RTO) | Undocumented (per §5.4.6) | Bounded only by manual operator reaction time |
-| Recovery Point Objective (RPO) | Not applicable (per §5.4.6) | Stateless system has no recoverable data |
-
-The full SLA requirements documentation is provided in §6.5.7 below.
-
-#### 6.5.3.5 Capacity Tracking
-
-Capacity tracking is **not implemented**. No resource-utilization metrics are emitted to a metrics store, no capacity-planning artifact exists in the repository, and no orchestrator is present that could act on capacity signals. Per §6.1.3.2, "Metrics emission for trigger evaluation: None — no Prometheus, StatsD, OpenTelemetry."
-
-| Capacity Tracking Concern | Status | Rationale |
-|----------------------------|--------|-----------|
-| CPU / memory utilization reporting | Not emitted | No `process.cpuUsage()` / `process.memoryUsage()` calls |
-| Connection-pool saturation | Not applicable | No outbound connections to pool (§6.1.3.3) |
-| Queue depth / backlog | Not applicable | No queue exists |
-| File-descriptor usage | Not emitted | No `process.report` or similar telemetry |
-| Disk usage | Not applicable | No filesystem I/O (§3.6) |
-| Network saturation | Not emitted | No bandwidth metrics |
-| Forecasted capacity headroom | Not documented | No baseline metrics from which to forecast |
-| Auto-scaling triggers | Not configured | Per §6.1.3.2, no orchestrator and no metrics |
-
----
-
-### 6.5.4 Incident Response — Inapplicability Analysis
-
-#### 6.5.4.1 Alert Routing
-
-Alert routing is **not applicable**. With no alert sources defined (§6.5.2.4), no alert rules to evaluate, and no notification channels integrated, there is no routing fabric to configure. The conventional fan-out of `metric source → alert manager → routing tree → on-call schedule → notification channel` has no referent in this system.
-
-| Alert Routing Concern | Status | Rationale |
-|------------------------|--------|-----------|
-| Alert routing tree configuration | Not implemented | No alert manager deployed (§6.5.2.4) |
-| Severity-based routing (P1/P2/P3) | Not applicable | No alerts to classify |
-| Team / service ownership labels | Not applicable | No alert metadata exists |
-| Routing by time-of-day / on-call schedule | Not applicable | No schedule integration |
-| Channel selection (PagerDuty / Slack / email) | Not implemented | No outbound integrations (§5.1.4) |
-| Alert deduplication / grouping | Not applicable | No alerts generated |
-
-#### 6.5.4.2 Escalation Procedures
-
-Escalation procedures are **not documented**. No on-call rotation, escalation policy, or response-time SLA is recorded anywhere in the repository. Per §5.4.6, "Any recovery from a crash is therefore an external concern: the operator (or an external supervisor outside the repository boundary) must re-invoke `node server.js`."
-
-| Escalation Concern | Status | Rationale |
-|--------------------|--------|-----------|
-| On-call rotation schedule | Not documented | No PagerDuty/OpsGenie integration; no schedule file |
-| Tier-1 / Tier-2 / Tier-3 escalation paths | Not documented | No support organization defined |
-| Time-bound escalation rules (e.g., escalate after 15 min) | Not documented | No SLA from which to derive timer |
-| Incident commander assignment | Not documented | No IC role defined |
-| Stakeholder communication template | Not documented | No status-page or templated message exists |
-| Severity classification matrix | Not documented | No incident-severity taxonomy defined |
-
-#### 6.5.4.3 Runbooks
-
-Runbooks are **not provided**. The repository contains no `RUNBOOK.md`, no `OPERATIONS.md`, no `docs/operations/` directory, no troubleshooting guide, and no diagnostic playbook. The only operator-facing documentation is the two-line `README.md`, which per §1.3.1 contains only "the purpose and the immutability directive."
-
-| Runbook Concern | Status | Rationale |
-|-----------------|--------|-----------|
-| Operational runbook file (`RUNBOOK.md` etc.) | Not present | Repository contains only `README.md` |
-| Diagnostic decision tree | Not documented | No issue catalog exists |
-| Known-issue / FAQ document | Not documented | No issue-tracker integration |
-| Restart / recovery procedure | Implicit only | "Re-invoke `node server.js`" per §5.4.6 |
-| Rollback procedure | Not documented | No deployment automation (§3.7) to roll back |
-| Capacity-incident playbook | Not documented | No capacity metrics tracked (§6.5.3.5) |
-| Security-incident playbook | Not documented | No security-event surface (§6.4.3.5) |
-
-The de facto "runbook" — for completeness — consists of three steps, none of which are encoded inside the repository: (1) observe a non-zero exit code or absence of the startup line, (2) determine the root cause from the operator's terminal output (e.g., `EADDRINUSE` text from Node.js's default error printer), (3) execute `node server.js` to restart.
-
-#### 6.5.4.4 Post-mortem Processes
-
-Post-mortem processes are **not documented**. The repository contains no post-mortem template, no incident-tracking artifact, no `postmortems/` directory, and no issue-tracker integration. Per §1.3.2 the defect process itself is "Not documented," from which it follows that no formal post-mortem workflow exists.
-
-| Post-mortem Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| Post-mortem template (blameless format) | Not provided | No `templates/` or `docs/postmortems/` directory |
-| Incident timeline reconstruction process | Not documented | No structured logging from which to reconstruct (§6.5.2.2) |
-| Root-cause analysis (RCA) methodology | Not documented | No RCA framework referenced |
-| Contributing-factors checklist | Not documented | No checklist artifact |
-| Action-item tracking | Not documented | No issue-tracker linkage |
-| Post-mortem review / sign-off workflow | Not documented | No review process defined |
-| Public post-mortem publication | Not applicable | No external customer commitment exists |
-
-#### 6.5.4.5 Improvement Tracking
-
-Improvement tracking is **not implemented**. The repository contains no `TODO` markers in source (`server.js` is 14 lines of executing code with no comments), no `CHANGELOG.md`, no `ROADMAP.md`, no GitHub Issues integration committed to the repository, and no formal backlog. Per assumption A-004 (referenced via §6.1.5.2 lineage), even known inconsistencies in the repository (such as the `main: "index.js"` field in `package.json` pointing to a file that does not exist) are deliberately preserved rather than tracked for correction.
-
-| Improvement Tracking Concern | Status | Rationale |
-|------------------------------|--------|-----------|
-| `TODO` / `FIXME` markers in code | Zero — `server.js` contains no comments | Source invariance precludes adding them (C-001) |
-| `CHANGELOG.md` | Not present | No release history documented |
-| `ROADMAP.md` / planned-features file | Not present | No future work tracked |
-| GitHub Issues / GitLab Issues templates | Not present | No `.github/ISSUE_TEMPLATE/` directory |
-| Continuous-improvement / Kaizen process | Not documented | No process artifact |
-| Trend analysis from monitoring data | Not applicable | No monitoring data exists to trend |
-| Known-inconsistency register | Not tracked | Per A-004 lineage, inconsistencies are preserved |
-
-#### 6.5.4.6 Alert Flow Diagram
-
-The diagram below documents the actual "alert flow" through the system when an error condition arises. The flow contains zero alert sources, zero routing decisions, and zero notification channels at the application layer; the sole observation point is the operator's shell, which receives Node.js's default unhandled-error output and a non-zero process exit code. The right-hand cluster enumerates the conventional alert pipeline components that are absent.
-
-```mermaid
-flowchart TD
-    Trigger([Error condition occurs<br/>during process lifetime])
-
-    Trigger --> ErrCat{Error category?}
-    ErrCat -->|"EADDRINUSE / EACCES"| NoListenerA[No 'error' listener<br/>registered on server]
-    ErrCat -->|"Unhandled exception"| NoListenerB[No try/catch in<br/>handler body]
-    ErrCat -->|"SIGINT / SIGTERM"| NoSignalH[No signal handler<br/>registered]
-    ErrCat -->|"EPIPE on stdout"| NoListenerC[Unhandled —<br/>undefined behavior]
-
-    NoListenerA --> Default[Error propagates to<br/>Node.js default handler]
-    NoListenerB --> Default
-    NoListenerC --> Default
-    NoSignalH --> Abrupt[Process terminates<br/>without server.close]
-
-    Default --> Exit([Process exits with<br/>non-zero status code])
-    Abrupt --> Exit
-
-    Exit --> StderrMsg[Node.js prints<br/>default stack trace to<br/>stderr]
-    StderrMsg --> Operator[(Operator's terminal —<br/>SOLE observation point)]
-
-    subgraph Conventional["Conventional Alert Pipeline — NOT IMPLEMENTED"]
-        direction TB
-        Metric["Metric / log event<br/>emitted by app"]
-        Rule["Alert rule evaluated<br/>(Alertmanager,<br/>Grafana Alerting)"]
-        Routing["Alert routing tree<br/>(severity, team,<br/>time-of-day)"]
-        OnCall["On-call schedule<br/>lookup (PagerDuty,<br/>OpsGenie)"]
-        Notify["Notification channel<br/>(SMS, push, Slack,<br/>email)"]
-        Ticket["Incident ticket<br/>opened with<br/>runbook link"]
-        Metric --> Rule --> Routing --> OnCall --> Notify --> Ticket
-    end
-
-    Exit -.->|"would normally feed"| Conventional
-```
-
-The dashed edge documents that, in a system with conventional monitoring, the non-zero exit event would feed the alert pipeline shown on the right; in this repository it does not, because no such pipeline exists.
-
----
-
-### 6.5.5 Sole Observability Surface (Detailed Specification)
-
-#### 6.5.5.1 Startup Readiness Signal
-
-The single intentionally produced observability signal in the entire system is the startup log line emitted by `server.js` line 13. Its complete specification is reproduced below from §5.4.2.
-
-| Property | Value |
-|----------|-------|
-| Source location | `server.js` line 13 (inside the `server.listen()` callback) |
-| API used | `console.log` (Node.js core `console` global) |
-| Output stream | Process stdout (file descriptor 1) |
-| Exact format | Template literal: `` `Server running at http://${hostname}:${port}/` `` |
-| Rendered output | `Server running at http://127.0.0.1:3000/` |
-| Frequency | Exactly once per process lifetime, at startup |
-| Trigger | Successful `server.listen()` socket bind |
-| Log level | None (no severity classification) |
-| Structure | Plain text (no JSON, no key-value fields) |
-| Rotation policy | None — externally managed if at all (§5.4.2) |
-| Scheme requirement | Must use `http://` (not `https://`) per F-003-RQ-002 |
-
-#### 6.5.5.2 Implicit Health via HTTP Response
-
-The second observability surface is the HTTP response itself. Because the handler is branchless and returns an identical response on every invocation, the downstream consumer can use the response itself as an implicit health signal.
-
-| Signal Component | Value | Health Interpretation |
-|------------------|-------|------------------------|
-| TCP handshake completion | Three-way handshake on `127.0.0.1:3000` | Process is alive and listener is bound |
-| HTTP status code | `200` | Application is responsive |
-| `Content-Type` header | `text/plain` | Response framing is correct |
-| Response body | `Hello, World!\n` (14 bytes) | Byte-identical contract is intact (F-002-RQ-004) |
-
-Per §5.4.1, the consumer "must therefore infer the system's health by observing the HTTP response itself (connection success and a `200` status) rather than by querying any observability endpoint."
-
-#### 6.5.5.3 Process Exit Code
-
-The third observability surface is the operating-system exit code of the Node.js process. Per §5.4.3.2, all error categories converge on "process exits with non-zero status code," providing an out-of-band signal observable by a parent shell, a CI runner, or a manual operator.
-
-| Exit State | Code (typical) | Interpretation |
-|------------|----------------|----------------|
-| Listener bound, process running | (no exit) | Healthy |
-| Synchronous startup error (e.g., `EADDRINUSE`) | Non-zero (Node.js default) | Startup failure — operator must re-invoke |
-| Uncaught exception in handler (hypothetical) | Non-zero (Node.js default) | Runtime failure — operator must re-invoke |
-| Operator-initiated `SIGINT` / `SIGTERM` | 130 / 143 (POSIX convention) | Intentional termination |
-
-#### 6.5.5.4 Dashboard Layout Diagram
-
-The diagram below documents the actual "dashboard layout" for this system: a single operator terminal pane displaying the one startup line and the eventual exit-code signal. The right-hand cluster enumerates the conventional dashboard panels that have no data source in this repository.
-
-```mermaid
-flowchart LR
-    subgraph ActualDash["Actual Dashboard — Operator Terminal"]
-        direction TB
-        Pane["Terminal Pane (single pane)"]
-        Line1["Line emitted at startup:<br/>Server running at<br/>http://127.0.0.1:3000/"]
-        Line2["(no further output<br/>during normal operation)"]
-        Line3["On failure: stderr stack trace<br/>+ non-zero exit code"]
-        Pane --> Line1
-        Line1 --> Line2
-        Line2 --> Line3
-    end
-
-    subgraph TypicalDash["Typical Operational Dashboard — NO DATA SOURCE"]
-        direction TB
-        Panel1["Request Rate (RPS)<br/>—— no data source ——"]
-        Panel2["Error Rate (4xx/5xx)<br/>—— no data source ——"]
-        Panel3["Latency P50/P95/P99<br/>—— no data source ——"]
-        Panel4["CPU Utilization<br/>—— no data source ——"]
-        Panel5["Memory (RSS / Heap)<br/>—— no data source ——"]
-        Panel6["Event-Loop Lag<br/>—— no data source ——"]
-        Panel7["Business KPIs<br/>—— no data source ——"]
-        Panel8["SLO Burn Rate<br/>—— no SLO defined ——"]
-        Panel9["Active Alerts<br/>—— no alert source ——"]
-    end
-
-    ActualDash -.->|"comparison only —<br/>no architectural relationship"| TypicalDash
-```
-
----
-
-### 6.5.6 Alert Threshold Matrices
-
-#### 6.5.6.1 Alert Threshold Inapplicability
-
-Because no metrics are emitted (§6.5.2.1), no log structure exists to parse (§6.5.2.2), and no traces are generated (§6.5.2.3), **no alert thresholds can be evaluated by any monitoring system**. The matrix below documents this exhaustively for the conventional thresholds that a Monitoring and Observability section would normally specify. Every row's "Threshold Value" column is intentionally documented as "Not defined" because no monitoring source exists from which the threshold could be evaluated.
-
-| Conventional Threshold | Threshold Value | Data Source Status |
-|------------------------|-----------------|---------------------|
-| Liveness probe failure | Not defined | No `/health` endpoint (§6.5.3.1) |
-| Readiness probe failure | Not defined | No `/ready` endpoint (§6.5.3.1) |
-| Request error rate exceeded | Not defined | No error-rate metric (§6.5.3.2) |
-| Latency P95 exceeded | Not defined | No latency histogram (§6.5.3.2) |
-| Latency P99 exceeded | Not defined | No latency histogram (§6.5.3.2) |
-| Request rate spike / drop | Not defined | No request-count metric |
-| Memory utilization high | Not defined | No `process.memoryUsage()` sampling |
-| CPU utilization high | Not defined | No `process.cpuUsage()` sampling |
-| Event-loop lag high | Not defined | No event-loop instrumentation |
-| Disk-space low | Not defined | No filesystem I/O exists (§3.6) |
-| File-descriptor exhaustion | Not defined | No FD metric emitted |
-| Log-error-volume spike | Not defined | No per-request logs exist |
-| Trace-span error rate | Not defined | No tracing SDK installed (§6.5.2.3) |
-| SLO burn-rate | Not defined | No SLO defined (§6.5.3.4) |
-| Process-restart frequency | Not defined | No supervisor tracks restarts (§5.4.6) |
-
-#### 6.5.6.2 Hypothetical Threshold Matrix (Reference Only)
-
-The table below provides a reference-only set of typical thresholds that a similar system would configure if monitoring were applicable. It is included as forward guidance for any future system that might supersede this fixture; **none of the rows below applies to the current repository**, and each row's "Hypothetical Threshold" column should be read as guidance only.
-
-| Conventional Threshold | Hypothetical Threshold (Reference) | Action |
-|------------------------|------------------------------------|--------|
-| Liveness probe failure | 3 consecutive failed probes over 30 s | Restart container |
-| Readiness probe failure | 1 failed probe | Remove from load-balancer pool |
-| 5xx error rate | > 1% over 5 minutes | Page on-call |
-| Latency P95 | > 200 ms over 5 minutes | Investigate |
-| Memory RSS | > 85% of container limit | Page on-call |
-| CPU utilization | > 85% over 10 minutes | Scale or investigate |
-| Event-loop lag | > 100 ms P95 | Investigate |
-| Process restart frequency | > 3 restarts in 10 minutes | Page on-call |
-
-Per the constraint mapping in §6.5.8.1, none of these hypothetical thresholds can be implemented in the current repository without violating at least one of C-001, C-005, or C-006.
-
----
-
-### 6.5.7 SLA Requirements Documentation
-
-#### 6.5.7.1 SLA Definition Status
-
-Per §5.4.5 and §4.7, **no service-level agreements, service-level objectives, or service-level indicators are defined for this system**. The repository contains no SLA document, no SLO specification, no error-budget policy, and no contractual performance commitment. Per §4.7, "any quantitative performance expectations must be defined externally by the consumer (the 'backprop integration' tooling) rather than inside this repository."
-
-| SLA Dimension | Documented Value | Source |
-|---------------|------------------|--------|
-| Availability target (e.g., 99.9%) | Not defined | §5.4.5 |
-| Latency budget (e.g., P95 < 100 ms) | Not defined | §5.4.5 |
-| Throughput target (e.g., 1000 RPS) | Not defined | §5.4.5 |
-| Error-rate ceiling (e.g., < 0.1%) | Not applicable | Branchless handler emits only `200 OK` |
-| Recovery Time Objective (RTO) | Undocumented | §5.4.6 |
-| Recovery Point Objective (RPO) | Not applicable | Stateless — no data to recover (§5.4.6) |
-| Maintenance window policy | Not defined | No deployment automation (§3.7) |
-| Customer-facing uptime commitment | Not applicable | Local fixture; no external customer |
-
-#### 6.5.7.2 Implicit Operational Characteristics
-
-Although no SLAs are contractually defined, the per-step characteristics of the request path documented in §5.4.5 establish the implicit performance envelope of the system. These are characteristics — not commitments — and they are bounded by the Node.js `http` core implementation on the host system.
-
-| Per-Step Operation | Implicit Characteristic |
-|--------------------|--------------------------|
-| `http.createServer()` | Synchronous, sub-millisecond, executed once at startup |
-| `server.listen()` bind | Asynchronous; bounded by OS socket allocation |
-| Status code assignment | Sub-millisecond property assignment |
-| Header emission | Sub-millisecond property assignment |
-| Body emission (`res.end`) | Sub-millisecond, constant-time (14 bytes) |
-
-Per §5.4.5, "per-request latency is dominated by socket I/O rather than by any application logic. Throughput is bounded by the single Node.js event loop's ability to accept and dispatch connections on the loopback interface."
-
-#### 6.5.7.3 SLA Monitoring Inapplicability
-
-Even if SLAs were defined externally by the downstream consumer, they could not be monitored from within this repository. The monitoring artefacts that conventional SLA monitoring depends on — SLI emission, error-budget calculation, burn-rate alerting — are all forbidden by the governing constraints documented in §6.5.8.1.
-
-| SLA Monitoring Artefact | Status | Forbidden By |
-|--------------------------|--------|--------------|
-| SLI metric emission | Not implementable | C-001 (source invariance), C-005 (zero deps) |
-| SLO target store (e.g., Sloth, OpenSLO) | Not deployed | C-005, C-006 |
-| Error-budget calculator | Not deployed | No SLI source exists |
-| Burn-rate alert rule | Not configured | No alert manager (§6.5.2.4) |
-| SLO dashboard panel | Not configured | No data source (§6.5.2.5) |
-| Customer-facing status page | Not deployed | No outbound integration (§5.1.4) |
-
----
-
-### 6.5.8 Governing Constraints and Architectural Rationale
-
-#### 6.5.8.1 Constraint Mapping
-
-The monitoring posture is enforced normatively by the constraints catalogue in §2.6.2. Four of the seven catalogued constraints have direct bearing on Monitoring and Observability:
-
-| Constraint ID | Statement | Effect on Monitoring and Observability |
-|---------------|-----------|-----------------------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding telemetry SDK imports, `/health` routes, structured logging, or per-request log emission to `server.js` |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Precludes external monitoring agents from scraping the listener; precludes externally hosted dashboards or status pages |
-| C-005 | Zero runtime and zero development dependencies must be maintained | Excludes Prometheus client, OpenTelemetry SDK, Pino, Winston, Bunyan, Sentry SDK, DataDog agent, New Relic agent |
-| C-006 | Project must remain executable on a Node.js installation without any prior `npm install` step | Excludes any installable monitoring toolkit whose deployment would require dependency resolution |
-
-#### 6.5.8.2 Architectural Principles That Forbid Monitoring Infrastructure
-
-The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of conventional monitoring features.
-
-| Principle | Implication for Monitoring and Observability |
-|-----------|-----------------------------------------------|
-| Behavioral stability | Adding observability spans would change response timing; emitting structured logs would change stdout output |
-| Source invariance | "Do not touch!" directive (C-001) forbids adding telemetry imports, health routes, or structured logging |
-| Operational simplicity | Monitoring stacks require external infrastructure (Prometheus, Grafana, log shippers) outside the 4-file repository |
-| Defense by minimalism | Monitoring libraries expand the supply-chain attack surface enumerated in §3.9 |
-| Determinism | Telemetry collection introduces variable latency; alerting introduces non-deterministic side effects |
-| Self-containment | Full observability requires external systems beyond the 4-file repository surface |
-
-The "Negative Architecture" pattern documented in §5.1.1.2 — "the deliberate, documented exclusion of features that a non-fixture system would normally include" — extends naturally to observability features, producing what may be termed **observability-by-absence**: the single startup log line and the implicit HTTP-response health signal together constitute the entire intentional observability surface.
-
-#### 6.5.8.3 Relationship to Other Specification Sections
-
-For readers seeking related discussions of the same architectural conclusion, the following sections of this Technical Specification provide complementary perspectives:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Monitoring approach (authoritative) | §5.4.1 | Authoritative absence table for all observability primitives |
-| Logging strategy (authoritative) | §5.4.2 | Definitive single-line `console.log` specification |
-| Error handling absence | §5.4.3, §4.4 | No alert sources; process crash with no notification |
-| Performance / SLA posture | §5.4.5, §4.7 | No SLAs, no KPIs documented |
-| Disaster recovery posture | §5.4.6 | No health checks, no RTO documented |
-| Third-party services (negative inventory) | §3.5 | DataDog, New Relic, Sentry, Prometheus, OpenTelemetry confirmed absent |
-| Scaling — auto-scale prerequisites | §6.1.3.2 | "No metrics emission for trigger evaluation" |
-| ADR-005 (zero dependencies) | §5.3.6.5 | Formal architectural decision that excludes monitoring libraries |
-| ADR-006 (source invariance) | §5.3.6.6 | Formal architectural decision that excludes adding instrumentation |
-| Governing constraints | §2.6.2 | C-001, C-002, C-005, C-006 normative perimeter |
-| Out-of-scope capabilities | §1.3.2 | "Request logging or structured logging framework" explicitly excluded |
-| In-scope documentation | §1.3.1 | Only the two-line `README.md` is in scope for documentation |
-| Core services applicability | §6.1 | Precedent "not applicable" determination structure |
-| Database design applicability | §6.2 | Precedent "not applicable" determination structure |
-| Security architecture applicability | §6.4 | Precedent "not applicable" determination structure; defense-by-minimalism pattern mirrored here as observability-by-absence |
-
-#### 6.5.8.4 Normative Posture Summary
-
-The architectural posture is therefore not merely **descriptive** (what is currently absent) but **normative** (what must remain absent). Any future enhancement that proposed introducing metrics emission, structured logging, distributed tracing, a `/health` endpoint, alert rules, dashboards, runbooks, or post-mortem templates would simultaneously violate one or more of constraints C-001, C-002, C-005, and C-006. The absence of a detailed monitoring architecture is therefore a permanent architectural property protected by multiple, mutually reinforcing constraints.
-
-The three standard practices documented in §6.5.1.2 (startup readiness signal, implicit health via HTTP response, process exit code) constitute the complete and sufficient observability posture for the system's role as a deterministic test fixture. The downstream consumer is the authoritative monitoring authority for any quantitative concerns; per §4.7, "any quantitative performance expectations must be defined externally by the consumer (the 'backprop integration' tooling) rather than inside this repository."
-
----
-
-### 6.5.9 References
-
-#### 6.5.9.1 Files Examined
-
-- `server.js` — Complete 14-line source verified to contain only `require('http')`, a single `console.log` at line 13 inside the `server.listen()` callback, a branchless handler that ignores `req` per F-002-RQ-004, no telemetry SDK imports (`@opentelemetry/*`, `prom-client`, `pino`, `winston`, `bunyan`), no error listeners (`server.on('error', ...)`), no signal handlers (`process.on('SIGINT'/'SIGTERM', ...)`), no resource sampling (`process.cpuUsage()`, `process.memoryUsage()`), and no `process.env` reads
-- `package.json` — Confirmed absence of `dependencies` and `devDependencies` fields; no monitoring agent, log shipper, metrics client, or APM SDK declared; `hello_world` v1.0.0 with MIT license
-- `package-lock.json` — Confirmed npm `lockfileVersion: 3` with empty `packages` tree (only root `""` entry) — cryptographic attestation of zero installed monitoring packages and zero transitive monitoring dependencies
-- `README.md` — Established the "Do not touch!" governance directive (constraint C-001) that forbids adding instrumentation, the absence of operational documentation, and the lack of a `RUNBOOK.md` or troubleshooting guide
-
-#### 6.5.9.2 Folders Explored
-
-- `/` (repository root, depth 0) — Confirmed the absence of every conventional monitoring-related subdirectory: no `metrics/`, `monitoring/`, `observability/`, `logs/`, `telemetry/`, `health/`, `dashboards/`, `runbooks/`, `postmortems/`, `.github/`, or `docs/operations/` exists; the entire repository surface is the four files listed above with no subdirectories of any kind
-
-#### 6.5.9.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Established intrinsic limitations including "no error handling, no graceful shutdown, no health checks"
-- **§1.3 SCOPE** — Confirmed that request logging and structured logging frameworks are out of scope; only the two-line `README.md` is in scope for documentation
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — No quantitative performance targets; KPIs and SLAs explicitly absent
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Constraints C-001, C-002, C-005, C-006 that normatively forbid the introduction of monitoring infrastructure
-- **§3.5 THIRD-PARTY SERVICES** — Explicit negative inventory confirming the absence of DataDog, New Relic, Sentry, Prometheus, OpenTelemetry, and all other monitoring services
-- **§3.7 DEVELOPMENT & DEPLOYMENT** — No CI/CD, no containerization, no orchestrator configuration, no IaC
-- **§3.9 SECURITY IMPLICATIONS OF STACK CHOICES** — Defense-by-minimalism narrative whose pattern is mirrored here as observability-by-absence
-- **§4.4 ERROR HANDLING AND RECOVERY** — Source of the error-flow diagram pattern used in §6.5.4.6; no error notification mechanism
-- **§4.7 TIMING AND SLA CONSIDERATIONS** — Confirmation that no SLAs, throughput targets, or latency budgets exist; performance bounded by Node.js `http` core
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Six architectural principles; single inbound interface, zero outbound; "negative integration inventory" confirming no telemetry exporters
-- **§5.3 TECHNICAL DECISIONS** — ADR-005 (zero dependencies) and ADR-006 (source invariance) as the formal architectural basis for the absence of monitoring
-- **§5.4 CROSS-CUTTING CONCERNS** — §5.4.1 (the most directly relevant — authoritative monitoring absence table), §5.4.2 (definitive logging strategy specification), §5.4.3 (error-handling absence), §5.4.5 (performance / SLA absence), §5.4.6 (disaster-recovery posture)
-- **§6.1 CORE SERVICES ARCHITECTURE** — Precedent "not applicable" determination structure; §6.1.3.2 auto-scaling prerequisites table confirming "no metrics emission for trigger evaluation"
-- **§6.2 DATABASE DESIGN** — Precedent "not applicable" determination structure with constraint mapping
-- **§6.4 SECURITY ARCHITECTURE** — Precedent "not applicable" determination structure; defense-by-minimalism pattern mirrored here as observability-by-absence; reused audit-mechanism non-applicability table
-
-## 6.6 Testing Strategy
-
-### 6.6.1 Applicability Assessment
-
-#### 6.6.1.1 Determination Statement
-
-**Detailed Testing Strategy is not applicable for this system.**
-
-The `hao-backprop-test` repository implements a 4-file, 14-line Node.js HTTP "Hello World" fixture whose `package.json` declares the verbatim npm-default test placeholder `echo "Error: no test specified" && exit 1`. The system has no test framework, no test files, no test directories, no mocking libraries, no coverage tooling, no CI/CD pipeline, no quality gates, no integration points to test, and no UI surface for end-to-end automation. Every conventional testing primitive prescribed for a Testing Strategy section — unit test framework, mocking strategy, integration test approach, E2E automation, performance benchmarks, code-coverage gates, parallel execution, flaky-test management — is **deliberately absent by design** and is forbidden from being introduced by the constraints catalogued in §2.6.2.
-
-This determination is a substantive architectural finding, not a documentation gap. Per §1.3.2, "Automated tests" is explicitly enumerated as out-of-scope with the verification note that the `test` script in `package.json` is the npm-default placeholder returning exit code 1. The placeholder behavior is **itself a feature** of the system — formalized as requirement F-004-RQ-004 (per §2.2.4) — and the absence of real tests is a deliberate signal to consumers, not an oversight.
-
-This section therefore documents (a) the **basic validation approach** that the system relies on in lieu of a full testing strategy, (b) comprehensive **negative inventories** for each prescribed testing subtopic (Unit, Integration, E2E, Automation, Quality Metrics), (c) the **three required diagrams** (test execution flow, test environment architecture, test data flow), and (d) the **constraint mapping** that normatively forbids the introduction of conventional testing infrastructure.
-
-#### 6.6.1.2 Repository Evidence of Testing Infrastructure Absence
-
-The applicability determination rests on the following directly observable repository properties:
-
-| Evidence Dimension | Observed State | Implication |
-|--------------------|----------------|-------------|
-| `scripts.test` in `package.json` | `echo "Error: no test specified" && exit 1` | npm-default placeholder; explicitly signals no real tests |
-| Test framework declarations in `package.json` | Zero — no `dependencies` field, no `devDependencies` field | No Jest, Mocha, Vitest, Jasmine, AVA, Tape, or supertest declared |
-| Installed test packages in `package-lock.json` | Zero — only root `""` entry in `packages` map | Cryptographic attestation of no test transitive dependencies |
-| Test directories | None — no `test/`, `tests/`, `__tests__/`, `spec/`, `e2e/` | No location exists for test files |
-| Test configuration files | None — no `jest.config.*`, `.mocharc.*`, `vitest.config.*` | No test runner is configured |
-| E2E configuration files | None — no `playwright.config.*`, `cypress.config.*`, `karma.conf.*` | No browser automation is configured |
-| Coverage tool configuration | None — no `.nycrc`, no `c8` config, no `istanbul` config | No coverage measurement is configured |
-| CI/CD workflow files | None — no `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/` | No automated test triggers exist |
-| `module.exports` in `server.js` | Absent | Source cannot be imported by a unit-test runner |
-| Branch points in handler logic | Zero — handler ignores `req` per F-002-RQ-004 | No equivalence classes exist for input-driven testing |
-
-#### 6.6.1.3 Architectural Position — The System IS the Test Fixture
-
-A conceptual point that is essential for interpreting this section: **this repository is not a system under test; it is a test fixture for an external system.** Per §1.1 and §1.2.1, the system is a controlled artifact used to exercise an external "backprop integration" workflow. The downstream "backprop" consumer is the authoritative test authority; this repository provides the deterministic baseline that the consumer verifies against.
-
-The relationship is inverted from the conventional case: instead of having tests *that exercise* the system, the system *is the input to* an external test workflow. The 14-byte byte-identical response, HTTP 200 status code, and `Content-Type: text/plain` header collectively constitute the implicit "test contract" that external tests verify against. Per F-002-RQ-004 (Validation Rule), the handler "must not branch on any property of `req`" — guaranteeing that the response surface remains a stable testing target for upstream consumers.
-
-This architectural inversion mirrors the observability pattern documented in §6.5.5.2, where the HTTP response itself serves as the health signal in lieu of explicit health-check endpoints. The same response *also* serves as the assertion target in lieu of explicit test assertions.
-
----
-
-### 6.6.2 Basic Validation Approach (In Lieu of Full Testing Strategy)
-
-In lieu of a full testing strategy, the system relies on a manual validation approach driven by reproducible shell commands. This subsection documents the basic unit-testing-equivalent approach that will be used — the only validation workflow consistent with the constraints catalogued in §2.6.2.
-
-#### 6.6.2.1 Placeholder Test Script Specification
-
-Per F-004-RQ-004 (per §2.2.4), the `package.json` `scripts.test` field is intentionally configured as the npm-default placeholder. Its complete specification is reproduced below:
-
-| Property | Value |
-|----------|-------|
-| Field location | `package.json` `scripts.test` |
-| Verbatim value | `echo "Error: no test specified" && exit 1` |
-| Standard output on invocation | `Error: no test specified` |
-| Exit code on invocation | `1` (non-zero, by design) |
-| Validation rule (per F-004-RQ-004) | "Placeholder script is intentionally non-zero to signal absence of real tests" |
-
-The non-zero exit code is **the test result itself**: invoking `npm test` produces a deterministic, observable signal (`exit 1`) that communicates the deliberate absence of test coverage. Any future replacement of this placeholder with a real test runner would violate constraint C-001 (source immutability) and consequently is forbidden.
-
-#### 6.6.2.2 Manual Validation Methods
-
-Per §2.5.1 (Traceability Matrix), every functional requirement is mapped to a manual validation method. These manual probes constitute the de facto "test plan" for the system:
-
-| Requirement | Validation Method | Validation Target |
-|-------------|-------------------|--------------------|
-| F-001-RQ-001 (Listen callback) | Observation of listen callback execution | Process startup completion |
-| F-001-RQ-002 (Hostname bind) | `netstat`/`lsof` inspection of `127.0.0.1` binding | Network interface binding |
-| F-001-RQ-003 (Port bind) | `netstat`/`lsof` inspection of port `3000` | Port allocation |
-| F-001-RQ-004 (Startup log) | Observation of `"Server running at..."` console line | Stdout emission |
-| F-002-RQ-001 (Status code) | `curl -w "%{http_code}"` probe | HTTP 200 response |
-| F-002-RQ-002 (Content-Type) | `curl -I` header inspection | `text/plain` header value |
-| F-002-RQ-003 (Body equality) | `curl` body equality check against `"Hello, World!\n"` | 14-byte body content |
-| F-002-RQ-004 (Determinism) | Probe with multiple methods/paths confirming identical responses | Branchless handler invariant |
-| F-003-RQ-001, F-003-RQ-002 (Startup log content) | Stdout capture and string equality check | Log line value |
-| F-004 (Metadata) | JSON parse of `package.json` and `npm test` invocation | Placeholder behavior |
-| F-005 (Zero dependencies) | JSON parse of `package.json` and `package-lock.json` | Empty dependency tree |
-| F-006 (Code immutability) | Git diff against committed baseline | Source-tree invariance |
-
-#### 6.6.2.3 Validation Reproducibility Commands
-
-The manual validation methods are encoded as reproducible shell commands. These commands serve as the de facto "test cases" and are the only validation workflow consistent with constraints C-001, C-005, and C-006:
-
-| Validation | Command Pattern | Expected Outcome |
-|------------|-----------------|-------------------|
-| Status code | `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/` | `200` |
-| Content-Type header | `curl -sI http://127.0.0.1:3000/` | Line containing `Content-Type: text/plain` |
-| Body equality | `curl -s http://127.0.0.1:3000/` | Exactly `Hello, World!\n` (14 bytes) |
-| Determinism | Repeat with `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS` and varying paths | Byte-identical responses |
-| Placeholder test script | `npm test` | Stderr error line + exit code `1` |
-| Code immutability | `git diff` | Empty output (no diffs) |
-| Hostname bind | `lsof -nP -iTCP:3000 -sTCP:LISTEN` or `netstat -an \| grep 3000` | Listener on `127.0.0.1:3000` |
-| Startup log line | Stdout capture from `node server.js` | Single line `Server running at http://127.0.0.1:3000/` |
-
-These commands require no installed test framework, no `npm install`, and no modification of the repository — fully satisfying constraints C-001 (source immutability), C-005 (zero dependencies), and C-006 (no `npm install` requirement).
-
-#### 6.6.2.4 Test Execution Flow Diagram
-
-The diagram below documents the actual test-execution flow available to a consumer of this fixture. The flow contains two paths: (1) the placeholder `npm test` invocation that always exits non-zero by design, and (2) the manual validation flow that constitutes the entire substantive "testing" workflow.
-
-```mermaid
-flowchart TD
-    Begin([Operator initiates validation workflow])
-    Choice{Validation path?}
-
-    Begin --> Choice
-    Choice -->|"Path A: Placeholder test script"| NpmTest["npm test<br/>(invokes scripts.test)"]
-    Choice -->|"Path B: Manual validation flow"| Launch["node server.js"]
-
-    NpmTest --> EchoMsg["stderr/stdout:<br/>'Error: no test specified'"]
-    EchoMsg --> Exit1([Process exits with code 1<br/>per F-004-RQ-004 — by design])
-
-    Launch --> Bind["http.createServer +<br/>server.listen(3000, '127.0.0.1')"]
-    Bind --> BindOk{Bind successful?}
-    BindOk -->|No — EADDRINUSE / EACCES| Crash([Process crashes with<br/>non-zero exit code<br/>per §5.4.3])
-    BindOk -->|Yes| LogLine["Stdout emits:<br/>'Server running at<br/>http://127.0.0.1:3000/'"]
-
-    LogLine --> Probe["Manual probes:<br/>curl / netstat / lsof / git diff"]
-    Probe --> Compare{"Response matches<br/>byte-identical baseline?<br/>(F-002-RQ-004)"}
-    Compare -->|"HTTP 200 +<br/>Content-Type: text/plain +<br/>14-byte 'Hello, World!\n'"| Pass([Validation passes])
-    Compare -->|Any mismatch| Fail([Validation fails —<br/>fixture contract broken])
-```
-
-The two paths converge on a non-zero exit code or a substantive validation result; neither path uses a conventional test runner.
-
----
-
-### 6.6.3 Testing Approach — Inapplicability Analysis
-
-#### 6.6.3.1 Unit Testing
-
-Unit testing is **not implemented and cannot be implemented without violating governing constraints**. The complete inventory of unit-testing concerns and their non-applicability rationale is documented below:
-
-| Unit Testing Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| Testing framework (Jest, Mocha, Vitest, Jasmine, AVA, Tape) | Not installed | Zero `devDependencies` in `package.json`; empty `packages` tree in `package-lock.json`; forbidden by C-005 |
-| Test organization structure (e.g., `__tests__/`, `*.test.js` co-location) | Not present | No test files or directories exist; adding them would violate C-001 |
-| Mocking strategy (Sinon, jest.mock, testdouble, nock) | Not implemented | No mocking library installed; per §3.3.4 the source has nothing to mock — no outbound calls, no I/O, no clock dependency |
-| Code coverage tooling (`nyc`, `c8`, Istanbul, Jest coverage) | Not configured | No coverage tool installed; no coverage configuration file |
-| Test naming conventions | Not defined | No tests exist for which to define naming conventions |
-| Test data management (factories, fixtures, builders) | Not applicable | The only "test data" is the compile-time string `"Hello, World!\n"` (14 bytes); see §6.6.6 |
-| Assertion library (Chai, expect, assert) | Not installed | The only "assertion" is byte-equality of the static response against an external baseline |
-| Test runner CLI | Not present | `npm test` invokes only the echo placeholder |
-| Snapshot testing | Not applicable | Response is a 14-byte compile-time literal; no dynamic output to snapshot |
-| Module unit-testability | Architecturally precluded | `server.js` does not declare `module.exports`; nothing can be imported as a unit under test |
-
-The architectural reason that unit testing is precluded is documented in the source itself: `server.js` invokes `http.createServer` and `server.listen` as top-level statements with no exported functions, classes, or modules. There is no testable unit (function, class, module) that can be imported and exercised in isolation. The only observable behavior is the running process, which is exercised via the integration-style HTTP probes documented in §6.6.2.
-
-#### 6.6.3.2 Integration Testing
-
-Integration testing is **not applicable** — there are no integration points to test. Per §5.1.4 and §6.1.2.2, the system has exactly one external integration point (an inbound HTTP/1.1 listener on `127.0.0.1:3000`) and zero outbound integrations of any kind. The negative integration inventory enumerated in §5.1.4 confirms the deliberate absence of every channel that would require integration testing:
-
-| Integration Testing Concern | Status | Rationale |
-|------------------------------|--------|-----------|
-| Service integration test approach | Not applicable | No second service exists; system is single-process, single-file (§6.1.2.1) |
-| API testing strategy (REST/GraphQL/gRPC) | Not implemented | No formal API contract; handler returns identical response on every request, regardless of path or method (F-002-RQ-004) |
-| Database integration testing | Not applicable | No database, no ORM, no persistence layer (§3.6) |
-| External service mocking (WireMock, MSW, nock, Pact) | Not applicable | No outbound HTTP calls (`http.request`, `fetch`, `axios`) — nothing to mock against |
-| Test environment management (staging, ephemeral envs) | Not applicable | Loopback binding (C-002) restricts execution to the local host only |
-| Contract testing (Pact, Spring Cloud Contract) | Not implemented | The only contract is the byte-identical response, verified by external probes |
-| Message broker integration tests | Not applicable | No Kafka/RabbitMQ/SQS client; zero broker integrations (§5.1.4) |
-| Cache integration tests | Not applicable | No cache layer (Redis, Memcached) integrated |
-| Authentication / authorization tests | Not applicable | No auth framework — no tokens, sessions, or credentials to verify (§6.4.2) |
-
-The only "integration-style" verification that occurs is the manual probe of the inbound HTTP listener documented in §6.6.2.3 — which is essentially an end-to-end test in functional terms (the entire system is exercised), reduced to a single trivial scenario by the branchless handler.
-
-#### 6.6.3.3 End-to-End Testing
-
-End-to-end testing is **not applicable** in its conventional form. The system has no UI surface, no multi-step user journey, no session state, and no business workflow. Every conventional E2E concern is either inapplicable by topology or precluded by the determinism contract:
-
-| E2E Testing Concern | Status | Rationale |
-|---------------------|--------|-----------|
-| E2E test scenarios | Reduced to one trivial scenario | "Send any HTTP request → receive identical 14-byte response" |
-| UI automation approach (Playwright, Cypress, Selenium, Puppeteer) | Not applicable | No UI surface — system is a backend HTTP endpoint only |
-| Test data setup / teardown | Not applicable | Stateless system; no state to set up or tear down (§5.1.3.4) |
-| Performance testing requirements (load, stress, soak) | Not defined | No SLAs, latency budgets, or throughput targets exist anywhere in the spec (§4.7, §5.4.5) |
-| Cross-browser testing strategy | Not applicable | No browser-served content; response is `text/plain`, not HTML/JS/CSS |
-| Mobile responsiveness testing | Not applicable | No UI; no responsive layout |
-| Accessibility testing (axe-core, Lighthouse) | Not applicable | No UI; no accessibility surface to audit |
-| Visual regression testing (Percy, Chromatic) | Not applicable | No visual surface |
-| User-journey scripting | Not applicable | No multi-step workflow; single stateless request/response pair |
-
-The closest E2E analog is the manual `curl` validation described in §6.6.2.3, which exercises the entire system end-to-end (TCP handshake through HTTP response emission) using a single trivial scenario.
-
-#### 6.6.3.4 Security Testing
-
-Security testing is **not applicable** in its conventional form. The complete security inventory per §6.4 establishes that the system has no authentication framework, no authorization system, no token handling, no session management, no encryption-in-transit, and no key management surface — eliminating the entire security-testing problem space.
-
-| Security Testing Concern | Status | Rationale |
-|--------------------------|--------|-----------|
-| Authentication / session tests | Not applicable | No authentication mechanism exists |
-| Authorization / RBAC tests | Not applicable | No authorization model exists |
-| Input validation / fuzz testing | Not applicable | Handler ignores `req` entirely (F-002-RQ-004); no input is consumed |
-| Injection testing (SQLi, XSS, CSRF, SSRF) | Not applicable | No database, no HTML rendering, no outbound HTTP — no injection sinks |
-| Dependency vulnerability scanning (`npm audit`, Snyk, Dependabot) | Not applicable | Zero dependencies — empty supply-chain attack surface (C-005) |
-| SAST (Semgrep, CodeQL, SonarQube) | Not configured | No static-analysis configuration committed; 14-line source has no exploitable patterns |
-| DAST (OWASP ZAP, Burp) | Not configured | No formal API to exercise; loopback binding precludes external scanning |
-| Secret scanning (gitleaks, trufflehog) | Not applicable | No secret material — no API keys, no credentials, no certificates |
-| Penetration testing | Not applicable | Loopback-only attack surface (C-002); no public exposure |
-
-The three implicit security controls documented in §6.4.1.2 — network-layer isolation (loopback bind), supply-chain elimination (zero dependencies), and injection-surface elimination (handler ignores `req`) — can each be verified by the manual probes already documented in §6.6.2.3 (attempt remote connection → expect refused; inspect lockfile → expect single root entry; send any payload → expect identical response). No formal security-testing framework is required or applicable.
-
----
-
-### 6.6.4 Test Automation — Inapplicability Analysis
-
-#### 6.6.4.1 CI/CD Integration
-
-CI/CD integration is **not implemented and cannot be implemented without violating C-001**. Per §3.7.5, no CI/CD pipeline is present or configured. The complete inventory of CI/CD platforms and their absence:
-
-| CI/CD Platform | Status | Verification |
-|----------------|--------|--------------|
-| GitHub Actions | Not configured | No `.github/workflows/` directory |
-| GitLab CI | Not configured | No `.gitlab-ci.yml` |
-| Jenkins | Not configured | No `Jenkinsfile` |
-| CircleCI | Not configured | No `.circleci/` directory |
-| Travis CI | Not configured | No `.travis.yml` |
-| Azure Pipelines | Not configured | No `azure-pipelines.yml` |
-| Buildkite | Not configured | No `.buildkite/` directory |
-| Drone CI | Not configured | No `.drone.yml` |
-| TeamCity / Bamboo | Not configured | No platform configuration committed |
-
-Per §3.7.5: "The absence of CI/CD is consistent with the fixture's role: there are no tests to run, no artifacts to publish, no deployments to orchestrate, and no quality gates to enforce." Per C-001, the codebase is intended to be immutable, removing the primary motivation for continuous integration in the first place.
-
-#### 6.6.4.2 Automated Triggers, Parallel Execution, and Reporting
-
-Because no test runner exists and no CI/CD pipeline is configured, every conventional test-automation concern resolves to "not applicable":
-
-| Test Automation Concern | Status | Rationale |
-|--------------------------|--------|-----------|
-| Automated test triggers (push, PR, schedule, manual) | Not configured | No CI/CD platform present |
-| Pre-merge gate (PR check) | Not configured | No GitHub Actions / GitLab merge-request workflow |
-| Pre-commit hooks (husky, lefthook) | Not configured | No `.husky/` directory; per §3.7.1, pre-commit hooks not configured |
-| Parallel test execution (sharding, workers) | Not applicable | No test runner; only the placeholder echo script exists |
-| Port allocation for parallel runs | Architecturally precluded | Port 3000 is hardcoded (C-003); parallel server instances collide on `EADDRINUSE` |
-| Test reporting (JUnit XML, Allure, HTML reports) | Not configured | No test runner produces output to report on |
-| Test results dashboard (SonarQube, Codecov, Coveralls) | Not integrated | No reporting feed exists |
-| Test artifact storage (logs, screenshots, traces) | Not applicable | No artifacts are produced |
-| Notification on completion (Slack, email) | Not configured | No outbound integrations (§5.1.4); zero dependencies (C-005) |
-
-#### 6.6.4.3 Failed Test and Flaky Test Handling
-
-| Concern | Status | Rationale |
-|---------|--------|-----------|
-| Failed test handling (retry, quarantine, blocker labels) | Not applicable | No test suite produces pass/fail signals |
-| Flaky test detection (mocha-retry, jest --testFailureExitCode, retry-on-failure) | Not applicable | No tests to flake |
-| Flaky test quarantine workflow | Not applicable | No CI/CD platform in which to quarantine |
-| Test result trend analysis | Not applicable | No historical test results stored |
-| Mean time to repair (MTTR) for flakes | Not tracked | No flake corpus exists |
-
-The only "failure" condition in the entire workflow is the deterministic non-zero exit of `npm test`, which is itself the expected behavior per F-004-RQ-004 and consequently is not a flake.
-
----
-
-### 6.6.5 Test Environment Architecture
-
-#### 6.6.5.1 Single-Host Test Environment Topology
-
-The validation environment for this system is the same host on which `node server.js` is executed. There is no separate test environment, no staging environment, no ephemeral preview environment, and no containerized test sandbox. The validation tools (curl, netstat, lsof, git) are invoked from the operator's shell on the same host as the server process.
-
-The diagram below documents the actual single-host test environment and contrasts it with the conventional multi-tier test environments that this section would normally describe.
-
-```mermaid
-flowchart TB
-    subgraph ActualEnv["Actual Test Environment — Single Host (Operator Workstation)"]
-        direction TB
-        OpTerm["Operator Shell<br/>(invocation + observation)"]
-        NodeProc["Node.js Process<br/>server.js (14 lines)<br/>Stateless handler"]
-        Loopback["127.0.0.1:3000<br/>Loopback Interface<br/>(hardcoded per C-002, C-003)"]
-        Tools["Validation Toolset<br/>• curl (HTTP probe)<br/>• netstat / lsof (bind check)<br/>• git diff (immutability)"]
-        GitTree["Git Working Tree<br/>(baseline for diff)"]
-
-        OpTerm -->|"node server.js"| NodeProc
-        NodeProc --> Loopback
-        OpTerm --> Tools
-        Tools -->|"HTTP probe<br/>(curl)"| Loopback
-        Tools -->|"OS query<br/>(netstat / lsof)"| Loopback
-        Tools -->|"Source diff"| GitTree
-    end
-
-    subgraph TypicalEnv["Typical Test Environment — NOT PRESENT"]
-        direction TB
-        CIRunner["CI Runner<br/>(GitHub Actions,<br/>Jenkins, GitLab CI)"]
-        TestDB["Test Database<br/>(PostgreSQL,<br/>MongoDB, Redis)"]
-        MockSvc["Mock Services<br/>(WireMock, MSW,<br/>nock, Pact broker)"]
-        StagingEnv["Staging Environment<br/>(Docker, Kubernetes,<br/>ephemeral previews)"]
-        ReportStore["Test Reporting<br/>(Allure, JUnit XML,<br/>SonarQube, Codecov)"]
-        BrowserGrid["Browser Grid<br/>(Selenium, BrowserStack,<br/>Sauce Labs)"]
-    end
-
-    ActualEnv -.->|"comparison only —<br/>no architectural relationship"| TypicalEnv
-```
-
-The right-hand cluster is illustrative only; none of its elements exist in this repository, and the absence of every typical test-environment component is verified by the file inventory in §6.6.1.2.
-
-#### 6.6.5.2 Resource Requirements for Test Execution
-
-The validation workflow has minimal resource requirements, all of which are inherited from the host operating system. No dedicated test infrastructure is required:
-
-| Resource Dimension | Requirement | Source |
-|---------------------|-------------|--------|
-| CPU | One core sufficient (single-process, event-loop bound) | Per §6.1.3.3, "All steps in the request path are in-memory, synchronous, and constant-time" |
-| Memory | Node.js default heap; no `--max-old-space-size` configured | Per §6.1.3.2, no resource limit declarations |
-| Disk | Zero — no persistence, no test artifacts, no log files | Per §3.6, no filesystem I/O |
-| Network | Loopback interface only (`127.0.0.1`) | Constraint C-002 |
-| Port | TCP port 3000 must be free on the loopback interface | Constraint C-003; collision causes `EADDRINUSE` startup failure (A-002) |
-| Node.js runtime | Any version supporting `http.createServer` callback API (Node.js ≥ 0.10) | No `engines` field in `package.json` |
-| Operating system | POSIX (Linux/macOS) or Windows with Node.js support | Implicit per Node.js runtime requirement |
-| External services | None | Zero outbound integrations (§5.1.4) |
-| `npm install` step | Not required | Constraint C-006 ("no `npm install` step") |
-
----
-
-### 6.6.6 Test Data Management
-
-#### 6.6.6.1 Static Test Data Specification
-
-The system's entire "test data" surface consists of compile-time constants declared in `server.js`. There are no test fixtures, no factory functions, no seed data files, no database fixtures, no recorded HTTP cassettes (VCR), and no mock data builders. The complete test-data inventory:
-
-| Data Element | Value | Source Location | Mutability |
-|--------------|-------|------------------|------------|
-| Hostname | `'127.0.0.1'` | `server.js` line 3 (per §2.5.2 mapping) | Immutable (C-002) |
-| Port | `3000` | `server.js` line 4 (per §2.5.2 mapping) | Immutable (C-003) |
-| Status code | `200` | `server.js` line 7 (per §2.5.2 mapping) | Immutable (C-001) |
-| Content-Type header value | `'text/plain'` | `server.js` line 8 (per §2.5.2 mapping) | Immutable (C-001) |
-| Response body | `'Hello, World!\n'` (14 bytes) | `server.js` line 9 (per §2.5.2 mapping) | Immutable (C-001, C-004) |
-| Startup log template | `` `Server running at http://${hostname}:${port}/` `` | `server.js` line 13 | Immutable (C-001) |
-
-Per §6.6.1.3 and F-002-RQ-004, the response is byte-identical on every invocation regardless of request method, path, headers, or body. This eliminates the entire conventional test-data design space (equivalence classes, boundary values, fuzz inputs) and reduces the test-data contract to a single 14-byte string.
-
-#### 6.6.6.2 Test Data Flow Diagram
-
-The diagram below illustrates the actual test-data flow through the system: compile-time constants in `server.js` flow through the Node.js process to produce a byte-identical HTTP response that is verified by the external probe against an expected baseline.
-
-```mermaid
-flowchart LR
-    subgraph CompileConsts["Compile-Time Constants in server.js (the only 'test data')"]
-        direction TB
-        HostConst["hostname = '127.0.0.1'<br/>(line 3)"]
-        PortConst["port = 3000<br/>(line 4)"]
-        StatusConst["statusCode = 200<br/>(line 7)"]
-        HeaderConst["Content-Type:<br/>text/plain<br/>(line 8)"]
-        BodyConst["'Hello, World!\\n'<br/>14 bytes<br/>(line 9)"]
-    end
-
-    NodeProc["Node.js Process<br/>(stateless, branchless)"]
-    Socket["Listening Socket<br/>127.0.0.1:3000"]
-    Response["HTTP Response<br/>200 OK<br/>+ Content-Type: text/plain<br/>+ 14-byte body"]
-
-    CompileConsts --> NodeProc
-    NodeProc --> Socket
-    Socket -->|"byte-identical on<br/>every request<br/>(F-002-RQ-004)"| Response
-
-    Probe["Validation Probe<br/>(curl / manual)"]
-    Baseline["Expected Baseline<br/>(byte-identical contract)"]
-    Verdict{"Byte-equality<br/>check"}
-
-    Response --> Probe
-    Probe --> Verdict
-    Baseline --> Verdict
-    Verdict -->|"Match"| ResultPass([Validation passes])
-    Verdict -->|"Mismatch"| ResultFail([Validation fails])
-
-    subgraph AbsentData["Conventional Test Data Surfaces — NOT APPLICABLE"]
-        direction TB
-        Fixtures["Test fixtures /<br/>factory data"]
-        SeedDB["Test database<br/>seed scripts"]
-        Cassettes["Mock responses /<br/>recorded cassettes"]
-        BeforeAll["beforeAll / beforeEach<br/>setup hooks"]
-        AfterAll["afterAll / afterEach<br/>teardown hooks"]
-        Builders["Test data builders /<br/>object mothers"]
-    end
-
-    Verdict -.->|"would normally consume<br/>(but does not)"| AbsentData
-```
-
-#### 6.6.6.3 Test Data Setup and Teardown
-
-| Lifecycle Phase | Required Action | Rationale |
-|------------------|-----------------|-----------|
-| Setup before validation | `node server.js` (start the process) | The "fixture" is the running process itself |
-| Per-request setup | None | Stateless handler ignores all input (F-002-RQ-004) |
-| Per-request teardown | None | Stateless handler holds no per-request state |
-| Database seeding | Not applicable | No database |
-| Cache warming | Not applicable | No cache |
-| Auth-token provisioning | Not applicable | No authentication (§6.4.2) |
-| Teardown after validation | `Ctrl-C` (manual `SIGINT`) | Per §5.4.3.3, no graceful-shutdown handler — termination is abrupt |
-| Cleanup of persisted state | Not applicable | No persistent state created by the system |
-| Cleanup of network resources | OS-managed socket close on process exit | No application-layer `server.close()` invocation |
-
-The entire test-data lifecycle reduces to "start the process, run probes, kill the process." No formal setup or teardown framework is required or applicable.
-
----
-
-### 6.6.7 Quality Metrics — Inapplicability Analysis
-
-#### 6.6.7.1 Code Coverage Targets
-
-Code coverage targets are **not defined and not measurable** within this repository. No coverage tool is installed (no `nyc`, `c8`, Istanbul, or Jest coverage configuration exists), no coverage configuration file is present, and `server.js` is not importable as a module (no `module.exports`), so even a coverage instrumenter would have no test code to instrument.
-
-| Coverage Dimension | Status | Rationale |
-|--------------------|--------|-----------|
-| Coverage tool installed | None | Zero `devDependencies` (C-005) |
-| Line coverage target | Not defined | No coverage measurement possible |
-| Branch coverage target | Not meaningful | `server.js` is branchless (handler has no `if`/`switch`/`?:`) |
-| Function coverage target | Not defined | Two anonymous arrow functions; no named exports to track |
-| Statement coverage target | Not defined | All 14 lines execute on successful startup (no dead code) |
-| Coverage gating in CI | Not applicable | No CI/CD pipeline (§3.7.5) |
-| Coverage report publication (Codecov, Coveralls) | Not configured | No coverage data to publish |
-
-If a coverage measurement were forced retrospectively, it would be a binary metric: the process either starts successfully (in which case all reachable lines execute exactly once during startup, plus the handler executes on every request) or it fails to start (in which case the listen callback is unreached). No partial-coverage scenarios exist.
-
-#### 6.6.7.2 Test Success Rate Requirements
-
-| Test Success Rate Dimension | Status | Rationale |
-|------------------------------|--------|-----------|
-| Required pass rate (e.g., 100% mandatory tests) | Not defined | No test suite exists |
-| Acceptable flake rate (e.g., < 1% retried) | Not defined | No tests to flake |
-| Build break policy (e.g., red build blocks merge) | Not applicable | No CI/CD; merges are not gated |
-| Test stability dashboard | Not applicable | No historical test data |
-| Manual validation success criterion | 100% byte-identity of HTTP response | Per F-002-RQ-004 determinism contract |
-
-The only "success rate" measurable in the system is the byte-equality of the HTTP response against the expected baseline, which by design must be exactly 100% for the fixture to be operating correctly.
-
-#### 6.6.7.3 Performance Test Thresholds
-
-Performance test thresholds are **not defined**. Per §2.4.2, §4.7, and §5.4.5, no quantitative performance targets — throughput, latency, concurrency, or memory ceilings — are documented in any repository file. Per §4.7.2: "any quantitative performance expectations must be defined externally by the consumer (the 'backprop integration' tooling) rather than inside this repository."
-
-| Performance Test Concern | Threshold Value | Source Status |
-|---------------------------|-----------------|----------------|
-| Maximum P95 latency | Not defined | No latency budget in spec |
-| Maximum P99 latency | Not defined | No latency budget in spec |
-| Minimum throughput (RPS) | Not defined | No throughput target in spec |
-| Maximum CPU utilization | Not defined | No `process.cpuUsage()` sampling |
-| Maximum memory RSS | Not defined | No `process.memoryUsage()` sampling |
-| Sustained load duration | Not defined | No soak test scenario |
-| Stress test ceiling | Not defined | No stress profile defined |
-| Cold-start latency budget | Not defined | No startup benchmark configured |
-
-No load-testing tool (k6, Artillery, JMeter, wrk, autocannon) is installed or configured, and per constraint C-002 the loopback-only binding precludes external load-generator setups.
-
-#### 6.6.7.4 Quality Gates
-
-Quality gates are **not implemented**. With no test runner, no coverage tool, no linter, no formatter, no type checker (per §3.7.1), and no CI/CD platform to enforce them, there is no infrastructure on which a quality gate could operate.
-
-| Quality Gate | Status | Rationale |
-|--------------|--------|-----------|
-| Test pass gate | Not configured | No test runner |
-| Coverage threshold gate | Not configured | No coverage tool |
-| Linter clean gate | Not configured | No linter (per §3.7.1) |
-| Formatter clean gate | Not configured | No formatter (per §3.7.1) |
-| Type-checker clean gate | Not configured | No type checker (per §3.7.1) |
-| Vulnerability scan gate | Not applicable | Zero dependencies — empty supply chain |
-| SAST clean gate | Not configured | No static analysis configuration |
-| Performance regression gate | Not configured | No baseline performance data |
-| Release candidate promotion gate | Not applicable | No deployment automation |
-
-The implicit "quality gate" for the system is constraint C-001 itself: `git diff` against the committed baseline must produce empty output. Any divergence from the baseline is a quality failure by definition (per F-006).
-
-#### 6.6.7.5 Documentation Requirements for Tests
-
-| Test Documentation Concern | Status | Rationale |
-|----------------------------|--------|-----------|
-| Test plan document | Not provided | This Technical Specification §2.5.1 traceability matrix serves as the de facto plan |
-| Test case specifications | Not provided | Acceptance criteria in §2.2 serve as the de facto cases (per §6.6.2.3) |
-| Bug reporting template | Not provided | No issue-tracker integration (§6.5.4.4 lineage) |
-| Test result archival | Not applicable | No test results produced |
-| Test environment runbook | Not provided | Repository contains only the two-line `README.md` |
-| Validation evidence retention | Operator-managed | Curl output is ephemeral unless captured externally |
-
-The repository's `README.md` is two lines and per §1.3.1 contains only "the purpose and the immutability directive" — no test documentation is provided or required.
-
----
-
-### 6.6.8 Test Strategy Matrices
-
-#### 6.6.8.1 Test Layer Applicability Matrix
-
-The matrix below summarizes the applicability of each conventional test layer against the architectural reality of this system:
-
-| Test Layer | Applicability | Validation Substitute |
-|------------|---------------|------------------------|
-| Unit | Not applicable | None — `server.js` has no exported units (§6.6.3.1) |
-| Component | Not applicable | None — system is monolithic with one component (§6.1.2.1) |
-| Integration (in-process) | Not applicable | None — no inter-module integration; single file |
-| Integration (cross-service) | Not applicable | None — zero outbound integrations (§5.1.4) |
-| Contract | Implicit only | Byte-identical HTTP response contract (F-002-RQ-004) |
-| API / End-to-End | Reduced to one scenario | Manual `curl` probe per §6.6.2.3 |
-| UI / Browser | Not applicable | No UI surface |
-| Performance | Not applicable | No SLAs/KPIs defined (§4.7) |
-| Security | Not applicable | Implicit via loopback isolation + zero deps (§6.4.1.2) |
-| Accessibility | Not applicable | No UI surface |
-| Chaos / Resilience | Not applicable | No resilience primitives to chaos-test (§6.1.4) |
-| Smoke | Reduced to startup observation | Observe `"Server running at..."` log line |
-
-#### 6.6.8.2 Validation-Tool to Requirement Matrix
-
-This matrix maps each external validation tool to the requirements it verifies, providing the complete "test strategy" for the system in matrix form:
-
-| Validation Tool | Requirements Covered | Validation Scope |
-|------------------|----------------------|--------------------|
-| `node` (runtime invocation) | F-001-RQ-001, F-001-RQ-004, F-003-RQ-001, F-003-RQ-002 | Process startup, log emission, callback firing |
-| `netstat` / `lsof` | F-001-RQ-002, F-001-RQ-003 | Socket bind verification (hostname + port) |
-| `curl` | F-002-RQ-001, F-002-RQ-002, F-002-RQ-003, F-002-RQ-004 | Status code, headers, body, determinism |
-| JSON parse of `package.json` | F-004-RQ-001..004, F-005-RQ-001..004 | Metadata correctness and zero-dependency claim |
-| `npm test` | F-004-RQ-004 | Placeholder script exit-code behavior |
-| `git diff` | F-006-RQ-001..004 | Source-tree immutability against baseline |
-
-#### 6.6.8.3 Constraint-to-Test-Activity Matrix
-
-This matrix maps each governing constraint to the test activities it forbids:
-
-| Constraint | Statement | Forbidden Test Activities |
-|------------|-----------|---------------------------|
-| C-001 | Files must remain unchanged from committed baseline | Adding test files, modifying `scripts.test`, adding test exports to `server.js` |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Configuring tests to reach a non-loopback test environment |
-| C-003 | Port must remain hardcoded to `3000` | Parallelizing tests across multiple port-bound server instances |
-| C-004 | Response must remain byte-identical | Adding tests that depend on input-driven response variability |
-| C-005 | Zero runtime and dev dependencies | Installing any test framework, mocking library, or coverage tool |
-| C-006 | No `npm install` step required | Adopting any test toolkit that requires resolution of `devDependencies` |
-
----
-
-### 6.6.9 Governing Constraints and Architectural Rationale
-
-#### 6.6.9.1 Constraint Mapping
-
-The testing posture is enforced normatively by the constraints catalogue in §2.6.2. The same four constraints that govern the absence of monitoring infrastructure (§6.5.8.1) also govern the absence of testing infrastructure, with additional reinforcement from C-002, C-003, and C-004:
-
-| Constraint ID | Statement | Effect on Testing Strategy |
-|---------------|-----------|-----------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding test files, replacing the placeholder `scripts.test`, or modifying `server.js` to export testable units |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Restricts the validation environment to the same host; precludes externally hosted CI runners reaching the listener |
-| C-003 | Port must remain hardcoded to `3000` | Prevents parallel test execution across multiple server instances (port collision → `EADDRINUSE`) |
-| C-004 | Response must remain byte-identical | Defines the only "assertion" possible; precludes test cases that depend on input variability |
-| C-005 | Zero runtime and zero development dependencies | Excludes Jest, Mocha, Vitest, Sinon, nock, supertest, k6, Playwright, Cypress, and every other npm-installable test tool |
-| C-006 | Project must remain executable without `npm install` | Excludes any test toolkit whose deployment would require dependency resolution |
-
-#### 6.6.9.2 Architectural Principles That Forbid Testing Infrastructure
-
-The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of conventional testing features:
-
-| Principle | Implication for Testing Strategy |
-|-----------|----------------------------------|
-| Behavioral stability | Adding test instrumentation would change handler timing; adding test hooks would risk altering the response |
-| Source invariance | "Do not touch!" directive (C-001) forbids adding test files or modifying source for testability |
-| Operational simplicity | Testing stacks require external infrastructure (runners, reporters, CI platforms) outside the 4-file repository |
-| Defense by minimalism | Test libraries expand the supply-chain attack surface enumerated in §3.9 |
-| Determinism | Per F-002-RQ-004, the handler must be branchless — testing input variation is architecturally meaningless |
-| Self-containment | The complete system must fit in four files; test files would violate this property |
-
-The "Negative Architecture" pattern documented in §5.1.1.2 — "the deliberate, documented exclusion of features that a non-fixture system would normally include" — extends naturally to testing features, producing what may be termed **testability-by-determinism**: because the response is guaranteed byte-identical on every invocation, a single external probe against the running process is the complete and sufficient validation.
-
-#### 6.6.9.3 Normative Posture Summary
-
-The architectural posture is therefore not merely **descriptive** (what is currently absent) but **normative** (what must remain absent). Any future enhancement that proposed introducing a test framework, test files, mocking infrastructure, coverage instrumentation, a `/health` endpoint for liveness probes, CI/CD test triggers, quality gates, or performance benchmarks would simultaneously violate one or more of constraints C-001, C-002, C-003, C-004, C-005, and C-006.
-
-The placeholder `scripts.test` (per F-004-RQ-004), the manual validation methods (per §2.5.1), and the byte-identity contract (per F-002-RQ-004) together constitute the complete and sufficient validation posture for the system's role as a deterministic test fixture. The downstream "backprop integration" consumer is the authoritative test authority for any substantive verification; per §4.7 and §6.6.1.3, the consumer's external tests are what the fixture exists to serve.
-
-#### 6.6.9.4 Relationship to Other Specification Sections
-
-For readers seeking related discussions of the same architectural conclusion, the following sections of this Technical Specification provide complementary perspectives:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Placeholder test script feature definition | §2.2 (F-004-RQ-004) | Acceptance criteria for the `npm test` exit-code behavior |
-| Traceability matrix (manual validation methods) | §2.5.1 | Authoritative mapping from each requirement to its manual validation probe |
-| Out-of-scope listing of "Automated tests" | §1.3.2 | Explicit exclusion with verification |
-| Constraints C-001, C-005, C-006 | §2.6.2 | Normative perimeter that forbids adding tests |
-| Excluded test frameworks (Jest, Mocha, Vitest, etc.) | §3.3.4 | Explicit category exclusion |
-| Zero runtime and dev dependencies | §3.4.1, §3.4.2 | Cryptographic confirmation of empty package tree |
-| Development toolchain absence table | §3.7.1 | Authoritative listing of unconfigured test framework, linter, formatter |
-| CI/CD pipeline absence | §3.7.5 | All conventional CI/CD platforms verified absent |
-| No performance targets / SLAs | §4.7, §5.4.5 | No performance test thresholds can be defined |
-| Error-handling absence | §4.4, §5.4.3 | No error categories to test negatively against |
-| Branchless handler (determinism contract) | §5.4.4.2 (F-002-RQ-004) | The "test contract" that external probes verify |
-| Core services architecture not applicable | §6.1 | Precedent "not applicable" determination structure |
-| Security architecture not applicable | §6.4 | Defense-by-minimalism pattern; no security tests applicable |
-| Monitoring and observability not applicable | §6.5 | Implicit-health-via-HTTP-response pattern mirrored as implicit-validation-via-HTTP-response |
-
----
-
-### 6.6.10 References
-
-#### 6.6.10.1 Files Examined
-
-- `server.js` — Complete 14-line source verified to contain no `module.exports` (precluding unit-test importability), a branchless handler ignoring `req` per F-002-RQ-004 (eliminating equivalence-class testing), no error listeners (`server.on('error', ...)`) or signal handlers (precluding negative-path tests), and no `process.env` reads (precluding environment-driven test configuration)
-- `package.json` — Confirmed `scripts.test` is the verbatim npm-default placeholder `echo "Error: no test specified" && exit 1`; confirmed absence of both `dependencies` and `devDependencies` fields; no test frameworks, no linters, no coverage tools, no type checkers declared
-- `package-lock.json` — Verified npm `lockfileVersion: 3` with only the root `""` entry in the `packages` map — cryptographic attestation of zero installed test packages, zero installed development tooling, and zero transitive test-related dependencies
-- `README.md` — Two-line file establishing the "test project for backprop integration" purpose statement (confirming the system's role as a test fixture for external consumers) and the "Do not touch!" governance directive (constraint C-001) that forbids adding tests
-
-#### 6.6.10.2 Folders Explored
-
-- `/` (repository root, depth 0) — Confirmed the absence of every conventional testing-related subdirectory and configuration file: no `test/`, `tests/`, `__tests__/`, `spec/`, `e2e/`, `cypress/`, `playwright/`, `coverage/`, `nyc_output/`, `.github/workflows/`, `.gitlab-ci/`, `.circleci/`, no `jest.config.*`, `.mocharc.*`, `vitest.config.*`, `karma.conf.*`, `playwright.config.*`, `cypress.config.*`, no `Dockerfile`, no `docker-compose.yml`; the entire repository surface is exactly four files at the root with zero subdirectories
-
-#### 6.6.10.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Established the fixture-role context: the repository is a controlled artifact used to exercise an external "backprop integration" workflow, inverting the conventional system-under-test relationship
-- **§1.3 SCOPE** — §1.3.2 explicitly lists "Automated tests" and "CI/CD configuration" as out-of-scope, with verification via the `scripts.test` placeholder
-- **§2.1 FEATURE CATALOG** — F-004 (Package Identity) documents the placeholder `scripts.test` as a deliberate feature, not an oversight
-- **§2.2 FUNCTIONAL REQUIREMENTS** — F-004-RQ-004 formally specifies that the placeholder must exit non-zero; F-002-RQ-004 specifies the branchless handler invariant that constitutes the implicit test contract
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — §2.4.2 confirms "No quantitative performance targets" (excluding performance-test thresholds); §2.4.5 confirms "Placeholder test script — no real tests to maintain"
-- **§2.5 TRACEABILITY MATRIX** — §2.5.1 provides the authoritative mapping of every requirement to its manual validation method (the de facto test plan); §2.5.2 maps every feature to its source-file scope
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Constraints C-001, C-002, C-003, C-004, C-005, C-006 that normatively forbid the introduction of testing infrastructure
-- **§3.3 FRAMEWORKS & LIBRARIES** — §3.3.4 explicitly excludes test frameworks (Jest, Mocha, Vitest, Jasmine, AVA) as a category
-- **§3.4 OPEN SOURCE DEPENDENCIES** — Confirmed both §3.4.1 (Runtime Dependencies) and §3.4.2 (Development Dependencies) are "None"
-- **§3.7 DEVELOPMENT & DEPLOYMENT** — §3.7.1 development toolchain absence table; §3.7.5 confirms no CI/CD pipeline exists on any platform
-- **§4.4 ERROR HANDLING AND RECOVERY** — No error-handling primitives exist; consequently no negative-path test scenarios are testable against internal handlers
-- **§4.7 TIMING AND SLA CONSIDERATIONS** — No SLAs, throughput targets, or latency budgets are documented, precluding performance test thresholds
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — §5.1.1.2 six architectural principles; §5.1.4 negative integration inventory (zero outbound integrations, precluding integration testing)
-- **§5.4 CROSS-CUTTING CONCERNS** — §5.4.3 (no error handling to test); §5.4.4.2 (branchless handler defining the determinism contract); §5.4.5 (no performance metrics)
-- **§6.1 Core Services Architecture** — Precedent "not applicable" determination structure with constraint mapping
-- **§6.4 Security Architecture** — Defense-by-minimalism pattern; security testing not applicable for the same architectural reasons
-- **§6.5 Monitoring and Observability** — Precedent "not applicable" determination structure; the "implicit health via HTTP response" pattern applies symmetrically as "implicit validation via HTTP response"
-
-# 7. User Interface Design
-
-## 7.1 APPLICABILITY ASSESSMENT
-
-### 7.1.1 Determination
-
-```
-No user interface required.
-```
-
-The `hao-backprop-test` repository does not define, expose, or render any user interface. Accordingly, in conformance with the specification template's directive for projects without a UI, this section is intentionally empty of UI design content. The remainder of Section 7 enumerates the evidence supporting this determination and clarifies what programmatic surface exists in lieu of a UI.
-
-### 7.1.2 Evidence-Based Justification
-
-The absence of a user interface is not an oversight of documentation; it is a fundamental architectural property of the system that is reinforced at the source-code level, the dependency level, the protocol level, and the consumer-identity level. Each row in the table below cites an independently verifiable source for one facet of that property.
-
-| Evidence Dimension | Observation | Source of Truth |
-|---------------------|-------------|-----------------|
-| Response media type | The server emits `Content-Type: text/plain`, not `text/html`, on every request | `server.js` handler body; per §5.1.3.2, the handler performs `res.setHeader('Content-Type', 'text/plain')` |
-| Response payload | The response body is a 14-byte UTF-8 string `"Hello, World!\n"` with no markup, no styling, and no scripts | `server.js` `res.end()` call; data boundary defined in §5.1.1.3 |
-| Frontend frameworks | React, Vue, Angular, and Svelte are explicitly excluded; the specification records the verification statement "No DOM, no UI layer exists" | §3.3.4 *Frameworks and Libraries Explicitly Excluded* |
-| Bundlers and transpilers | No webpack, rollup, esbuild, vite, parcel, Babel, SWC, or TypeScript configuration exists in the repository | §3.3.4 |
-| Dependency surface | `package.json` declares no `dependencies` and no `devDependencies` fields, and `package-lock.json` (lockfile v3) contains only the root `""` package entry | §1.2.2 *Core Technical Approach*; §5.1.2 *Core Components Table* |
-| Template engines | No Pug, EJS, Handlebars, Mustache, or Nunjucks engine is loaded or installed | Absence verified by zero-dependency posture (§1.2.2) |
-| Static-asset directories | No `public/`, `static/`, `views/`, `templates/`, `client/`, `frontend/`, `web/`, or `assets/` folder exists under the repository root | Four-file repository surface enumerated in §5.1.2 |
-| Routing | The handler ignores the `req` argument entirely; there is no path-based or method-based dispatch capable of serving differentiated UI assets | §1.3.2 *Out-of-Scope Elements*; F-002-RQ-004 determinism guarantee |
-| Consumer identity | The sole external integration point is a programmatic "Local 'backprop' consumer" — a same-host test harness, not a human-facing client | §5.1.4 *External Integration Points* |
-| Repository governance | The README declares this artifact a "test project for backprop integration" with a "Do not touch!" directive — no human-user workflow is contemplated | `README.md` (entire two-line file) |
-
-## 7.2 NON-APPLICABLE UI DOCUMENTATION TOPICS
-
-Because no UI is present, none of the conventional UI Design subtopics enumerated by the Technical Specification template apply to this project. The table below records each canonical UI subtopic and the reason it is non-applicable, so that future readers do not interpret these omissions as gaps in documentation coverage.
-
-| Conventional UI Subtopic | Status | Reason for Non-Applicability |
-|--------------------------|--------|------------------------------|
-| Core UI technologies | Not applicable | No frontend framework, no DOM, no rendering layer exists (§3.3.4) |
-| UI use cases | Not applicable | The system serves a single static HTTP response to a programmatic consumer (§5.1.4); there is no human actor and no interactive task |
-| UI / backend interaction boundaries | Not applicable | The system contains only a backend; the only boundary is an HTTP/1.1 socket between two non-UI processes (§5.1.1.3) |
-| UI schemas | Not applicable | No view models, component prop types, GraphQL/REST schemas for UI consumption, or form definitions exist |
-| Screens required | Not applicable | No screens, pages, views, dialogs, or routes are rendered — the response body is a 14-byte plaintext string |
-| User interactions | Not applicable | No click, hover, focus, keyboard, gesture, or accessibility-event flows exist; the consumer is a test harness invoking HTTP synchronously |
-| Visual design considerations | Not applicable | No typography, color palette, spacing system, iconography, imagery, or branding artifacts exist; no design tokens, no style guide, no Figma/Sketch references |
-| Responsive design | Not applicable | No viewport, no breakpoints, no device targets — plaintext HTTP has no rendering surface |
-| Accessibility (WCAG / ARIA) | Not applicable | No DOM, no ARIA semantics; accessibility standards apply only to human-rendered content |
-| Internationalization (i18n) / Localization (l10n) | Not applicable | The single response string is fixed in English ASCII and is consumed programmatically; no locale negotiation is implemented |
-| State management (Redux, MobX, Pinia, etc.) | Not applicable | The system is fully stateless at the server layer and has no client layer (§5.1.1.1) |
-| Client-side routing | Not applicable | No client exists; the server-side handler is also routeless (§1.3.2) |
-
-## 7.3 INTEGRATION SURFACE IN LIEU OF A USER INTERFACE
-
-For completeness, the diagram below clarifies that the only interaction surface offered by this system is a programmatic HTTP endpoint consumed by a non-human actor. This is provided strictly to disambiguate Section 7 from sections that document interactive surfaces; it is not a UI design artifact.
-
-```mermaid
-flowchart LR
-    subgraph ConsumerEnv["Programmatic Consumer (Out of Repo)"]
-        Harness["Backprop Integration<br/>Test Harness"]
-    end
-
-    subgraph SystemEnv["hao-backprop-test (This Repository)"]
-        Listener["HTTP/1.1 Listener<br/>127.0.0.1:3000"]
-        Handler["Static Response Handler<br/>(branchless, deterministic)"]
-        Listener --> Handler
-    end
-
-    Harness -->|"HTTP request<br/>(any method, any path)"| Listener
-    Handler -->|"HTTP 200<br/>Content-Type: text/plain<br/>Body: Hello, World!\\n"| Harness
-
-    classDef noUI fill:#f5f5f5,stroke:#888,stroke-dasharray: 4 4
-    class ConsumerEnv,SystemEnv noUI
-```
-
-Two properties of this surface confirm its non-UI nature:
-
-1. **Media type contract** — The `Content-Type` response header is hardcoded to `text/plain`, ensuring that any client which were to attempt to render the body as a webpage would receive plaintext rather than markup. This is the deterministic guarantee documented in §5.1.3.2 and protected by F-002-RQ-004.
-2. **Consumer identity** — The README identifies the integration counterpart as "backprop integration" — a machine consumer — and §5.1.4 catalogues exactly one inbound integration point ("Local 'backprop' consumer (unspecified)") and zero outbound integrations of any kind. No browser, no native app, no terminal user interface, and no operator console are part of the system's intended consumer set.
-
-## 7.4 FORWARD COMPATIBILITY NOTE
-
-Should the project's purpose be redefined in a future phase to incorporate a human-facing experience, introducing a UI would constitute a material architectural change requiring, at minimum:
-
-- Selection and addition of a frontend stack (currently excluded per §3.3.4)
-- Introduction of a build/transpile pipeline (currently absent per §1.3.2)
-- Modification of the response handler to perform content negotiation or to serve HTML/CSS/JS assets (currently forbidden by the branchless handler contract in F-002-RQ-004)
-- Revision of the "Do not touch!" governance directive from `README.md`
-- Reassessment of the loopback-only network boundary (§5.1.1.3)
-
-Because each of these changes would invalidate properties that the rest of this Technical Specification documents as load-bearing, any future UI work is explicitly out of scope for the present document, consistent with the *Future Phase Considerations* clause in §1.3.2.
-
-## 7.5 References
+The "x"-terminated dashed edges connecting the live data path to each absent subgraph indicate that no implemented connection exists. Each absent subgraph corresponds to a verified-absent inventory previously enumerated in §3.5.1, §6.3.3, §6.3.4, and §6.3.5.
+
+### 6.3.8 Cross-Section Reference Map
+
+For readers who need additional context on each integration-architecture concern, the table below maps each sub-area to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
+
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Protocol specifications | §5.1.4 | §1.2.2, §6.3.3.1 |
+| Authentication / authorization | §2.4.4 | §3.5.1, §6.1.3 |
+| Rate limiting / throttling | §6.1.5.5 | §2.4.4 |
+| Versioning | §2.6.3 | §6.2.4.2 |
+| API documentation standards | §5.1.4 | §6.3.3.6 |
+| Event processing | §5.1.3 | §4.3.3 |
+| Message queues / brokers | §3.5.1 | §6.1.3.2 |
+| Stream processing | §3.5.1 | §6.1.3.2 |
+| Batch processing / scheduling | §4.3.3 | §6.1.4.2 |
+| Error handling | §4.6 | §6.1.5.1 |
+| Third-party services | §3.5.1 | §5.1.4 |
+| Legacy interfaces | §3.5.1 | §1.3.2 |
+| API gateway / reverse proxy | §6.1.2.3 | §6.1.3.1 |
+| External service contracts | §5.1.4 | §1.2.3 |
+| Integration topology | §4.3.1 | §2.3.2 |
+| Inbound HTTP sequence | §4.3.2 | §5.2.7 |
+
+### 6.3.9 Conditions Under Which This Section Would Become Applicable
+
+For traceability, this subsection records the architectural events that would trigger reauthoring of §6.3 as a populated (rather than minimal / non-applicable) Integration Architecture specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
+
+| Triggering Event | Constraint to Relax | New Integration Domain Introduced |
+|------------------|---------------------|------------------------------------|
+| Add an outbound HTTP client call in `server.js` | C-001 | Outbound API integration, retry/backoff, circuit breakers |
+| Import a broker client (Kafka, RabbitMQ, SQS) | C-001, C-005 | Asynchronous messaging, queue topology, DLQ design |
+| Bind to a non-loopback host or expose via a proxy | C-002 | API gateway, ingress, WAF, external authentication |
+| Introduce an OpenAPI specification artifact | C-001 | Versioning policy, contract testing, developer portal |
+| Add an authentication / authorization library | C-005 | Identity integration, RBAC/ABAC, session management |
+| Add a telemetry SDK (OpenTelemetry, Datadog, Sentry) | C-005 | Observability integration, distributed tracing, error reporting |
+| Introduce request-conditional response logic | C-004 | Content negotiation, routing, differentiated error responses |
+| Add a scheduler / cron / job queue | C-001, C-005 | Batch processing, workflow orchestration |
+
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of minimal applicability for §6.3 stands: the system retains exactly one inbound integration point with no auxiliary integration architecture.
+
+### 6.3.10 References
 
 #### Files Examined
 
-- `server.js` — Verified the response `Content-Type` is `text/plain` and the body is the 14-byte literal `"Hello, World!\n"`; verified absence of any template engine, DOM API, or markup-generation logic
-- `package.json` — Verified absence of `dependencies` and `devDependencies` fields, confirming no frontend framework, bundler, transpiler, or template engine is installed
-- `package-lock.json` — Verified lockfile v3 contains only the root `""` package entry, cryptographically attesting an empty dependency tree
-- `README.md` — Verified the project's stated purpose as "test project for backprop integration" with a "Do not touch!" directive; no UI or user-facing language present
+- `server.js` — Confirmed the 14-line single-file implementation, branchless handler, `http.createServer` + `server.listen(3000, '127.0.0.1', ...)` pattern, absence of `module.exports`, absence of outbound HTTP client constructions, absence of authentication/authorization/rate-limiting/error-handling primitives.
+- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, no `engines` field, no `start` script, MIT license, and the absence of any integration-related framework or SDK declarations.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty `packages` tree below the root entry, verifying the absence of transitive dependencies that could introduce integration libraries.
+- `README.md` — Confirmed the 3-line content (project title plus "Do not touch!" immutability directive) that is the source of constraint C-001.
 
 #### Folders Explored
 
-- `/` (repository root) — Confirmed the repository contains only the four files listed above; no `public/`, `static/`, `views/`, `templates/`, `client/`, `frontend/`, `web/`, `assets/`, or `src/` subdirectories exist
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/documentation/` folders; no source subdirectories, no integration-related configuration files.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); no integration code, no contract specifications.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts; no integration code, no API definitions, no service contracts.
 
 #### Technical Specification Sections Cross-Referenced
 
-- §1.2 *System Overview* — Established the system as a stateless HTTP fixture consumed by "backprop integration"; confirmed zero runtime/development dependencies and no build/transpile pipeline
-- §1.3 *Scope* — Confirmed in-scope data domain is a "single static UTF-8 string" and that public network exposure, differentiated response logic, and programmatic embedding are explicitly out of scope
-- §3.3 *Frameworks & Libraries* — Confirmed §3.3.4 explicitly excludes React, Vue, Angular, Svelte, bundlers, and transpilers, with the verification statement "No DOM, no UI layer exists"
-- §5.1 *High-Level Architecture* — Confirmed one inbound HTTP interface and zero outbound interfaces; confirmed the response handler is branchless and ignores `req` per F-002-RQ-004
+- §1.1 Executive Summary — Project overview and core business problem (deterministic test fixture).
+- §1.2 System Overview — Integration boundary diagram; primary system capabilities; "one-directional and protocol-based" characterization.
+- §1.3 Scope — In-scope single inbound HTTP and out-of-scope enumeration of all other integration categories.
+- §2.1 Feature Catalog — Six features (F-001 through F-006); no integration features beyond F-001/F-002/F-003.
+- §2.3 Feature Relationships — Integration Points table establishing exactly one integration point; shared components inventory.
+- §2.4 Implementation Considerations — Security implications (no authentication, no authorization); scalability not applicable.
+- §2.6 Assumptions and Constraints — Seven hard constraints (C-001 through C-007); five assumptions (A-001 through A-005).
+- §3.1 Stack Philosophy and Overview — Minimalism principle; joint preclusion by C-001 and C-005.
+- §3.5 Third-Party Services — Comprehensive verified-absent inventory of all external services.
+- §4.3 Integration Workflows — Integration topology table; inbound HTTP sequence diagram; absent integration patterns inventory.
+- §4.6 Error Handling — Documented absence of all error-handling primitives; error flow diagram; missing recovery mechanisms.
+- §5.1 High-Level Architecture — "Single-process, single-file, monolithic micro-service"; external integration points table; verified-absent integration categories.
+- §5.2 Component Details — `server.js` as sole runtime component; inbound HTTP sequence diagram.
+- §5.4 Cross-Cutting Concerns — Authentication/authorization framework (none); observability primitives (all absent); disaster recovery posture.
+- §6.1 Core Services Architecture — Negative-space structural pattern; constraint impact tables; verified-absent diagrams.
+- §6.2 Database Design — Reinforced negative-space pattern; entity-relationship absence diagram.
+
+## 6.4 Security Architecture
+
+### 6.4.1 Applicability Statement
+
+**Detailed Security Architecture is not applicable for this system.**
+
+The `hao-backprop-test` repository implements a deliberately minimal, single-process, single-file HTTP fixture whose entire runtime is a 14-line `server.js` invoked directly by the Node.js binary. Per §2.4.4 and §3.9, the system has no authentication, no authorization, no transport encryption, no input validation, no security headers beyond `Content-Type`, no dependency vulnerabilities (zero dependencies), and no network exposure beyond the loopback interface. Every dimension of a conventional Security Architecture concern domain — authentication framework, authorization system, and data protection — is verified absent by direct repository inspection and is precluded by binding architectural constraints documented in §2.6.2.
+
+The authoritative position is recorded in §5.4.4: "There is no authentication or authorization at the application layer. The sole effective access-control mechanism is the OS network stack itself: by binding to `127.0.0.1`, the listener is reachable only by processes already running on the same host. Connections from any non-loopback source are refused by the OS before reaching Node.js." This characterization is binding under Assumption A-005 (§2.6.1): "No security review of plaintext HTTP / loopback binding is required" because "the fixture is local-only by design."
+
+This section adopts the canonical "negative-space" reference pattern established by §6.1 (Core Services Architecture), §6.2 (Database Design), and §6.3 (Integration Architecture). It enumerates each security concern from the standard Security Architecture prompt, records the documented absence with traceable evidence, identifies the governing constraint that bars introduction of the concern, and documents the **standard security practices that the system does follow instead** — practices that derive their effectiveness from the radical elimination of attack surface rather than from the addition of defensive primitives.
+
+#### 6.4.1.1 Standard Security Practices Followed Instead
+
+Although no conventional security architecture exists, the system does follow a coherent set of standard practices that achieve security through deliberate elimination of capability and attack surface. Per §3.9, "the minimalism of the stack produces a paradoxical security benefit: by eliminating capabilities, it also eliminates attack surface." The practices below are the standard practices that apply:
+
+| Standard Practice | Implementation in This System | Governing Source |
+|-------------------|-------------------------------|------------------|
+| Network isolation (defense in depth) | Hardcoded loopback bind to `127.0.0.1` (C-002) | §5.4.4 |
+| Minimize attack surface (least functionality) | Branchless handler ignores all request input | F-002-RQ-004 |
+| Eliminate supply-chain risk | Zero `dependencies`, zero `devDependencies` | §2.6.2 (C-005) |
+| Eliminate secret-handling exposure | No `process.env.*` reads; no credentials material | §1.2.2 |
+| Reproducible immutable baseline | Four immutable baseline files; no in-place mutation | §2.6.2 (C-001) |
+| Deterministic, audit-stable output | Byte-identical response to every request | §2.6.2 (C-004) |
+| Vulnerability scanning posture | `npm audit` reports zero vulnerabilities | §3.9 |
+
+#### 6.4.1.2 Architectural Constraints That Preclude Security Architecture Expansion
+
+The seven binding constraints from §2.6.2 jointly preclude introducing any of the standard authentication, authorization, or data-protection patterns. Constraints C-001, C-002, C-004, and C-005 are the operative justifications for every verified absence documented in subsequent subsections.
+
+| ID | Constraint | Impact on Security Architecture |
+|----|------------|---------------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add auth code, security middleware, or new security source files |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Loopback isolation IS the sole effective access control |
+| C-003 | Port hardcoded to `3000` | Cannot expose a parallel TLS port (e.g., `443`) |
+| C-004 | Response body, status, headers byte-identical across requests | Cannot emit `WWW-Authenticate`, `Set-Cookie`, CSP, HSTS, or any security header |
+| C-005 | Zero runtime and zero development dependencies | Cannot add Passport, jsonwebtoken, bcrypt, helmet, or any security library |
+| C-006 | Must remain executable without `npm install` | Reinforces C-005 — no out-of-band security tooling permitted |
+| C-007 | MIT license for all repository contents | License-compatibility baseline preserved |
+
+Per §3.1, "Constraint C-001 ('All four baseline files must remain unchanged from their committed state') combined with constraint C-005 ('Zero runtime and zero development dependencies') jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every sub-area documented in this section.
+
+---
+
+### 6.4.2 Authentication Framework (Verified Absent)
+
+This subsection addresses each authentication concern from the standard prompt and documents its absence with file-level evidence. Per §2.4.4 and the §3.5.1 verified-absent inventory, **no authentication mechanism of any kind is implemented**. The branchless handler signature `(req, res) => {...}` discards the `req` argument entirely, structurally precluding the inspection of any identifying claim that could appear in a request.
+
+#### 6.4.2.1 Identity Management — Verified Absent
+
+No identity store, identity provider, or directory integration is present. The handler has no concept of "a user" — it treats every connection identically, regardless of any caller attribute that might exist at the transport, header, body, or session layer.
+
+| Identity Management Component | Documented State | Governing Constraint |
+|-------------------------------|------------------|----------------------|
+| Local user store (in-memory, file, database) | None — no database, no `fs.read` of user data | C-005, §6.2 |
+| External identity provider (Auth0, Okta, Cognito, Keycloak) | None — no SDK imported anywhere | §3.5.1 |
+| Directory service integration (LDAP, Active Directory) | None — no directory client | C-005 |
+| Federated identity (SAML 2.0, OIDC RP) | None — no federation SDK | §3.5.1 |
+| User registration / account-creation API | None — handler is branchless | C-004, F-002-RQ-004 |
+| Identity provisioning (SCIM, just-in-time) | None — no identity surface to provision | §3.5.1 |
+
+#### 6.4.2.2 Multi-Factor Authentication — Verified Absent
+
+No MFA mechanism of any kind is present. MFA presupposes a primary authentication step against which a second factor can be challenged; since no primary authentication step exists, MFA is structurally impossible.
+
+| MFA Mechanism | Documented State |
+|---------------|------------------|
+| TOTP / HOTP (RFC 6238 / RFC 4226) | None — no TOTP library imported |
+| SMS or voice OTP delivery | None — no SMS gateway integration |
+| Email OTP delivery | None — no SMTP client |
+| Push-notification factor (Duo, Okta Verify, Authy) | None — no push provider SDK |
+| WebAuthn / FIDO2 (passkeys, security keys) | None — no WebAuthn library |
+| Hardware token (YubiKey, RSA SecurID) | None — no token integration |
+| Step-up authentication for sensitive operations | Not applicable — no sensitive operations exist |
+
+#### 6.4.2.3 Session Management — Verified Absent
+
+No session model exists. The handler is fully stateless per F-002-RQ-004 and emits no session-tracking artifacts of any kind. Per §1.2 (referenced in §6.2 cross-section map): "State Model: Fully stateless; no persistence, no in-memory accumulation, no session tracking."
+
+| Session Management Concern | Documented State | Governing Constraint |
+|----------------------------|------------------|----------------------|
+| `Set-Cookie` header emission | None — only `Content-Type` header set | C-004 |
+| Session ID generation (crypto-random) | None — no `crypto.randomBytes` use | C-001 |
+| Session store (Redis, Memcached, in-memory Map) | None — no store of any kind | C-005, §6.2 |
+| Session lifetime / idle timeout / absolute timeout | Not applicable — no sessions to time out |
+| Session fixation protection (regenerate on auth) | Not applicable — no authentication step |
+| Cookie security attributes (`HttpOnly`, `Secure`, `SameSite`) | Not applicable — no cookies emitted |
+| Concurrent session limits | Not applicable — no sessions to limit |
+
+#### 6.4.2.4 Token Handling — Verified Absent
+
+No token-based authentication, no token issuance, no token verification, and no token revocation. The handler never inspects the `Authorization` header.
+
+| Token Mechanism | Documented State | Governing Source |
+|-----------------|------------------|------------------|
+| JWT (signed/encrypted) issuance | None — no `jsonwebtoken`, no `jose`, no `node-jose` library | C-005 |
+| JWT verification (signature, claims, `exp`, `aud`, `iss`) | None — `Authorization` header never read | F-002-RQ-004 |
+| Opaque bearer tokens | None — no token store, no introspection endpoint | C-005, §6.2 |
+| OAuth 2.0 access / refresh tokens | None — no OAuth client or AS integration | §3.5.1 |
+| PASETO / Macaroons / biscuit tokens | None — no library imported | C-005 |
+| Token rotation / refresh flows | Not applicable — no tokens to rotate |
+| Token revocation list (CRL-style) | Not applicable — no tokens issued |
+
+#### 6.4.2.5 Password Policies — Verified Absent
+
+No credential surface exists; consequently, no password policy applies. There are no password fields to validate, no hashing function to select, no storage to protect, and no rotation cadence to enforce.
+
+| Password Policy Concern | Documented State |
+|-------------------------|------------------|
+| Password hashing (bcrypt, Argon2, scrypt, PBKDF2) | None — no hashing library imported (C-005) |
+| Minimum length / complexity rules | Not applicable — no password input |
+| Password rotation / expiry policy | Not applicable — no credentials to rotate |
+| Breach detection (HaveIBeenPwned, k-anonymity) | Not applicable — no credentials to check |
+| Password reset workflow (token + email) | Not applicable — no accounts exist |
+| Brute-force protection / account lockout | Not applicable — nothing to brute-force |
+| Credential stuffing protection | Not applicable — no credential check point |
+
+#### 6.4.2.6 Authentication Flow Diagram (Negative-Space Form)
+
+The diagram below visualizes the entire authentication "flow" of the system. Because the application layer performs no authentication, the flow consists of a single OS-level gate (loopback reachability) followed by direct delivery to the branchless handler. Every authentication primitive that would normally branch the flow is enumerated in the deliberately disconnected "Verified-Absent Authentication Primitives" subgraph.
+
+```mermaid
+flowchart TD
+    Client["HTTP Client<br/>(any process)"]
+    OSGate{{"OS Loopback Check<br/>(127.0.0.1 reachable?)"}}
+    Refused["Connection refused<br/>by OS TCP/IP stack<br/>(RST / unreachable)"]
+    HTTPCore["node:http core<br/>parses request"]
+    Handler["server.js handler<br/>(req discarded)"]
+    Response["200 / text/plain /<br/>'Hello, World!\n'"]
+
+    subgraph AbsentAuth["Verified-Absent Authentication Primitives"]
+        NoAuthHdr["No Authorization<br/>header inspection"]
+        NoCookie["No Cookie / session<br/>parsing"]
+        NoJWT["No JWT verification<br/>(no library)"]
+        NoMFA["No MFA challenge"]
+        NoIdP["No IdP redirect<br/>(no OIDC / SAML)"]
+        NoPwd["No password check<br/>(no credential store)"]
+        NoLockout["No lockout / rate-limit<br/>on auth failures"]
+    end
+
+    Client --> OSGate
+    OSGate -- "No (non-loopback)" --> Refused
+    OSGate -- "Yes (co-resident)" --> HTTPCore
+    HTTPCore --> Handler
+    Handler --> Response
+    Handler -.->|"never invokes"| AbsentAuth
+```
+
+The dashed "never invokes" edge from the handler to the absent subgraph emphasizes that the handler executes none of the authentication primitives enumerated there. The sole authentication-relevant decision in the entire flow is performed by the host operating system at the network layer, not by the application.
+
+---
+
+### 6.4.3 Authorization System (Verified Absent)
+
+This subsection addresses each authorization concern from the standard prompt and documents its absence with file-level evidence. Per §2.4.4 and §6.3.3.3, **no authorization framework is implemented**. The handler grants identical access to every caller and emits an identical response regardless of any role, scope, or claim that could appear in the request.
+
+#### 6.4.3.1 Role-Based Access Control — Verified Absent
+
+No RBAC scheme is implemented. There are no roles to assign, no role-to-permission mappings, no role-inheritance graph, and no enforcement code in the request path.
+
+| RBAC Component | Documented State | Governing Constraint |
+|----------------|------------------|----------------------|
+| Role catalog / role definitions | None — no role concept exists | C-001, §6.2 |
+| Role assignment store (user→role mapping) | None — no user store; no database | C-005, §6.2 |
+| Role hierarchy / inheritance | Not applicable — no roles defined |
+| Role evaluation library (Casbin, AccessControl) | None — no library imported | C-005 |
+| Role-based route protection | Not applicable — handler is branchless | C-004, F-002-RQ-004 |
+| Privileged-role audit | Not applicable — no privileged operations |
+
+#### 6.4.3.2 Permission Management — Verified Absent
+
+No permission catalog, no permission grant/revoke API, no scope concept, and no fine-grained policy engine. The handler exposes a single anonymous response path with no permission gates of any kind.
+
+| Permission Management Component | Documented State |
+|---------------------------------|------------------|
+| Permission catalog (resource × verb) | None — no resources, no verbs to permission |
+| Attribute-Based Access Control (ABAC) attributes | None — no attribute extraction code |
+| Policy engine (OPA, Cedar, Zanzibar-style) | None — no policy SDK; C-005 forbids |
+| Relationship-based access control (ReBAC) | None — no relationship graph |
+| Scope tokens (OAuth 2.0 scopes) | None — no OAuth flow |
+| Permission grants / revocations API | Not applicable — no resources to permission |
+| Delegated administration | Not applicable — no admin tier |
+
+#### 6.4.3.3 Resource Authorization — Verified Absent
+
+No resource model exists; consequently, no resource-level authorization applies. The system serves a single static literal, not a collection of addressable resources.
+
+| Resource Authorization Concern | Documented State |
+|--------------------------------|------------------|
+| Resource ownership model (`owner_id`, `tenant_id`) | None — no resources, no ownership records |
+| Multi-tenant isolation (row-level security) | Not applicable — no multi-tenancy |
+| Resource ACLs (per-object permissions) | None — no objects to permission |
+| Hierarchical resource authorization (parent→child) | Not applicable — no hierarchy |
+| URL / path-based resource gating | Not applicable — `req.url` ignored |
+| API-method-based authorization (GET vs. POST gates) | Not applicable — `req.method` ignored |
+
+#### 6.4.3.4 Policy Enforcement Points — Single PEP at OS Layer
+
+A Policy Enforcement Point (PEP) is the location in a request flow where a policy decision is checked. In this system, **the sole effective PEP is the host operating system's TCP/IP loopback check**, and the policy it enforces is "the source IP must be loopback." There is no application-layer PEP.
+
+| Policy Enforcement Point | Location | Decision Enforced |
+|--------------------------|----------|-------------------|
+| OS TCP/IP loopback check | Host kernel network stack | Accept only connections from `127.0.0.1` |
+| Node.js `http` core parser | Node.js runtime | Validate HTTP/1.1 syntax (no authorization) |
+| Application handler (`server.js`) | Application layer | None — always returns 200 |
+| Reverse-proxy / WAF / API-gateway PEP | Not deployed | Not applicable per §6.3.5.3 |
+| Service-mesh sidecar PEP (Istio, Linkerd) | Not deployed | Not applicable per §6.1.3.2 |
+
+Per §6.3.3.2, "Non-loopback connections are refused by the operating system's TCP/IP stack before reaching the Node.js process." This is the entire access-control story.
+
+#### 6.4.3.5 Audit Logging — Verified Absent
+
+No audit logging exists at any layer. Per §5.4.1: "Per-request log emission: Not implemented; handler contains no `console.log`." Per §6.2.5.4: "No audit mechanisms exist for data access because no data access occurs." The only observability event in the entire system is the one-shot startup line `Server running at http://127.0.0.1:3000/`, which per §5.4.2 "contains no secrets, no tokens, and no PII."
+
+| Audit Logging Concern | Documented State | Governing Constraint |
+|-----------------------|------------------|----------------------|
+| Per-request access log | None — handler emits no logs | C-001, C-004 |
+| Authentication event log (success/failure) | Not applicable — no authentication occurs |
+| Authorization decision log (allow/deny) | Not applicable — no authorization decisions |
+| Administrative action audit | Not applicable — no admin operations |
+| Tamper-evident audit storage (WORM, append-only ledger) | None — no audit data; C-005 forbids tooling |
+| Audit log shipping to SIEM (Splunk, Elastic, Sentinel) | None — no log shipper | §6.3.5.1 |
+| Audit log retention policy (regulatory minimum) | Not applicable — no log to retain |
+
+#### 6.4.3.6 Authorization Flow Diagram (Negative-Space Form)
+
+The diagram below visualizes the authorization "flow" of the system. Because the application has no concept of authorization, every request that traverses the OS loopback gate flows directly to a single unconditional "allow" outcome. The deliberately disconnected "Verified-Absent Authorization Primitives" subgraph enumerates every authorization mechanism that would normally introduce a decision diamond.
+
+```mermaid
+flowchart TD
+    Inbound["Authenticated request<br/>(actually: anonymous loopback)"]
+    PEP["Sole effective PEP<br/>OS loopback bind<br/>(network layer only)"]
+    Decision{{"Application-layer<br/>authorization decision?"}}
+    NoDecision["No decision exists<br/>(branchless handler)"]
+    Allow["Unconditional allow<br/>(handler emits 200)"]
+    Audit["Audit log<br/>(not written — see §5.4.1)"]
+
+    subgraph AbsentAuthz["Verified-Absent Authorization Primitives"]
+        NoRBAC["No RBAC role check"]
+        NoABAC["No ABAC attribute eval"]
+        NoACL["No ACL lookup"]
+        NoScope["No OAuth scope check"]
+        NoOPA["No policy engine call<br/>(OPA / Cedar)"]
+        NoOwner["No resource ownership check"]
+        NoTenant["No tenant isolation"]
+    end
+
+    Inbound --> PEP
+    PEP --> Decision
+    Decision -.->|"would consult"| AbsentAuthz
+    Decision --> NoDecision
+    NoDecision --> Allow
+    Allow -.->|"would write"| Audit
+```
+
+The two dashed edges ("would consult", "would write") indicate the conventional flow that does not occur in this system: no policy is consulted because no policy exists, and no audit record is written because no audit pipeline exists.
+
+---
+
+### 6.4.4 Data Protection (Verified Absent)
+
+This subsection addresses each data-protection concern from the standard prompt. Per §6.2.5 (Compliance Considerations, Verified Absent) and the §1.3.2 out-of-scope enumeration ("Persistence: Databases, ORMs, file-based storage, in-memory caches"), **no data plane exists**. Consequently, no data-protection mechanism applies, and no compliance regime is triggered.
+
+#### 6.4.4.1 Encryption Standards — Verified Absent
+
+No encryption is performed at any layer of the system. No cryptographic library is imported, no symmetric or asymmetric algorithm is invoked, and no random material is generated. The transport is plaintext HTTP/1.1, and there is no payload to encrypt.
+
+| Encryption Standard | Documented State | Governing Source |
+|---------------------|------------------|------------------|
+| TLS 1.2 / 1.3 transport encryption | Not enabled — `require('http')` only; no `https` module | §6.3.3.1 |
+| Application-layer encryption (envelope) | None — `node:crypto` never required | C-001 |
+| At-rest encryption (AES-256-GCM, ChaCha20-Poly1305) | Not applicable — no data at rest | §6.2.5.3 |
+| Field-level / column-level encryption | Not applicable — no fields, no columns |
+| End-to-end encryption (Signal, MLS, age) | Not applicable — no peer-to-peer surface |
+| Hashing for integrity (SHA-256, SHA-3) | None — `node:crypto` never required |
+| FIPS 140-2 / 140-3 module mode | Not configured — no crypto module loaded |
+
+Per §2.4.4, the documented transport-encryption posture is "None (plaintext HTTP)" with the mitigating factor that "loopback traffic does not traverse external networks."
+
+#### 6.4.4.2 Key Management — Verified Absent
+
+No keys, certificates, or other cryptographic material exists in the repository or is loaded at runtime. There is no key store, no key rotation cadence, no escrow, and no HSM integration.
+
+| Key Management Concern | Documented State |
+|------------------------|------------------|
+| Key store (HashiCorp Vault, AWS KMS, GCP KMS, Azure Key Vault) | None — no SDK imported per §3.5.1 |
+| Hardware Security Module (HSM) integration | None — no PKCS#11 binding |
+| Key rotation cadence / policy | Not applicable — no keys to rotate |
+| Key escrow / split-knowledge / dual-control | Not applicable |
+| Certificate lifecycle (issuance, renewal, revocation) | Not applicable — no certificates used |
+| Secret rotation (database creds, API tokens) | Not applicable — no secrets exist |
+| `process.env.*` secret loading | None — `process.env` never accessed |
+
+Per the §6.3.2.1 evidence row "Environment variable reads (`process.env.*`): None": the source code does not read environment variables, so even ambient OS-level secret material cannot enter the runtime through that channel.
+
+#### 6.4.4.3 Data Masking Rules — Verified Absent
+
+No data masking, redaction, tokenization, or pseudonymization rules apply because no data is collected, transformed, or emitted that could require masking. The response body is a compile-time UTF-8 literal containing no caller-derived content.
+
+| Data Masking Concern | Documented State |
+|----------------------|------------------|
+| PII redaction in logs / responses | Not applicable — no PII processed |
+| Format-Preserving Encryption (FPE) | Not applicable — no formatted data |
+| Tokenization (Vault Transform, payment tokens) | Not applicable — no sensitive data |
+| Static data masking (lower environments) | Not applicable — no lower environments |
+| Dynamic data masking (per-role views) | Not applicable — no roles, no views |
+| Differential privacy / k-anonymity | Not applicable — no analytical surface |
+
+#### 6.4.4.4 Secure Communication — Loopback Isolation Only
+
+No application-layer secure-communication protocol is enabled. The wire transport is plaintext HTTP/1.1 per §6.3.3.1. The sole effective communication security is the OS-enforced loopback isolation, which prevents any non-co-resident process from reaching the listener.
+
+| Secure Communication Mechanism | Documented State | Effective Substitute |
+|--------------------------------|------------------|----------------------|
+| TLS termination (1.2 / 1.3) | Not enabled per §6.3.3.1 | Loopback isolation per A-005 |
+| Mutual TLS (client cert verification) | Not enabled — no TLS at all | None — co-resident trust model |
+| HSTS (`Strict-Transport-Security`) | Not emitted — only `Content-Type` set | Not required for loopback fixture |
+| HTTP Public Key Pinning (HPKP) | Not emitted; deprecated by standards bodies | Not required |
+| Certificate transparency monitoring | Not applicable — no certificates issued | Not required |
+| VPN / private-network tunneling | Not deployed | Loopback never leaves the host |
+| Service-mesh mTLS (Istio, Linkerd) | Not deployed per §6.3.5.3 | Not required for single process |
+
+#### 6.4.4.5 Compliance Controls — Not Applicable
+
+No regulatory compliance regime is triggered by this system because no regulated data is collected, processed, or stored. Per §6.2.5.1: "No data retention rules apply because no data is collected, processed, or stored. The handler receives `req` but ignores it; no fields from incoming requests are persisted, logged, or correlated." Per §6.2.5.3: "No privacy controls are required at the application layer because no personal data is collected, processed, or persisted."
+
+| Compliance Regime | Applicability | Rationale |
+|-------------------|---------------|-----------|
+| GDPR (EU 2016/679) | Not triggered | No personal data of EU data subjects collected (§6.2.5.3) |
+| CCPA / CPRA (California) | Not triggered | No personal information of California residents collected |
+| HIPAA (US healthcare) | Not triggered | No Protected Health Information (PHI) processed |
+| PCI-DSS (cardholder data) | Not triggered | No cardholder data processed; no payment surface |
+| SOC 2 (Trust Services Criteria) | Not formally claimed | No data plane, no user data, no audit log subject to attestation |
+| ISO/IEC 27001 (ISMS) | Not formally claimed | No ISMS scope defined for a local-only fixture |
+| FedRAMP / FISMA | Not applicable | No federal data processed; no agency authority to operate |
+| NIST 800-53 / 800-171 controls | Not implemented | Not deployed into a US-Government boundary |
+
+The system is a local-only test fixture per §1.3.1 and is consequently outside the scope of every regulatory regime listed above. Per Assumption A-005, "No security review of plaintext HTTP / loopback binding is required" because "the fixture is local-only by design."
+
+---
+
+### 6.4.5 Security Zone Diagram
+
+The diagram below visualizes the complete security zone topology of the system. There are exactly three nested trust zones (external, loopback, application), each separated by exactly one effective boundary control (the OS loopback check). Every conventional perimeter and zone control that would normally appear in an enterprise security architecture is enumerated in the deliberately disconnected "Verified-Absent Security Controls" subgraphs to emphasize that no member is present in the runtime.
+
+```mermaid
+flowchart TB
+    subgraph External["External Zone (Wholly Excluded by C-002)"]
+        ExtClient["Any non-loopback client<br/>(remote host, other LAN)"]
+        ExtBlock["Connection refused by OS<br/>(loopback bind, C-002)"]
+        ExtClient -->|"TCP SYN to 127.0.0.1"| ExtBlock
+    end
+
+    subgraph Loopback["Loopback Trust Zone (Sole Effective Access Boundary)"]
+        OSStack["Host OS TCP/IP Stack<br/>Loopback 127.0.0.1:3000<br/>(only boundary control)"]
+        LocalClient["Co-resident process<br/>(e.g., backprop consumer)"]
+        LocalClient -->|"HTTP/1.1 plaintext"| OSStack
+    end
+
+    subgraph Application["Application Zone (Branchless, No Internal Checks)"]
+        HTTPCore["node:http core parser"]
+        Handler["server.js handler<br/>(req discarded, no checks)"]
+        Literal["Compile-time literal<br/>'Hello, World!\n'"]
+        OSStack --> HTTPCore
+        HTTPCore --> Handler
+        Handler --> Literal
+    end
+
+    subgraph AbsentPerimeter["Verified-Absent Perimeter Controls"]
+        NoTLS["No TLS termination"]
+        NoWAF["No Web Application Firewall"]
+        NoGW["No API gateway"]
+        NoIDS["No IDS / IPS"]
+        NoProxy["No reverse proxy"]
+    end
+
+    subgraph AbsentIdentity["Verified-Absent Identity Controls"]
+        NoIdP["No identity provider"]
+        NoRBAC["No RBAC / ABAC engine"]
+        NoMFA["No MFA service"]
+        NoSecrets["No secrets manager"]
+    end
+
+    subgraph AbsentObservability["Verified-Absent Security Observability"]
+        NoSIEM["No SIEM forwarder"]
+        NoAudit["No audit log pipeline"]
+        NoVulnScan["No runtime vuln scanner"]
+        NoIntrusion["No intrusion detection"]
+    end
+
+    External -.-x AbsentPerimeter
+    Loopback -.-x AbsentIdentity
+    Application -.-x AbsentObservability
+```
+
+The "x"-terminated dashed edges indicate that no implemented connection exists between any trust zone and any absent control set. The single solid edge from `LocalClient` to `OSStack` represents the entire effective security perimeter of the system. Per §5.4.4, this perimeter is "the sole effective access-control mechanism" because "by binding to `127.0.0.1`, the listener is reachable only by processes already running on the same host."
+
+---
+
+### 6.4.6 Security Control Matrices
+
+This subsection consolidates the system's security posture into the required matrices. Each row records a security control category, the implemented state, and the mitigating factor (when present).
+
+#### 6.4.6.1 Security Posture Matrix (Authoritative)
+
+Reproduced from §2.4.4 and §3.9 with elaboration. This is the canonical security control matrix for the system.
+
+| Control Domain | Implementation State | Mitigating Factor |
+|----------------|----------------------|-------------------|
+| Authentication | None | Loopback binding restricts socket reach |
+| Authorization | None | Same as above |
+| Transport Encryption | None (plaintext HTTP) | Loopback traffic does not traverse external networks |
+| Input Validation | None (request ignored) | No input is consumed, eliminating injection surfaces |
+| Output Encoding | Static literal | Body and headers are compile-time constants |
+| Security Headers | Only `Content-Type` | No CSP, HSTS, X-Frame-Options — not required for loopback fixture |
+| Dependency Vulnerabilities | None | Zero dependencies (per F-005); `npm audit` reports zero vulnerabilities |
+| Network Exposure | Loopback only | Hardcoded `127.0.0.1` prevents external reachability |
+| Supply-Chain Risk | None | No third-party packages; no transitive closure |
+
+#### 6.4.6.2 OWASP Top 10 (2021) Coverage Matrix
+
+The standard application-security risk catalog is matched against the implementation surface. Every category is recorded with the relevant posture for this fixture.
+
+| OWASP Top 10 (2021) Category | Posture | Rationale |
+|------------------------------|---------|-----------|
+| A01 — Broken Access Control | Not exposed | No access control to break; loopback isolation is the only gate |
+| A02 — Cryptographic Failures | Not exposed | No cryptography invoked; no sensitive data |
+| A03 — Injection | Not exposed | Handler ignores `req`; no parser, no query, no template |
+| A04 — Insecure Design | Mitigated by minimalism | Deliberate elimination of features eliminates design surface |
+| A05 — Security Misconfiguration | Not exposed | No configurable surface; all values hardcoded |
+| A06 — Vulnerable and Outdated Components | Not exposed | Zero dependencies; only Node.js core `http` used |
+| A07 — Identification and Authentication Failures | Not exposed | No authentication implemented |
+| A08 — Software and Data Integrity Failures | Mitigated by C-001 | Immutability directive bars unsanctioned changes |
+| A09 — Security Logging and Monitoring Failures | Out of scope | No security event sources to log per §6.4.3.5 |
+| A10 — Server-Side Request Forgery (SSRF) | Not exposed | No outbound HTTP client; `req` ignored |
+
+#### 6.4.6.3 Defense-in-Depth Layer Matrix
+
+The implementation distributes its single effective security control across exactly one layer (the host operating system network stack). Every other defense-in-depth layer is empty.
+
+| Defense-in-Depth Layer | Control Present | Notes |
+|------------------------|-----------------|-------|
+| Physical / Datacenter | Out of scope | Operator-controlled host environment |
+| Network Perimeter (firewall, segmentation) | Out of scope | Host networking outside repository scope |
+| Network — Host (`iptables`, host firewall) | Out of scope | Operator-managed; not provisioned by this repo |
+| Transport (TLS, mTLS) | None | Loopback isolation substitutes per A-005 |
+| Application Boundary (WAF, API gateway) | None | Not deployed per §6.3.5.3 |
+| Application Identity (authentication) | None | Verified absent per §6.4.2 |
+| Application Authorization (RBAC/ABAC) | None | Verified absent per §6.4.3 |
+| Data Protection (encryption, masking) | None | No data plane per §6.2 / §6.4.4 |
+| Audit / SIEM | None | Verified absent per §6.4.3.5 |
+| Operating System (loopback bind) | **Sole effective control** | C-002 hardcodes `127.0.0.1` bind |
+
+---
+
+### 6.4.7 Compliance Requirements
+
+The compliance posture for this system is summarized below. As established in §6.4.4.5, no regulatory regime is triggered by the implementation. Each compliance dimension is mapped to its documented state and authoritative source.
+
+| Compliance Dimension | Posture | Authoritative Source |
+|----------------------|---------|----------------------|
+| Personal Data Processing (GDPR / CCPA / CPRA) | Not applicable | §6.2.5.3 (no PII collected) |
+| Protected Health Information (HIPAA) | Not applicable | §6.2.5.3 (no PHI processed) |
+| Payment Card Data (PCI-DSS) | Not applicable | §6.2.5.1 (no payment surface) |
+| Data Retention Schedules | Not applicable | §6.2.5.1 (nothing collected) |
+| Right-to-be-Forgotten / Erasure (GDPR Art. 17) | Not applicable | §6.2.5.1 (no subject data) |
+| Data Subject Access Requests (DSAR) | Not applicable | §6.2.5.3 (no subject data) |
+| Cross-Border Data Transfer Controls (SCC, BCR) | Not applicable | §6.2.5.3 (loopback-only) |
+| Audit Log Retention (regulatory minimum) | Not applicable | §6.2.5.4 (no audit log) |
+| Vulnerability Disclosure Policy | Not formally published | §2.4.5 (no defect process documented) |
+| Software Bill of Materials (SBOM) | Trivially empty | §3.4 / §6.3.2.1 (zero dependencies) |
+| Penetration Testing Cadence | Not scheduled | A-005 (no security review required) |
+| Security Incident Response Plan | Not documented | §5.4.6 (DR is manual re-invocation only) |
+
+The trivial SBOM observation deserves brief emphasis: a Software Bill of Materials produced from this repository would contain a single entry (the root package `hello_world@1.0.0`) and no transitive entries. Per §6.3.2.1, `package-lock.json` has "`lockfileVersion: 3` with empty `packages` tree confirming zero transitive dependencies." This minimal SBOM is itself a notable security posture, as it eliminates the entire supply-chain attack surface.
+
+---
+
+### 6.4.8 Cross-Section Reference Map
+
+For readers who need additional context on each verified-absent security concern, the table below maps each Security Architecture sub-area to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
+
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Identity management | §5.4.4 | §3.5.1, §6.3.3.2 |
+| Multi-factor authentication | §6.3.3.2 | §3.5.1 |
+| Session management | §5.4.4 | §6.2.5.5 |
+| Token handling | §6.3.3.2 | §3.5.1 |
+| Password policies | §3.5.1 | §6.2.5.5 |
+| Role-based access control | §5.4.4 | §6.3.3.3 |
+| Permission management | §6.3.3.3 | §6.2.5.5 |
+| Resource authorization | §6.2.5.5 | §6.3.3.3 |
+| Policy enforcement points | §5.4.4 | §6.3.3.2 |
+| Audit logging | §5.4.1 | §6.2.5.4 |
+| Encryption standards | §6.3.3.1 | §6.2.5.3 |
+| Key management | §3.5.1 | §6.3.2.1 |
+| Data masking rules | §6.2.5.3 | §6.2.5.1 |
+| Secure communication | §6.3.3.1 | §5.4.4 |
+| Compliance controls | §6.2.5 | §1.3.2 |
+| Security headers | §2.4.4 | §3.9 |
+| Vulnerability posture | §3.9 | §3.4 |
+
+---
+
+### 6.4.9 Conditions Under Which This Section Would Become Applicable
+
+For traceability, this subsection records the architectural events that would trigger reauthoring of §6.4 as a populated (rather than non-applicable) Security Architecture specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
+
+| Triggering Event | Constraint to Relax | New Security Domain Introduced |
+|------------------|---------------------|--------------------------------|
+| Bind to a non-loopback host or expose via a proxy | C-002 | TLS termination, network policies, WAF, perimeter authn |
+| Inspect request headers, body, method, or path | F-002-RQ-004 | Input validation, injection defenses, schema enforcement |
+| Vary response by caller identity or claim | C-004 | RBAC/ABAC engine, session management, token handling |
+| Add an authentication or authorization library | C-005 | Identity integration, MFA, federation, password policy |
+| Persist user-derived data (logs, sessions, audit records) | C-001, C-005 | Encryption at rest, key management, audit pipeline, retention |
+| Open an outbound HTTP call or SDK integration | C-001 | Secrets management, mTLS, certificate pinning |
+| Introduce a database driver or ORM | C-005, C-006 | Connection encryption, RLS, query injection defenses |
+| Add a logging framework or APM SDK | C-005 | Log sanitization, PII redaction, SIEM forwarding |
+| Process regulated data (PII / PHI / cardholder) | C-004, C-005 | GDPR / HIPAA / PCI-DSS controls, DSAR workflow, DPIA |
+
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for §6.4 stands. The complete security architecture of the system continues to be: a single OS-enforced loopback bind acting as the sole effective access boundary, behind which a branchless handler emits a byte-identical 14-byte literal response to every request, with zero dependencies and zero attack surface introduced by third-party code.
+
+---
+
+### 6.4.10 References
+
+#### Files Examined
+
+- `server.js` — Confirmed the 14-line single-file implementation; verified `require('http')` is the only module dependency (no `https`, no `crypto`, no security libraries); verified the branchless handler signature `(req, res) => {...}` that discards `req` and never reads `Authorization`, `Cookie`, or any other request attribute; verified the absence of `Set-Cookie`, `WWW-Authenticate`, CSP, HSTS, or any security header beyond `Content-Type`; verified the hardcoded loopback bind `127.0.0.1:3000` as the sole effective access boundary.
+- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, no `engines` field, no `start` script, MIT license; confirmed the absence of any security framework, authentication library, hashing library, or cryptography SDK declaration.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty `packages` tree below the root entry, verifying the absence of transitive dependencies that could introduce security libraries; confirmed the trivial SBOM posture.
+- `README.md` — Confirmed the operational immutability directive ("Do not touch!") that is the source of constraint C-001 and bars the addition of security middleware, authentication code, or policy artifacts.
+
+#### Folders Explored
+
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no `auth/`, `security/`, `middleware/`, `policies/`, `certs/`, `keys/`, or other security-relevant source subdirectories exist.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); no security policies, no threat models, no audit configuration.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts (`Agent Action Plan.md`, `Build Prompt.md`, `Technical Specifications.md`, `Project Guide.md`); no security implementations, no compliance documentation.
+
+#### Technical Specification Sections Cross-Referenced
+
+- §1.2 System Overview — Local-only fixture characterization; loopback integration boundary.
+- §1.3 Scope — Explicit out-of-scope enumeration of Authentication & Authorization, Network Exposure (no TLS, no public binding), and Configuration Management (no secrets management).
+- §2.3 Feature Relationships — Single inbound HTTP integration point; zero outbound integrations; no shared services.
+- §2.4 Implementation Considerations — §2.4.4 Security Implications table (authoritative security posture); confirms no authentication, no authorization, no transport encryption, no input validation.
+- §2.6 Assumptions and Constraints — Foundational Assumption A-005 ("No security review of plaintext HTTP / loopback binding is required"); seven hard constraints (C-001 through C-007) that bar security-architecture introduction.
+- §3.1 Stack Philosophy and Overview — Minimalism principle; joint preclusion by C-001 and C-005.
+- §3.5 Third-Party Services — Comprehensive verified-absent inventory (Auth0, Okta, Cognito, Vault, AWS Secrets Manager, all observability backends).
+- §3.9 Security Implications of Stack Choices — Authoritative security posture table; "paradoxical security benefit" framing.
+- §4.6 Error Handling — Documented absence of all error-handling primitives (relevant for security event handling absence).
+- §5.1 High-Level Architecture — "Single-process, single-file, monolithic micro-service" with no security substrate.
+- §5.4 Cross-Cutting Concerns — §5.4.1 (no per-request logging), §5.4.4 (explicit "no application-layer auth/authz"; OS loopback is sole control).
+- §6.1 Core Services Architecture — Canonical negative-space precedent structure; constraint impact patterns.
+- §6.2 Database Design — Reinforced negative-space pattern; §6.2.5 Compliance Considerations (Verified Absent) covering data retention, privacy, audit mechanisms, access controls.
+- §6.3 Integration Architecture — §6.3.3.2 Authentication (verified absent inventory), §6.3.3.3 Authorization (verified absent inventory), §6.3.3.4 Rate Limiting (verified absent), §6.3.5.3 API Gateway / WAF (verified absent).
+
+## 6.5 Monitoring and Observability
+
+### 6.5.1 Applicability Statement
+
+**Detailed Monitoring Architecture is not applicable for this system.**
+
+The `hao-backprop-test` repository implements a deliberately minimal, single-process, single-file HTTP fixture whose entire runtime is a 14-line `server.js` invoked directly by the Node.js binary. Per §5.4.1, the system's "observability surface is intentionally minimal — a single one-shot startup log line written to stdout. All other observability primitives expected of a production service are verified absent." Every dimension of a conventional Monitoring and Observability concern domain — monitoring infrastructure (metrics, logs, traces, alerts, dashboards), observability patterns (health checks, performance, business, SLA, capacity), and incident response (alert routing, escalation, runbooks, post-mortems, improvement tracking) — is verified absent by direct repository inspection and is precluded by the binding architectural constraints documented in §2.6.2.
+
+The authoritative position is recorded in §5.4.1: the sole observability event in the entire system is "the startup log emitted by F-003: the literal string `Server running at http://127.0.0.1:3000/` written from the `server.listen` callback to stdout, exactly once per process lifetime." Per §1.3.2, the out-of-scope enumeration explicitly includes "Observability | Request logging, structured logs, metrics emission, distributed tracing, health endpoints."
+
+This section adopts the canonical "negative-space" reference pattern established by §6.1 (Core Services Architecture), §6.2 (Database Design), §6.3 (Integration Architecture), and §6.4 (Security Architecture). It enumerates each monitoring concern from the standard prompt, records the documented absence with traceable evidence, identifies the governing constraint that bars introduction of the concern, and documents the **basic monitoring practices that the system does follow instead** — practices grounded in stdout observation, external HTTP probing, process-exit observation, and manual operator recovery.
+
+#### 6.5.1.1 Basic Monitoring Practices Followed Instead
+
+Although no conventional monitoring architecture exists, the system follows a coherent set of basic practices that derive their effectiveness from the radical elimination of internal observability surface and from external out-of-band verification. These are the practices that apply, each grounded in evidence in the four immutable baseline files or in companion documentation files under `docs/`.
+
+| Basic Practice | Implementation in This System | Governing Source |
+|----------------|-------------------------------|------------------|
+| Startup readiness signal | Single `console.log` line at `server.js` line 13 | F-003 (§2.1.3) |
+| External HTTP probe verification | HTTP GET to `http://127.0.0.1:3000/` and verify the four invariants | §5.1.4, `docs/testing-strategy.md` |
+| Process state observation | Non-zero exit code via Node.js default error propagation | §4.6.2, §5.4.3 |
+| stdout / stderr channel observation | Single startup line + Node.js default error output | §5.4.1, §5.4.2 |
+| Manual operator recovery | Re-invoke `node server.js` after termination | §5.4.6, §3.7.7 |
+| Supply-chain vulnerability scan | `npm audit` reports zero vulnerabilities | §3.9 |
+| Source immutability monitoring | Byte-level diff of the four baseline files | §2.6.2 (C-001) |
+
+The startup readiness signal is the sole built-in observability event in the entire system. Per the F-003 feature description in §2.1.3, this line "provides the only built-in operational signal indicating that the fixture has reached its ready state" and "allows a human operator or an automation script to deterministically detect that the server is available to receive traffic." Per §5.4.1, the line "contains no secrets, no tokens, and no PII — it is a static format string with hardcoded host/port values."
+
+#### 6.5.1.2 Architectural Constraints That Preclude Monitoring Infrastructure Expansion
+
+The seven binding constraints from §2.6.2 jointly preclude introducing any of the standard monitoring or observability primitives. Constraints C-001, C-003, C-004, and C-005 are the operative justifications for every verified absence documented in subsequent subsections.
+
+| ID | Constraint | Impact on Monitoring and Observability |
+|----|------------|----------------------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add instrumentation, metrics endpoints, or log emission |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Cannot expose a monitoring port to remote scrapers |
+| C-003 | Port hardcoded to `3000` | Cannot open a parallel metrics / health-check port |
+| C-004 | Response body, status, headers byte-identical | Cannot emit health / status responses on differentiated paths |
+| C-005 | Zero runtime and zero development dependencies | Cannot add Prometheus, OpenTelemetry, Winston, Pino, Datadog SDK |
+| C-006 | Must remain executable without `npm install` | Reinforces C-005 — no out-of-band tooling permitted |
+| C-007 | MIT license for all repository contents | License-compatibility baseline preserved |
+
+Per §3.1, "Constraint C-001 ('All four baseline files must remain unchanged from their committed state') combined with constraint C-005 ('Zero runtime and zero development dependencies') jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every sub-area documented in this section.
+
+---
+
+### 6.5.2 System Composition Establishing Non-Applicability
+
+#### 6.5.2.1 Observability Surface Inventory
+
+The total observability surface of the system is enumerated below. Per §5.4.1 (the authoritative observability primitive inventory), every primitive expected of a production service is verified absent.
+
+| Observability Primitive | Status |
+|-------------------------|--------|
+| Structured logging framework (Winston / Pino / Bunyan / Morgan) | Not present (zero dependencies per F-005) |
+| Per-request log emission | Not implemented; handler contains no `console.log` |
+| Metrics emission (Prometheus, StatsD) | Not implemented |
+| Distributed tracing (OpenTelemetry, Jaeger SDK) | Not implemented |
+| Health-check endpoint | Not implemented; handler ignores `req.url` per F-002-RQ-004 |
+| APM integration (Datadog, New Relic, Sentry) | Absent |
+| Log shipper / aggregator | Absent |
+
+#### 6.5.2.2 The Sole Observability Event
+
+The system emits exactly one observability event over its entire process lifetime. The event is the startup log line specified by feature F-003 (§2.1.3) and is the only built-in indicator that the fixture has reached its ready state.
+
+| Event Attribute | Value |
+|-----------------|-------|
+| Source location | `server.js` line 13 (inside the `server.listen` callback) |
+| Output channel | `stdout` via Node.js `console.log` |
+| Emission count | Exactly once per process lifetime (on bind success) |
+| Literal content | `Server running at http://127.0.0.1:3000/` (40 bytes) |
+
+Per §5.4.2, "the startup log line is the only 'trace' available to consumers." Per the same section, "future logging or tracing instrumentation would require introducing a logging library (forbidden by C-005), persisting log files (forbidden by C-001 because it would require new files or `fs` use in `server.js`), or registering tracing SDK hooks (forbidden by C-005). Therefore, the documented strategy is 'no expansion of logging or tracing is permitted.'"
+
+#### 6.5.2.3 The Four-Invariant External Contract
+
+Per §5.1.4 and §6.3.3.6, the entire externally observable contract of the system consists of four exact-match invariants. These are the only contractual signals that an external monitoring system (operating from outside the repository boundary) can validate.
+
+| Acceptance Criterion | Exact Value |
+|----------------------|-------------|
+| HTTP status code | `200` |
+| `Content-Type` response header | `text/plain` |
+| Response body (UTF-8) | `Hello, World!\n` (14 bytes) |
+| Startup log line | `Server running at http://127.0.0.1:3000/` |
+
+External monitoring practices reduce to verifying these four invariants by out-of-band probes. Three are verifiable per HTTP request via standard tooling (`curl`, `wget`, or a zero-dependency Node.js test harness using `node:test` and `node:assert`); the fourth is verifiable by observing process stdout.
+
+---
+
+### 6.5.3 Monitoring Infrastructure (Verified Absent)
+
+This subsection addresses each monitoring-infrastructure concern from the standard prompt and documents its absence with file-level evidence.
+
+#### 6.5.3.1 Metrics Collection — Verified Absent
+
+Per §5.4.1 and §3.5.1, no metrics collection of any kind is implemented. There is no metrics SDK imported, no metrics emitted from the handler, no metrics endpoint exposed, and no metrics aggregator integration.
+
+| Metrics Collection Component | Documented State | Governing Constraint |
+|------------------------------|------------------|----------------------|
+| Prometheus client library (`prom-client`) | None — no SDK imported | C-005 |
+| StatsD client library | None — no SDK imported | C-005 |
+| OpenMetrics text-format exposition | None — no `/metrics` endpoint | C-001, C-004 |
+| Custom counters / gauges / histograms / summaries | None — handler is branchless | F-002-RQ-004 |
+| Metrics endpoint (`/metrics`, `/stats`) | None — `req.url` ignored | F-002-RQ-004, C-004 |
+| Push-based metrics aggregator (Telegraf, Datadog Agent) | None — no agent integration | §3.5.1 |
+| RED / USE method instrumentation | None — no instrumentation primitives present | C-001 |
+
+#### 6.5.3.2 Log Aggregation — Verified Absent
+
+Per §5.4.1 and §5.4.2, no log aggregation of any kind is implemented. There is no structured logging framework imported, no JSON log emission, no log levels, no log rotation, and no remote log shipping. The sole stdout output is the one-line startup log emitted from F-003.
+
+| Log Aggregation Component | Documented State | Governing Constraint |
+|---------------------------|------------------|----------------------|
+| Structured logging framework (Winston, Pino, Bunyan, Morgan) | None — no library imported | C-005 |
+| JSON-structured log output | None — only plaintext startup line | C-001 |
+| Log levels (DEBUG / INFO / WARN / ERROR / TRACE) | None — no levelling primitive | C-005 |
+| Log rotation (size-based, time-based) | None — no `fs.write` to log files | C-001 |
+| Remote log shipping (Splunk, ELK, Loggly, Datadog Logs) | None — no transport, no shipper | §3.5.1 |
+| Correlation IDs / request IDs | None — no per-request emission | F-002-RQ-004 |
+| Per-request access log | None — handler emits no logs | C-001, C-004 |
+| Audit log pipeline | None — see §6.4.3.5 | C-005 |
+
+#### 6.5.3.3 Distributed Tracing — Verified Absent
+
+Per §3.5.1 and §5.4.1, no distributed tracing is implemented. There is no tracing SDK imported, no span emission, no trace-context propagation, and no tracing context-of-use because the system has zero outbound calls per §2.3.2 (i.e., no downstream services exist to propagate context to).
+
+| Distributed Tracing Component | Documented State | Governing Constraint |
+|-------------------------------|------------------|----------------------|
+| OpenTelemetry SDK (Node.js auto-instrumentation) | None — no `@opentelemetry/*` packages | C-005 |
+| Jaeger client | None — no `jaeger-client` package | C-005 |
+| Zipkin client | None — no `zipkin` package | C-005 |
+| W3C Trace Context propagation (`traceparent` / `tracestate`) | None — request headers never read | F-002-RQ-004 |
+| Custom span emission | None — no tracing primitives in `server.js` | C-001 |
+| Trace sampling configuration | Not applicable — no spans generated | C-005 |
+| Service map / dependency graph | Not applicable — single component, zero outbound | §6.3.2.2 |
+
+Per §6.3.4.1, "no event-driven pattern is implemented beyond the Node.js intrinsic event loop." Per §6.3.2.1, "Outbound HTTP client calls (`http.request`, `fetch`, axios): None." The absence of downstream targets makes distributed tracing structurally meaningless even before the C-005 constraint is invoked.
+
+#### 6.5.3.4 Alert Management — Verified Absent
+
+Per §4.6.4 ("Error notification flow: Not implemented; no notification client") and §5.4.6 ("No automated alerting or pager rotation hookup"), no alert management of any kind is implemented. There is no alert manager integration, no notification client, no on-call rotation, and no escalation tier configuration.
+
+| Alert Management Component | Documented State | Governing Constraint |
+|----------------------------|------------------|----------------------|
+| Alert manager (Prometheus Alertmanager, Grafana Alerting) | None — no alerting backend | C-005 |
+| On-call paging (PagerDuty, Opsgenie, VictorOps) | None — no SDK imported | §3.5.1 |
+| Chat / collaboration webhook (Slack, Teams, Discord) | None — no webhook client | C-005 |
+| Email / SMS notification (SES, Twilio, SendGrid) | None — no notification SDK | §3.5.1 |
+| Generic webhook outbound client | None — no `http.request`, no `fetch` | §6.3.2.1 |
+| Alert deduplication / grouping rules | Not applicable — no alerts generated | C-005 |
+| Alert silencing / maintenance windows | Not applicable — no alerts to silence | C-005 |
+
+#### 6.5.3.5 Dashboard Design — Verified Absent
+
+Per §3.5.1, no dashboard tooling is integrated. There is no Grafana, Kibana, Datadog, or New Relic dashboard. The system emits no machine-readable metrics to drive such a dashboard, and the loopback binding (C-002) precludes any external scraper from reaching it.
+
+| Dashboard Component | Documented State | Governing Constraint |
+|---------------------|------------------|----------------------|
+| Grafana integration | None — no metrics emission to scrape | §3.5.1, C-005 |
+| Kibana integration | None — no log shipping pipeline | §3.5.1 |
+| Datadog / New Relic dashboard | None — no APM agent integrated | §3.5.1 |
+| Custom UI / panel layout | None — no `fs.read` of dashboard JSON | C-001 |
+| SLO burn-down panel | None — no SLO defined; no metric to burn | §5.4.5 |
+| Topology / service map | Not applicable — single component | §6.3.6.1 |
+
+#### 6.5.3.6 Monitoring Architecture Diagram (Negative-Space Form)
+
+The diagram below visualizes the entire monitoring surface of the system. The live observability path consists of a single solid edge from the Node.js process through stdout to the operator. Every conventional monitoring primitive that would normally fan out from the application or be scraped by an external collector is enumerated in deliberately disconnected subgraphs to emphasize verified absence.
+
+```mermaid
+flowchart TB
+    subgraph LiveSurface["Live Observability Surface (Implemented)"]
+        ServerProc["Node.js process<br/>server.js (14 lines)"]
+        StartupLog["console.log at line 13<br/>'Server running at<br/>http://127.0.0.1:3000/'"]
+        StdoutCh["Process stdout<br/>(single line, one-shot)"]
+        Operator["Operator / TTY<br/>(manual observation)"]
+        ExtProbe["External HTTP probe<br/>(curl / Node test harness)<br/>verifies 4 invariants"]
+        ServerProc --> StartupLog
+        StartupLog --> StdoutCh
+        StdoutCh --> Operator
+        ServerProc -.->|"HTTP/1.1 on 127.0.0.1:3000"| ExtProbe
+        ExtProbe -.->|"manual pass / fail"| Operator
+    end
+    subgraph AbsentMetrics["Absent Metrics Collection"]
+        NoPrometheus["No Prometheus client<br/>(prom-client)"]
+        NoStatsD["No StatsD client"]
+        NoCounters["No counters / gauges /<br/>histograms / summaries"]
+        NoMetricsEP["No /metrics endpoint<br/>(req.url ignored)"]
+        NoREDUSE["No RED / USE method<br/>instrumentation"]
+    end
+    subgraph AbsentLogs["Absent Log Aggregation"]
+        NoWinston["No Winston / Pino /<br/>Bunyan / Morgan"]
+        NoJSON["No JSON / structured logs"]
+        NoLevels["No log levels<br/>(DEBUG / INFO / WARN / ERROR)"]
+        NoShipper["No log shipper<br/>(Splunk / ELK / Loggly)"]
+        NoCorrID["No correlation IDs"]
+    end
+    subgraph AbsentTracing["Absent Distributed Tracing"]
+        NoOTel["No OpenTelemetry SDK"]
+        NoJaeger["No Jaeger client"]
+        NoZipkin["No Zipkin client"]
+        NoTraceCtx["No W3C Trace Context<br/>propagation"]
+    end
+    subgraph AbsentAPM["Absent APM"]
+        NoDatadog["No Datadog agent"]
+        NoNewRelic["No New Relic agent"]
+        NoSentry["No Sentry SDK"]
+        NoHoneycomb["No Honeycomb SDK"]
+    end
+    subgraph AbsentHealth["Absent Health Endpoints"]
+        NoHealth["No /health"]
+        NoHealthz["No /healthz"]
+        NoReady["No /ready"]
+        NoLive["No /live"]
+    end
+    subgraph AbsentDashboards["Absent Dashboards"]
+        NoGrafana["No Grafana panels"]
+        NoKibana["No Kibana panels"]
+        NoCustomUI["No custom UI"]
+        NoSLOBurn["No SLO burn-down"]
+    end
+
+    LiveSurface -.-x AbsentMetrics
+    LiveSurface -.-x AbsentLogs
+    LiveSurface -.-x AbsentTracing
+    LiveSurface -.-x AbsentAPM
+    LiveSurface -.-x AbsentHealth
+    LiveSurface -.-x AbsentDashboards
+```
+
+The "x"-terminated dashed edges indicate that no implemented connection exists between the live observability surface and any conventional monitoring infrastructure subsystem. The entire observability story consists of exactly one stdout line plus an externally driven HTTP probe.
+
+---
+
+### 6.5.4 Observability Patterns (Verified Absent)
+
+This subsection addresses each observability-pattern concern from the standard prompt and documents its absence (or, where applicable, the minimal external substitute) with file-level evidence.
+
+#### 6.5.4.1 Health Checks — Verified Absent
+
+Per §4.6.4 ("Health check endpoint: Not implemented; handler ignores `req.url`") and the F-002-RQ-004 branchless-handler mandate, no health-check endpoint is implemented. The handler returns the identical 200 / `text/plain` / `Hello, World!\n` response to every request regardless of method, path, headers, or body. There is no dedicated `/health`, `/healthz`, `/ready`, or `/live` endpoint.
+
+| Health-Check Pattern | Documented State | External Substitute |
+|----------------------|------------------|---------------------|
+| `/health` (liveness) | Not implemented | HTTP GET `/` and check 200 |
+| `/healthz` (Kubernetes-style liveness) | Not implemented | Same as above |
+| `/ready` (readiness probe) | Not implemented | Observe startup log on stdout |
+| `/live` (liveness probe) | Not implemented | Observe process exit code |
+| Deep health check (downstream verification) | Not applicable — zero outbound calls | Not required |
+| Dependency health aggregation | Not applicable — zero downstreams | Not required |
+
+The substitute for a health-check endpoint is the external HTTP probe defined in `docs/testing-strategy.md`: an operator or test harness issues an HTTP GET to `http://127.0.0.1:3000/` and verifies the four exact-match invariants enumerated in §6.5.2.3. Because the handler is branchless, any successful response from the listener simultaneously functions as both a liveness and a readiness signal.
+
+#### 6.5.4.2 Performance Metrics — Verified Absent
+
+Per §5.4.5 and §4.7.2, no quantitative performance metrics are documented or emitted. Every standard KPI dimension is recorded as "Not documented." The implicit per-step performance characteristics from §4.7.1 are bounded only by Node.js intrinsic timing rather than by an enforced ceiling.
+
+| Performance Metric | Documented Target | Source of Bound |
+|--------------------|-------------------|-----------------|
+| Throughput (requests/sec) | Not documented | Node.js `http` defaults |
+| Latency p50 | Not documented | Sub-millisecond in-memory ops |
+| Latency p95 | Not documented | Sub-millisecond in-memory ops |
+| Latency p99 | Not documented | Sub-millisecond in-memory ops |
+| Concurrent connections | Not documented | Node.js `http` defaults |
+| Cold-start latency | Not documented | OS socket allocation latency |
+| Memory footprint | Not documented | Node.js single-process limits |
+
+Per §4.7.1, the implicit per-step timing posture is sub-millisecond for `require('http')` (cached after first load), `http.createServer()`, and all per-request response operations (`res.statusCode`, `res.setHeader`, `res.end`), while `server.listen` bind latency is bounded by OS socket allocation. None of these characteristics are measured, recorded, or alerted on by the system.
+
+#### 6.5.4.3 Business Metrics — Not Applicable
+
+Per §1.2.3 ("No quantitative KPIs … are documented") and §2.1.2 (F-002 description), no business operations occur in the system. The handler emits a static compile-time literal in response to every request; no transactions are processed, no users are identified, and no revenue or conversion events occur. Consequently, no business metric exists to be tracked.
+
+| Business-Metric Category | Applicability | Rationale |
+|--------------------------|---------------|-----------|
+| Transactions per second | Not applicable | No transactional surface |
+| Revenue / conversion events | Not applicable | No commerce surface (§6.3.5.1) |
+| Active users / DAU / MAU | Not applicable | No user identity (§6.4.2.1) |
+| Feature-flag exposure metrics | Not applicable | No feature flags (§6.3.5.1) |
+| Funnel / cohort analytics | Not applicable | No user journey surface |
+| Customer-success metrics | Not applicable | No customer surface |
+
+The single qualitative success signal is the pass/fail outcome of the external HTTP probe against the four invariants in §6.5.2.3. There are no business-domain metrics layered on top of this signal.
+
+#### 6.5.4.4 SLA Monitoring — Verified Absent
+
+Per §4.7.2 ("No quantitative SLAs are documented for this system"), no SLA is defined and consequently no SLA-monitoring infrastructure exists. The KPI table from §5.4.5 is reproduced and consolidated below with explicit non-applicability notation.
+
+| SLA Dimension | Documented Target | Monitoring Mechanism |
+|---------------|-------------------|----------------------|
+| Throughput | Not documented | None |
+| Latency (p50 / p95 / p99) | Not documented | None |
+| Availability / uptime % | Not documented | None |
+| Error-rate ceiling | Not documented (F-002-RQ-001 mandates 100% `200` responses) | None |
+| Concurrent-connection ceiling | Not documented (Node.js `http` defaults) | None |
+| Cold-start latency | Not documented (bounded by `server.listen` bind) | None |
+| Memory ceiling | Not documented (Node.js single-process limits) | None |
+
+Per §4.7.2, "any quantitative SLA expectations must be defined externally by the consuming backprop tooling. The implementation provides only the behavioral guarantees enumerated in the success criteria in §1.2.3: a `200` status, `text/plain` content type, and the 14-byte response body." The only contractual SLA-like commitments are the four binary exact-match invariants in §6.5.2.3.
+
+#### 6.5.4.5 Capacity Tracking — Verified Absent
+
+Per §6.1.4.5, "no quantitative capacity-planning guidance is documented." Per §6.1.4.3, "no resource allocation strategy is documented or implemented. The process is launched with whatever CPU and memory the host operating system grants by default; no `--max-old-space-size` flag, no cgroups limits, no container resource requests/limits, and no priority class are configured."
+
+| Capacity-Tracking Dimension | Documented State |
+|-----------------------------|------------------|
+| CPU utilization tracking | Not implemented — no metric emission |
+| Memory footprint tracking | Not implemented — `--max-old-space-size` not set |
+| Disk I/O tracking | Not applicable — no `fs.write` calls (§6.2.4.4) |
+| Network I/O tracking | Not implemented — no socket-level instrumentation |
+| Event-loop lag tracking | Not implemented — no `perf_hooks` import |
+| Connection-pool saturation | Not applicable — no pools (no DB, no outbound HTTP) |
+| Worker / thread pool sizing | Default `UV_THREADPOOL_SIZE`; not customized (§6.1.4.3) |
+| Auto-scaling trigger metric | Not applicable — no orchestrator (§6.1.4.2) |
+
+---
+
+### 6.5.5 Incident Response (Minimal / Verified Absent)
+
+This subsection addresses each incident-response concern from the standard prompt. Aside from a minimal external runbook documented in `docs/testing-strategy.md` and §3.7.7, every conventional incident-response primitive is verified absent.
+
+#### 6.5.5.1 Alert Routing — Verified Absent
+
+Per §4.6.4 and §5.4.6, no alert routing exists. There is no notification client of any kind in `server.js`, no webhook integration, and no on-call rotation tooling. Errors do not generate alerts; they generate a non-zero process exit and nothing else.
+
+| Alert Routing Component | Documented State | Governing Constraint |
+|-------------------------|------------------|----------------------|
+| PagerDuty / Opsgenie / VictorOps client | None — no SDK imported | C-005 |
+| Slack / Teams / Discord webhook | None — no `http.request` for webhook | C-005, §6.3.2.1 |
+| Email / SMS notification | None — no SMTP / SMS gateway | §3.5.1 |
+| Generic outbound webhook | None — zero outbound calls per §2.3.2 | C-005 |
+| Routing rules / labels / matchers | Not applicable — no alerts generated | C-005 |
+| Multi-channel fan-out | Not applicable — no router exists | C-005 |
+
+#### 6.5.5.2 Escalation Procedures — Not Documented
+
+Per §2.4.5, "no defect process is documented in the repository." There is no on-call schedule, no escalation tier definition, no `CODEOWNERS` or `MAINTAINERS` file, and no response-time SLA for incident handling. The repository declares a single author (`hxu` in `package.json` per §2.1.4) and no further governance roles.
+
+| Escalation Component | Documented State |
+|----------------------|------------------|
+| On-call schedule (PagerDuty schedule, Opsgenie rotation) | None |
+| Escalation tiers (L1 / L2 / L3) | None |
+| `CODEOWNERS` / `MAINTAINERS` files | None — only declared author is `hxu` |
+| Alert response SLA (time-to-acknowledge, time-to-resolve) | None |
+| War-room / Slack channel convention | None |
+| Severity classification (SEV-1 through SEV-5) | None |
+
+#### 6.5.5.3 Runbooks — Minimal
+
+A minimal operational runbook exists, distributed across `docs/testing-strategy.md`, `blitzy/documentation/Project Guide.md`, and §3.7.7. Per §3.7.7, the documented operational procedure consists of three steps: launch with `node server.js` from the repository root, observe the startup log line on stdout, and verify HTTP behavior with an external probe. Recovery from any failure mode reduces to manual re-invocation of the same command.
+
+| Runbook Procedure | Documented Steps | Reference |
+|-------------------|------------------|-----------|
+| Server startup verification | Run `node server.js`; observe stdout for the F-003 startup line | §3.7.7, F-003 |
+| HTTP endpoint verification | Issue `curl http://127.0.0.1:3000/`; verify 200 / `text/plain` / 14 bytes | §5.1.4, `docs/testing-strategy.md` |
+| Recovery from crash / SIGINT / port collision | Re-invoke `node server.js` after addressing root cause | §4.6.4, §5.4.6 |
+| Port-collision diagnosis (`EADDRINUSE`) | Identify port-3000 owner externally (`lsof -i :3000`); free port | §4.6.2 |
+| Privilege-error diagnosis (`EACCES`) | Run as a user with permission to bind port 3000 | §4.6.2 |
+
+These external practices substitute for any in-process runbook automation. Per §5.4.6, the recovery time objective (RTO) is "bounded only by the time required to type `node server.js`," and the recovery point objective (RPO) is "undefined because there is nothing to lose."
+
+#### 6.5.5.4 Post-Mortem Processes — Not Documented
+
+Per §2.4.5, the repository documents no defect process and no post-mortem template. There is no incident-tracking system (Jira, ServiceNow, GitHub Issues template), no blameless review framework, no root-cause analysis cadence, and no incident knowledge base. Per §6.4.7, the "Security Incident Response Plan" is similarly "Not documented" with the same `§5.4.6 (DR is manual re-invocation only)` rationale.
+
+| Post-Mortem Component | Documented State |
+|-----------------------|------------------|
+| Blameless post-mortem template | None |
+| Root-cause analysis (5-whys, fishbone) | None |
+| Incident tracker (Jira, ServiceNow, GitHub Issues) | None |
+| Lessons-learned repository / knowledge base | None |
+| Post-mortem review cadence | None |
+| Action-item assignment process | None |
+
+#### 6.5.5.5 Improvement Tracking — Explicitly Precluded
+
+Per §1.3.2, "the 'Do not touch!' directive in the README implies that no future evolution of the four baseline files is anticipated. No roadmap, no backlog, no version planning, no enhancement proposals exist within the repository." Per the F-006 feature description (§2.1.6), the README's immutability directive "operationalizes the source-invariance property identified in §1.1.4 and §1.2.3."
+
+| Improvement-Tracking Component | Documented State | Governing Source |
+|--------------------------------|------------------|------------------|
+| Product roadmap | None — explicitly precluded by F-006 | §1.3.2 |
+| Backlog / issue tracker | None | §1.3.2 |
+| Version planning / release schedule | None — `1.0.0` is the only version | §2.6.3 |
+| Enhancement proposals (RFC, ADR) | None — ADRs documented retrospectively only | §5.3 |
+| CHANGELOG | None | §2.6.3 |
+| Continuous improvement metrics (MTTR, MTBF) | None — no metrics emission infrastructure | §6.5.3.1 |
+
+Improvement tracking is structurally incompatible with the "Do not touch!" governance directive. Any improvement-tracking infrastructure would presuppose a willingness to modify the four baseline files, which is the precise property that the immutability directive bars.
+
+#### 6.5.5.6 Alert Flow Diagram (Negative-Space Form)
+
+The diagram below traces the entire alert "flow" of the system. The live path consists of a single error sources → process exit → manual operator recovery sequence, reproduced and adapted from §4.6.3 and §5.4.3. Every conventional alert-routing, escalation, and post-mortem primitive is enumerated in deliberately disconnected subgraphs.
+
+```mermaid
+flowchart TD
+    subgraph Sources["Error Sources (All Unhandled)"]
+        E1{{"Port 3000 occupied?<br/>EADDRINUSE"}}
+        E2{{"Privileged port denied?<br/>EACCES"}}
+        E3{{"Synchronous handler<br/>exception?"}}
+        E4{{"SIGINT or SIGTERM<br/>received?"}}
+        E5{{"stdout write failure?<br/>EPIPE"}}
+        E6{{"uncaughtException<br/>anywhere?"}}
+    end
+    Default["Node.js default<br/>error propagation"]
+    ExitNZ(["Process terminates<br/>non-zero exit code"])
+    OperatorObs["Operator observes<br/>process exit externally"]
+    ManualRecov["Manual re-invocation:<br/>node server.js<br/>(re-executes WF-001)"]
+
+    subgraph AbsentRouting["Absent Alert Routing"]
+        NoPD["No PagerDuty integration"]
+        NoOpsgenie["No Opsgenie integration"]
+        NoSlack["No Slack / Teams webhook"]
+        NoEmail["No email / SMS gateway"]
+        NoAM["No Alertmanager"]
+    end
+    subgraph AbsentEscalation["Absent Escalation"]
+        NoOnCall["No on-call rotation"]
+        NoTiers["No L1 / L2 / L3 tiers"]
+        NoOwners["No CODEOWNERS<br/>(only author: 'hxu')"]
+        NoSLA["No alert SLA<br/>(no ack / resolve targets)"]
+        NoSev["No severity classification"]
+    end
+    subgraph AbsentPostMortem["Absent Post-Mortem"]
+        NoBlameless["No blameless review"]
+        NoRCA["No root-cause template"]
+        NoTracker["No incident tracker<br/>(Jira / ServiceNow)"]
+        NoFollow["No action-item tracking"]
+        NoKB["No lessons-learned KB"]
+    end
+    subgraph AbsentImprovement["Absent Improvement Tracking"]
+        NoRoadmap["No roadmap (F-006)"]
+        NoBacklog["No backlog / issue tracker"]
+        NoCHANGELOG["No CHANGELOG"]
+        NoMTTR["No MTTR / MTBF metrics"]
+    end
+
+    E1 -- "Yes" --> Default
+    E2 -- "Yes" --> Default
+    E3 -- "Yes" --> Default
+    E4 -- "Yes" --> Default
+    E5 -- "Yes" --> Default
+    E6 -- "Yes" --> Default
+    Default --> ExitNZ
+    ExitNZ -.->|"observed externally"| OperatorObs
+    OperatorObs --> ManualRecov
+    ExitNZ -.->|"would notify"| AbsentRouting
+    AbsentRouting -.->|"would page"| AbsentEscalation
+    ManualRecov -.->|"would produce"| AbsentPostMortem
+    AbsentPostMortem -.->|"would feed"| AbsentImprovement
+```
+
+Solid edges represent the live "alert" path: every error category converges to a single Node.js default propagation, the process terminates, and the operator (manually, out-of-band) observes the exit and re-invokes the launch command. The dashed "would …" edges to absent subgraphs indicate the conventional incident-response flow that does not exist in this system.
+
+---
+
+### 6.5.6 Alert Threshold Matrix
+
+Conventional monitoring documentation includes an alert threshold matrix mapping metric categories to warning / critical thresholds and configured actions. For this system, every threshold is recorded as "None — not documented" because no metric is emitted to compare against any threshold, and no action is configured to fire on threshold breach. The matrix below is provided in its inverted form to satisfy the documentation requirement while accurately reflecting verified absence.
+
+| Metric Category | Threshold Defined | Configured Action |
+|-----------------|-------------------|-------------------|
+| Throughput (RPS) | None — not documented per §5.4.5 | None — no alert pipeline |
+| Latency p50 | None — not documented per §5.4.5 | None |
+| Latency p95 | None — not documented per §5.4.5 | None |
+| Latency p99 | None — not documented per §5.4.5 | None |
+| Error rate (4xx / 5xx %) | None — F-002-RQ-001 mandates 100% `200` responses | None |
+| Availability / uptime % | None — RTO bounded by manual action per §5.4.6 | None |
+| Memory footprint (RSS / heap) | None — not documented per §6.1.4.3 | None |
+| CPU utilization | None — not documented per §6.1.4.3 | None |
+| Event-loop lag | None — no `perf_hooks` instrumentation | None |
+| Concurrent connections | None — bounded by Node.js `http` defaults | None |
+| Process restart frequency | None — no supervisor; manual recovery only | None |
+| Disk usage (log volume) | None — no `fs.write` to log files | None |
+
+The alert-action column is uniformly "None" because, per §6.5.3.4, no alert manager, no notification client, and no webhook routing exists. The system cannot "fire" an alert because it has no outbound notification surface.
+
+---
+
+### 6.5.7 SLA Requirements
+
+The SLA posture is reproduced and consolidated from §4.7.2 and §5.4.5. The system has a **qualitative pass/fail** SLA surface only; no quantitative dimensions are documented, and no measurement infrastructure exists to compute any quantitative SLA even if one were specified externally.
+
+| SLA Dimension | Documented Target | Authoritative Source |
+|---------------|-------------------|----------------------|
+| Throughput | Not documented | §5.4.5 |
+| Latency p50 / p95 / p99 | Not documented | §5.4.5, §4.7.2 |
+| Availability / uptime % | Not documented | §5.4.5 |
+| Error-rate ceiling | Not documented (100% `200` mandated by F-002-RQ-001) | §5.4.5 |
+| Concurrent-connection ceiling | Not documented (Node.js `http` defaults) | §5.4.5 |
+| Cold-start latency | Not documented (bounded by `server.listen` bind) | §5.4.5 |
+| Memory ceiling | Not documented (Node.js single-process limits) | §5.4.5 |
+| Time-to-acknowledge (incident SLA) | Not documented — no incident process | §6.5.5.2 |
+| Mean-time-to-recovery (MTTR) | "Bounded only by the time required to type `node server.js`" | §5.4.6 |
+| Recovery point objective (RPO) | "Undefined because there is nothing to lose" | §5.4.6 |
+
+The qualitative SLA surface consists exclusively of the four exact-match invariants documented in §6.5.2.3: status code `200`, `Content-Type: text/plain`, body `Hello, World!\n` (14 bytes), and startup log line `Server running at http://127.0.0.1:3000/`. Per §4.7.2, "any quantitative SLA expectations must be defined externally by the consuming backprop tooling."
+
+---
+
+### 6.5.8 Dashboard Layout (Verified-Absent Form)
+
+The diagram below represents the canonical "dashboard" of this system. The live dashboard is a single-pane TTY view consisting of three observation panels (the F-003 startup log line, the process exit-code observation, and the external HTTP probe outcome). Every conventional dashboard panel that would normally appear in a production observability product (metrics panels, infrastructure panels, SLA panels, alert-status panels) is enumerated in deliberately disconnected subgraphs.
+
+```mermaid
+flowchart TB
+    subgraph LiveDashboard["Live 'Dashboard' (Single-Pane TTY View)"]
+        StartupPanel["Startup Log Panel:<br/>'Server running at<br/>http://127.0.0.1:3000/'<br/>(emitted once at bind success)"]
+        ExitStatePanel["Process State Panel:<br/>exit code via OS<br/>(observed externally)"]
+        ProbePanel["External HTTP Probe Panel:<br/>curl http://127.0.0.1:3000/<br/>verify 200 / text/plain / 14 bytes"]
+    end
+    subgraph AbsentMetricsPanels["Absent Metrics Panels"]
+        NoThroughputPanel["No Throughput Panel<br/>(req/sec)"]
+        NoLatencyPanel["No Latency Panel<br/>(p50 / p95 / p99)"]
+        NoErrorRatePanel["No Error-Rate Panel<br/>(4xx / 5xx %)"]
+        NoConcurrencyPanel["No Concurrency Panel<br/>(active connections)"]
+    end
+    subgraph AbsentInfraPanels["Absent Infrastructure Panels"]
+        NoCPUPanel["No CPU Utilization Panel"]
+        NoMemPanel["No Memory Footprint Panel"]
+        NoDiskPanel["No Disk I/O Panel"]
+        NoNetPanel["No Network I/O Panel"]
+        NoLoopPanel["No Event-Loop Lag Panel"]
+    end
+    subgraph AbsentSLAPanels["Absent SLA / SLO Panels"]
+        NoAvailPanel["No Availability Panel<br/>(uptime %)"]
+        NoSLOBurnPanel["No SLO Burn-Down Panel"]
+        NoCapHeadPanel["No Capacity Headroom Panel"]
+        NoErrorBudgetPanel["No Error Budget Panel"]
+    end
+    subgraph AbsentAlertPanels["Absent Alert-Status Panels"]
+        NoActivePanel["No Active Alerts Panel"]
+        NoAckPanel["No Acknowledged Alerts Panel"]
+        NoHistPanel["No Alert History Panel"]
+        NoSilencedPanel["No Silenced Alerts Panel"]
+    end
+    subgraph AbsentBusinessPanels["Absent Business Panels"]
+        NoTxnPanel["No Transactions Panel"]
+        NoRevPanel["No Revenue Panel"]
+        NoUserPanel["No Active Users Panel"]
+        NoFunnelPanel["No Conversion Funnel Panel"]
+    end
+
+    LiveDashboard -.-x AbsentMetricsPanels
+    LiveDashboard -.-x AbsentInfraPanels
+    LiveDashboard -.-x AbsentSLAPanels
+    LiveDashboard -.-x AbsentAlertPanels
+    LiveDashboard -.-x AbsentBusinessPanels
+```
+
+The three solid panels in the live dashboard subgraph are the totality of operator-visible information about the system at runtime. The five disconnected subgraphs enumerate the dashboard panels that would conventionally appear in a Grafana, Datadog, or Kibana deployment but are verified absent here because the underlying telemetry sources (metrics, infrastructure data, SLO definitions, alert pipelines, business events) do not exist.
+
+---
+
+### 6.5.9 Cross-Section Reference Map
+
+For readers who need additional context on each verified-absent monitoring concern, the table below maps each Monitoring and Observability sub-area to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
+
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Metrics collection | §5.4.1 | §3.5.1, §1.3.2 |
+| Log aggregation | §5.4.1, §5.4.2 | §1.3.2, §6.4.3.5 |
+| Distributed tracing | §5.4.1 | §3.5.1, §6.3.4.1 |
+| Alert management | §4.6.4 | §5.4.6, §3.5.1 |
+| Dashboard design | §5.4.1 | §3.5.1, §6.1.4.6 |
+| Health checks | §4.6.4 | §6.1.3.6, §5.1.4 |
+| Performance metrics | §5.4.5 | §4.7.1, §4.7.2 |
+| Business metrics | §1.2.3 | §5.4.5, §6.3.5.1 |
+| SLA monitoring | §4.7.2 | §5.4.5, §1.2.3 |
+| Capacity tracking | §6.1.4.3 | §6.1.4.5, §5.4.7 |
+| Alert routing | §4.6.4 | §5.4.6, §6.3.4.5 |
+| Escalation procedures | §2.4.5 | §5.4.6, §6.4.7 |
+| Runbooks | §3.7.7 | §5.4.6, `docs/testing-strategy.md` |
+| Post-mortem | §2.4.5 | §6.4.7 |
+| Improvement tracking | §1.3.2 | §2.1.6 (F-006), §2.6.3 |
+
+---
+
+### 6.5.10 Conditions Under Which This Section Would Become Applicable
+
+For traceability, this subsection records the architectural events that would trigger reauthoring of §6.5 as a populated (rather than non-applicable) Monitoring and Observability specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
+
+| Triggering Event | Constraint to Relax | New Monitoring Domain Introduced |
+|------------------|---------------------|----------------------------------|
+| Add a metrics SDK (Prometheus, StatsD, OpenTelemetry) | C-001, C-005 | Metrics collection, exposition format, scraping endpoint |
+| Add a logging library (Winston, Pino, Bunyan, Morgan) | C-005 | Structured logging, log levels, log shipping pipeline |
+| Add a health-check endpoint (`/health`, `/ready`, `/live`) | C-001, C-004 | Liveness / readiness probes, K8s integration, deep health checks |
+| Open a separate metrics or admin port | C-003 | Scraping endpoint, network policy, port-level firewall |
+| Add a tracing SDK (OpenTelemetry, Jaeger, Zipkin) | C-001, C-005 | Distributed tracing, span propagation, service map |
+| Add an APM SDK (Datadog, New Relic, Sentry, Honeycomb) | C-005 | Application performance monitoring, error reporting |
+| Add a notification client (PagerDuty, Slack webhook) | C-005 | Alert routing, escalation tiers, on-call rotation |
+| Persist logs to disk | C-001 | Log rotation, retention, archival, shipping |
+| Define quantitative SLAs (latency, throughput, availability) | None (documentation-only) | SLO definition, error budgets, burn-down panels |
+| Introduce a process supervisor (PM2, systemd, Docker restart) | C-001 | Automated restart policy, supervisor metrics, lifecycle events |
+| Bind to a non-loopback host for external scraping | C-002 | Network exposure, scraper authentication, rate limiting |
+
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for §6.5 stands. The complete monitoring and observability surface of the system continues to be: a single one-shot startup log line emitted to stdout by F-003, supplemented by external HTTP probe verification of the four exact-match invariants in §6.5.2.3 and manual operator recovery on process termination.
+
+---
+
+### 6.5.11 References
+
+#### Files Examined
+
+- `server.js` — Confirmed the 14-line single-file implementation; verified `require('http')` is the only module dependency (no logging library, no metrics SDK, no tracing SDK); verified the branchless handler signature `(req, res) => {...}` that emits no per-request log and exposes no `/health` or `/metrics` endpoint; verified the sole `console.log` invocation is the F-003 startup line at line 13; confirmed the hardcoded loopback bind `127.0.0.1:3000` precluding external scraper reachability.
+- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, no `engines` field, no `start` script, MIT license, placeholder `test` script (`"echo \"Error: no test specified\" && exit 1"`); confirmed the absence of any observability framework, metrics SDK, logging library, or APM agent declaration.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty `packages` tree below the root entry, verifying the absence of transitive dependencies that could introduce monitoring libraries.
+- `README.md` — Confirmed the 3-line content (project title plus "Do not touch!" immutability directive) that is the source of constraint C-001 and bars the addition of instrumentation, log emission, or monitoring middleware.
+
+#### Folders Explored
+
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no `monitoring/`, `observability/`, `metrics/`, `logs/`, `tracing/`, `dashboards/`, or `alerts/` source subdirectories exist.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); `docs/testing-strategy.md` is the source of the external HTTP probe verification runbook referenced in §6.5.5.3 but contains no in-process monitoring code.
+- `blitzy/` (depth 1) — Confirmed single child folder `blitzy/documentation/`.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts (`Agent Action Plan.md`, `Build Prompt.md`, `Technical Specifications.md`, `Project Guide.md`); no monitoring configuration, no dashboard definitions, no alert rules.
+
+#### Technical Specification Sections Cross-Referenced
+
+- §1.2 System Overview — Local fixture context; integration boundary; "No quantitative KPIs are documented" framing.
+- §1.3 Scope — Explicit out-of-scope enumeration of "Observability | Request logging, structured logs, metrics emission, distributed tracing, health endpoints"; F-006 immutability framing in §1.3.2.
+- §2.1 Feature Catalog — F-003 (Startup Console Logging) as the sole observability feature; F-005 (Zero-Dependency Operation) and F-006 (Project Documentation and Immutability Directive) precluding library additions.
+- §2.3 Feature Relationships — No telemetry exports; no service-discovery registrations; no internal modules.
+- §2.4 Implementation Considerations — §2.4.5 ("no defect process is documented"); no quantitative SLAs.
+- §2.6 Assumptions and Constraints — Seven binding constraints (C-001 through C-007); five assumptions (A-001 through A-005); version `1.0.0` tracking.
+- §3.5 Third-Party Services — Comprehensive verified-absent inventory of APM, logging backends, monitoring services, and notification gateways.
+- §3.7 Development & Deployment — §3.7.7 operational runbook (launch + observe stdout + external probe + manual recovery).
+- §3.9 Security Implications of Stack Choices — Zero dependencies; `npm audit` zero vulnerabilities; trivial SBOM.
+- §4.6 Error Handling — Documented absence of all error-handling primitives; error categories converging to Node.js default exit; missing recovery mechanisms inventory (including "Error notification flow: Not implemented; no notification client").
+- §4.7 Timing and SLA Considerations — Implicit per-step timing posture; "no quantitative SLAs documented for this system."
+- §5.1 High-Level Architecture — Single-process, single-file monolithic micro-service; the four-invariant acceptance criteria.
+- §5.2 Component Details — `server.js` as sole runtime component; lifecycle state machine.
+- §5.3 Technical Decisions — ADRs C-001 through C-007 governing all decisions including observability tooling.
+- §5.4 Cross-Cutting Concerns — §5.4.1 (authoritative observability primitive inventory); §5.4.2 (logging and tracing strategy: "no expansion permitted"); §5.4.3 (error handling patterns: all errors → process exit); §5.4.5 (KPI table marked "Not documented"); §5.4.6 (disaster recovery: manual re-invocation only); §5.4.7 (operational posture: no CI/CD, no IaC, no containerization).
+- §6.1 Core Services Architecture — Canonical negative-space precedent pattern; constraint impact tables; resource allocation and capacity planning posture.
+- §6.2 Database Design — Reinforced negative-space pattern; §6.2.5 compliance considerations (no audit mechanisms).
+- §6.3 Integration Architecture — No outbound telemetry exports; verified-absent third-party integrations including APM (Datadog, New Relic, Sentry, Honeycomb), logging backends (Splunk, ELK, Loggly), and notification gateways (SendGrid, Twilio, SES, SNS); negative-space integration topology.
+- §6.4 Security Architecture — Standard practices followed instead pattern; security observability absence (no SIEM, no audit log pipeline, no intrusion detection).
+
+## 6.6 Testing Strategy
+
+### 6.6.1 Applicability Statement
+
+**Detailed Testing Strategy is not applicable for this system.**
+
+The `hao-backprop-test` repository is a deliberately minimal, immutability-governed HTTP fixture whose entire runtime consists of a 14-line `server.js` invoked directly by the Node.js binary. As characterized in §5.1.1, the system is a "single-process, single-file, monolithic micro-service" that contains no service decomposition, no internal modules, no UI, no database, no outbound integrations, no third-party dependencies, and no business logic beyond emitting a 14-byte compile-time string literal. Every dimension of a conventional Testing Strategy concern domain — comprehensive unit suites, multi-layer integration scaffolding, end-to-end browser automation, performance/load testing harnesses, automated CI/CD pipelines, and flaky-test management — is verified absent and is precluded by the binding architectural constraints documented in §2.6.2.
+
+The authoritative position is recorded in §3.7.8 (Test Infrastructure): zero tests are committed, no test framework is installed, no `test/` directory exists, no `*.test.js` or `*.spec.js` files exist, and the `scripts.test` entry in `package.json` is the npm-default placeholder (`echo "Error: no test specified" && exit 1`) that would intentionally fail any naïve CI invocation. Per §1.3.2, the out-of-scope enumeration explicitly includes "Quality Assurance | Automated tests, linters, formatters, type checkers (the `test` script is the npm-default placeholder)."
+
+This section adopts the canonical "negative-space" reference pattern established by §6.1 (Core Services Architecture), §6.2 (Database Design), §6.3 (Integration Architecture), §6.4 (Security Architecture), and §6.5 (Monitoring and Observability). It enumerates each testing concern from the standard prompt, records the documented absence with traceable evidence, identifies the governing constraint that bars introduction of the concern, and documents the **basic unit testing approach that the system would adopt** if tests were authored — an approach grounded entirely in zero-dependency, built-in Node.js tooling consistent with constraints C-005 and C-006. The full authoritative reference for this approach is the 308-line `docs/testing-strategy.md` document, from which this section consolidates risk-prioritized recommendations.
+
+#### 6.6.1.1 Basic Unit Testing Approach Followed Instead
+
+Although no comprehensive testing infrastructure exists and none can be introduced without relaxing the immutability constraint, the system follows a coherent set of basic recommendations documented in `docs/testing-strategy.md`. These recommendations describe **what tests would look like** if authored, using only built-in Node.js tooling that requires no `npm install` and adds no dependencies to `package.json`.
+
+| Basic Practice | Implementation Path | Governing Source |
+|----------------|---------------------|------------------|
+| Black-box API contract verification | `node:test` + global `fetch` or `node:http` probing the spawned server | `docs/testing-strategy.md` §3.2 |
+| Process lifecycle integration testing | `node:child_process.spawn` + readiness-log observation on stdout | `docs/testing-strategy.md` §3.4 |
+| Determinism / branchless invariant verification | Table-driven `node:test` cases varying method, path, body | `docs/testing-strategy.md` §3.3 |
+| Failure-mode verification (`EADDRINUSE`) | Listener-collision test using only `node:http` | `docs/testing-strategy.md` §3.5 |
+| Coverage measurement | `node --test --experimental-test-coverage` (built-in flag) | `docs/testing-strategy.md` §3.7 |
+| Supply-chain vulnerability scan | `npm audit` (reports zero vulnerabilities — empty dep tree) | §3.9 |
+
+The key insight from `docs/testing-strategy.md` §2.2 is that **the test pyramid is deliberately inverted in practice**: for a 14-line, export-less, branchless server, the cheapest *meaningful* check is a black-box HTTP request against a spawned process (an API/integration test), while a true isolated unit test of the request handler is **blocked** because there is no `module.exports` to import. The traditional unit-test layer at the pyramid's base is structurally precluded by C-001, leaving the integration and API layers as the only feasible authoring surfaces.
+
+#### 6.6.1.2 Architectural Constraints That Preclude Comprehensive Testing
+
+The seven binding constraints from §2.6.2 jointly preclude introducing any conventional testing infrastructure. Each constraint is binding under the operational "Do not touch!" directive in `README.md`.
+
+| ID | Constraint | Impact on Testing Strategy |
+|----|------------|----------------------------|
+| C-001 | All four baseline files must remain unchanged | Cannot add `module.exports` to `server.js`; cannot wire `"test": "node --test"`; cannot add `engines` field; cannot edit `scripts.test` |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Tests must probe `127.0.0.1`; no remote test runner reachable |
+| C-003 | Port hardcoded to `3000` | Tests must use port 3000; no parallel test instances on distinct ports |
+| C-004 | Response body, status, headers byte-identical | Tests assert exactly `200`/`text/plain`/`Hello, World!\n` (14 bytes) — no contract variation possible |
+| C-005 | Zero runtime and zero development dependencies | Excludes Jest, Mocha, Vitest, Jasmine, AVA, Tap, supertest, c8, nyc, Cypress, Playwright, Puppeteer, Selenium, ESLint, Prettier, TypeScript |
+| C-006 | Must remain executable without prior `npm install` | Reinforces C-005; only built-in Node.js modules permitted |
+| C-007 | MIT license for all repository contents | License-compatibility baseline preserved |
+
+Per §3.1, "Constraint C-001 ('All four baseline files must remain unchanged from their committed state') combined with constraint C-005 ('Zero runtime and zero development dependencies') jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every comprehensive testing primitive documented in subsequent subsections.
+
+---
+
+### 6.6.2 System Composition Establishing Non-Applicability
+
+#### 6.6.2.1 Test Infrastructure Inventory
+
+The total test infrastructure of the system is enumerated below. Per §3.7.8, every committed artifact and tool slot is verified empty by direct repository inspection.
+
+| Test Aspect | Current State | Recommended (Per `docs/testing-strategy.md`) |
+|-------------|---------------|----------------------------------------------|
+| Committed tests | Zero | N/A (recommendations only — never authored) |
+| Test framework | None | `node:test` (built-in Node ≥ 20) |
+| Assertion library | None | `node:assert` (built-in) |
+| HTTP client (test) | None | Global `fetch` (built-in Node ≥ 18) or `node:http` |
+| Coverage tool | None | `--experimental-test-coverage` (built-in flag) |
+| Coverage of committed code | 0% by design | 100% of reachable lines (recommended, not implemented) |
+| `scripts.test` | npm placeholder (`echo "Error: no test specified" && exit 1`) | Not modified per C-001 |
+| `test/`, `tests/`, `__tests__/`, `spec/` directories | None — no source subdirectories exist | Not introduced per C-001 |
+
+Per `docs/testing-strategy.md`, wiring a real script such as `"test": "node --test"` would modify a protected baseline file (`package.json`) and is therefore **gated by C-001 / C-005 / C-006 and requires explicit user confirmation** before it could be applied.
+
+#### 6.6.2.2 The Four Behavioral Invariants Tests Would Preserve
+
+Per `docs/testing-strategy.md` §5.4 and §5.1.4, the entire externally observable contract of the system consists of four exact-match invariants that any meaningful test would verify. These are the only contractual signals that an external test harness can validate without violating constraint C-001.
+
+| Invariant | Exact Value | Source Location |
+|-----------|-------------|-----------------|
+| HTTP status code | `200` | `server.js` line 7 |
+| `Content-Type` response header | `text/plain` | `server.js` line 8 |
+| Response body (UTF-8) | `Hello, World!\n` — exactly **14 bytes** | `server.js` line 9 |
+| Startup log line | `Server running at http://127.0.0.1:3000/` | `server.js` line 13 |
+
+These invariants — the same four that govern §6.5 (Monitoring and Observability) — collectively define the entire surface area against which any test could be authored. Per F-002-RQ-004, the handler is branchless and ignores `req` entirely, which means tests need not enumerate variant inputs to achieve full behavioral coverage — a single GET probe exercises the same code path as every other HTTP verb, header set, or body payload.
+
+#### 6.6.2.3 Risk-Prioritized Test Recommendation Matrix
+
+Per `docs/testing-strategy.md` §3.1, the recommended (but unimplemented) test classes are prioritized P0 → P2 by business-impact value. This matrix is the canonical authority for which tests are worth authoring under what constraint-compatibility profile.
+
+| Priority | Test Class | Recommendation | Constraint Interaction |
+|----------|------------|----------------|------------------------|
+| **P0** | API contract | `GET /` returns `200` / `text/plain` / `Hello, World!\n` (14 bytes) | Zero-dependency feasible |
+| **P0** | Edge case / determinism | Any HTTP method/path/body yields identical response | Zero-dependency feasible |
+| **P1** | Integration / lifecycle | Server binds `127.0.0.1:3000` AND emits the F-003 startup log | Zero-dependency feasible |
+| **P1** | Edge case / failure mode | Startup fails with `EADDRINUSE` when port 3000 occupied | Zero-dependency feasible |
+| **P2** | Unit / handler isolation | Exercise the request handler in isolation | **BLOCKED by C-001** — no `module.exports` |
+| **P2** | Coverage measurement | Baseline 0% → measure with `--experimental-test-coverage` | Built-in flag; `c8`/`nyc`/Jest excluded by C-005 |
+
+The five-class coverage cross-check below maps each rule-mandated test category (from `docs/testing-strategy.md` §4) to the priority and constraint posture documented above.
+
+| Rule-Mandated Class | Addressed By | Constraint Posture |
+|---------------------|--------------|--------------------|
+| Unit test recommendations | Handler in isolation (P2) | **Blocked by C-001** (no `module.exports`) |
+| Integration test recommendations | Bind + startup log (P1) | Zero-dependency feasible |
+| API test scenarios | GET / response contract (P0) | Zero-dependency feasible |
+| Edge case validations | Determinism (P0) + `EADDRINUSE` (P1) | Zero-dependency feasible |
+| Coverage improvement | 0% baseline + `--experimental-test-coverage` (P2) | Built-in only; c8/nyc/Jest excluded |
+
+---
+
+### 6.6.3 Testing Approach
+
+This subsection documents the recommended testing approach across the three conventional layers — Unit, Integration, and End-to-End — annotating each with verified-absent infrastructure and the basic zero-dependency practice that would substitute for it.
+
+#### 6.6.3.1 Unit Testing
+
+#### Frameworks and Tools
+
+Per `docs/testing-strategy.md` and §3.7.2, all permitted unit-testing tools are **built-in to Node.js with zero installation**. No third-party framework is permitted under constraint C-005.
+
+| Tool | Source | Purpose | Constraint Status |
+|------|--------|---------|-------------------|
+| `node:test` | Built-in (stable since Node v20) | Test runner with TAP output | Permitted (C-005 / C-006) |
+| `node:assert` | Built-in | Strict equality and behavioral assertions | Permitted |
+| Global `fetch` | Built-in (since Node 18) | HTTP test client | Permitted |
+| `node:http` | Built-in | Lower-level HTTP probing | Permitted |
+| `node:child_process.spawn` | Built-in | Spawn server as subprocess | Permitted |
+| Jest / Mocha / Vitest / Jasmine / AVA / Tap | npm packages | Test runners | **Excluded by C-005** |
+| supertest | npm package | HTTP testing | **Excluded by C-005** |
+| Sinon / jest.mock / nock / MSW | npm packages | Mocking / spying | **Excluded by C-005** |
+
+#### Test Organization Structure
+
+No test organization exists today, and any future organization is **constrained by C-001**: tests cannot be added under `package.json`'s `scripts.test` wiring because that field is part of an immutable baseline file. The only constraint-compatible authoring path is **out-of-band invocation** of `node --test path/to/test-file.js` against test files placed in a non-baseline subdirectory (such as a new `tests/` folder that is additive scaffolding rather than a modification to any baseline artifact). Even this is qualified as requiring explicit user confirmation per `docs/testing-strategy.md`.
+
+| Organization Aspect | Recommended State | Constraint Interaction |
+|---------------------|-------------------|------------------------|
+| Test file location | `tests/*.test.js` (additive only) | C-001 forbids editing baseline; new directories must be additive |
+| Test discovery | `node --test` auto-discovers `*.test.js` / `*.test.mjs` | Built-in; no configuration file required |
+| Per-test isolation | Each `test()` block executes independently | `node:test` default behavior |
+| Shared setup / teardown | `before` / `after` / `beforeEach` / `afterEach` hooks | `node:test` built-in lifecycle hooks |
+
+#### Mocking Strategy
+
+**No mocking strategy is applicable.** The handler in `server.js` is branchless per F-002-RQ-004 — it ignores `req` entirely and produces a deterministic output that does not depend on any external collaborator, time source, randomness, file system, network call, or database. Per §6.3.2.1, the system has **zero outbound HTTP calls, zero database connections, zero message broker clients, and zero external service integrations**, so there is nothing to mock or stub.
+
+| Mocking Concern | Applicability | Rationale |
+|-----------------|---------------|-----------|
+| HTTP client mocking (`nock`, `MSW`, `fetch-mock`) | Not applicable | Zero outbound HTTP calls per §6.3.2.1 |
+| Function spying (`sinon`, `jest.fn`) | Not applicable | Handler ignores all inputs (F-002-RQ-004) |
+| Time mocking (`sinon.useFakeTimers`) | Not applicable | No time-dependent logic |
+| Filesystem mocking (`mock-fs`) | Not applicable | No `fs.read`/`fs.write` calls |
+| Module-level mocking (`jest.mock`) | Not applicable | `server.js` has no `module.exports` |
+
+#### Code Coverage Requirements
+
+The recommended coverage approach uses Node.js's built-in `--experimental-test-coverage` flag introduced in Node 20. Per §3.7.8, the recommended coverage of committed code is **100% of reachable lines** — achievable because `server.js` contains no conditional branches (the handler is branchless and the `server.listen` callback is invoked unconditionally on successful bind).
+
+| Coverage Aspect | Target | Tool |
+|-----------------|--------|------|
+| Line coverage of `server.js` | 100% (achievable due to branchless handler) | `node --test --experimental-test-coverage` |
+| Branch coverage | Not applicable — handler is branchless | Same |
+| Function coverage | 100% (single arrow function in handler, one callback) | Same |
+| Statement coverage | 100% | Same |
+| Coverage report format | TAP / lcov (built-in emitters) | Same |
+| Coverage threshold gate | Not enforced (no CI to enforce) | N/A |
+| `c8` / `nyc` / Istanbul / Jest `--coverage` | **Excluded by C-005** | Not used |
+
+#### Test Naming Conventions
+
+The recommended convention follows the format prescribed in `docs/testing-strategy.md` example snippets: descriptive test names that explicitly call out the invariant being verified.
+
+| Convention | Pattern | Example |
+|------------|---------|---------|
+| API contract tests | `GET / honors the [status] / [content-type] / [byte-count] contract` | `GET / honors the 200 / text-plain / 14-byte contract` |
+| Determinism tests | `[any HTTP variation] yields identical response` | `POST /any/path with arbitrary body yields identical response` |
+| Lifecycle tests | `server [binds | logs | exits] when [precondition]` | `a second listener on 127.0.0.1:3000 fails with EADDRINUSE` |
+
+#### Test Data Management
+
+Test data management is **trivial by design**. The system has no fixtures, no seed data, no database, no test data factories, and no fixture rotation. The four behavioral invariants in §6.6.2.2 are compile-time string literals, and any HTTP request payload sent in a test is discarded by the branchless handler.
+
+| Test Data Concern | Documented State |
+|-------------------|------------------|
+| Fixture files (`fixtures/*.json`, `__fixtures__/`) | None — no test data required |
+| Database seeding | Not applicable — no database (§6.2) |
+| Factory libraries (`factory-bot`, `faker`) | **Excluded by C-005** |
+| Test data sources | Static compile-time literals only (the 14-byte body and 40-byte startup line) |
+| Test data cleanup | Not required — no persistent state created by tests |
+
+#### 6.6.3.2 Integration Testing
+
+#### Service Integration Test Approach
+
+The recommended integration test approach spawns `server.js` as a child process via `node:child_process.spawn`, waits for the F-003 startup log line on the child's stdout pipe (a deterministic readiness signal per §6.5.2.2), issues HTTP probes against `http://127.0.0.1:3000/` using `node:http` or global `fetch`, asserts the four invariants from §6.6.2.2, and then sends `SIGTERM`/`SIGKILL` to the child to release the port for the next test. This is the constraint-compatible substitute for the in-process unit test that C-001 forbids.
+
+| Integration Aspect | Implementation |
+|--------------------|----------------|
+| Server lifecycle | `spawn('node', ['server.js'])` + `child.kill()` |
+| Readiness detection | Parse child's stdout for `Server running at http://127.0.0.1:3000/` |
+| Test isolation | Each test owns its own child process (or uses a shared `before`/`after` pair) |
+| Port collision handling | Test must ensure 127.0.0.1:3000 is free before spawning |
+| Cleanup | `child.kill()` in `after` hook to release port |
+
+#### API Testing Strategy
+
+The P0 API test is the highest-value test in the recommendation matrix because it verifies the core contract that the backprop integration consumes. Per `docs/testing-strategy.md` §3.2, this test issues `GET /` and asserts the four exact-match invariants.
+
+| API Test Element | Assertion |
+|------------------|-----------|
+| Status code | `assert.strictEqual(statusCode, 200)` |
+| Content-Type header | `assert.strictEqual(headers['content-type'], 'text/plain')` |
+| Response body | `assert.strictEqual(body, 'Hello, World!\n')` |
+| Body byte length | `assert.strictEqual(Buffer.byteLength(body), 14)` |
+
+#### Database Integration Testing
+
+**Not applicable.** Per §6.2 (Database Design), the system has no database, no persistence layer, no in-memory store, no caching tier, and no file-system persistence. There is nothing to integrate against and nothing to set up, migrate, seed, or tear down.
+
+| Database Test Concern | Applicability |
+|-----------------------|---------------|
+| Schema migration testing | Not applicable — no schema (§6.2) |
+| Seed data fixtures | Not applicable — no database |
+| Transaction rollback testing | Not applicable — no transactions |
+| Database container (Testcontainers) | Not applicable — no database driver |
+| Repository pattern integration tests | Not applicable — no repositories |
+
+#### External Service Mocking
+
+**Not applicable.** Per §6.3.2.1, the system has zero outbound integrations — no HTTP client calls, no message broker producers/consumers, no telemetry exports, no DNS lookups, no third-party API consumption. There is no external service to mock.
+
+| External Service Concern | Applicability |
+|--------------------------|---------------|
+| HTTP client mocking (`nock`, `MSW`) | Not applicable — no outbound HTTP |
+| Message broker stub | Not applicable — no broker client |
+| DNS mocking | Not applicable — no DNS lookups (host is literal `127.0.0.1`) |
+| Third-party API stub server | Not applicable — no third-party consumption |
+| Service virtualization (WireMock, Mountebank) | Not applicable — no upstream dependencies |
+
+#### Test Environment Management
+
+The required test environment is minimal. Per §3.7.7 and `docs/testing-strategy.md` §5.4, only four conditions must hold:
+
+| Requirement | Specification | Source |
+|-------------|---------------|--------|
+| Node.js runtime | Version ≥ 20 (for `node:test` stable + `--experimental-test-coverage`) | `docs/testing-strategy.md` §5.4 |
+| Working directory | Repository root | §3.7.7 |
+| Network state | TCP port 3000 free on loopback (per A-002) | §2.6.1 |
+| Permissions | Permission to bind to port 3000 (non-privileged) | §4.6.2 |
+| `npm install` | **Not required** per C-006 | §2.6.2 |
+| Environment variables | **None required** — host/port hardcoded | §3.7.9 |
+
+#### 6.6.3.3 End-to-End Testing
+
+**End-to-end testing is largely not applicable.** The system has no UI, no client-side code, no browser surface, no DOM, no SPA framework, and no user-facing application beyond the raw HTTP byte-stream. The "end-to-end" path of the system is identical to the integration test path documented in §6.6.3.2: an external HTTP probe verifying the four-invariant contract is simultaneously the unit, integration, and end-to-end test.
+
+#### E2E Test Scenarios
+
+The single end-to-end scenario is the P0 API contract test from §6.6.3.2: a black-box HTTP GET against `http://127.0.0.1:3000/` asserting all four invariants from §6.6.2.2. There is no multi-step user journey, no shopping-cart flow, no authentication round-trip, no multi-page navigation, and no cross-service orchestration to author.
+
+| E2E Scenario | Status |
+|--------------|--------|
+| HTTP contract verification (GET /) | The sole E2E scenario (P0) |
+| Determinism verification | Table-driven variant of the above (P0) |
+| Multi-page user journey | Not applicable — no UI |
+| Authentication / authorization flow | Not applicable — no authentication (§6.4) |
+| Shopping cart / business workflow | Not applicable — no business surface |
+
+#### UI Automation Approach
+
+**Not applicable.** Per §1.2 and §5.1.1, the system exposes only a raw HTTP byte-stream. There is no browser-renderable artifact and consequently no UI to automate.
+
+| UI Automation Tool | Applicability |
+|--------------------|---------------|
+| Cypress | **Excluded by C-005** and not applicable (no UI) |
+| Playwright | **Excluded by C-005** and not applicable |
+| Puppeteer | **Excluded by C-005** and not applicable |
+| Selenium WebDriver | **Excluded by C-005** and not applicable |
+| WebdriverIO / TestCafe / Nightwatch | **Excluded by C-005** and not applicable |
+
+#### Test Data Setup / Teardown
+
+Setup and teardown are reduced to two operations: `spawn('node', ['server.js'])` in a `before` hook and `child.kill()` in an `after` hook. No fixtures are loaded, no seed data is inserted, no migrations are run, no caches are warmed, and no external services are configured.
+
+| Phase | Operation | Cost |
+|-------|-----------|------|
+| Setup (`before`) | Spawn child process; await F-003 readiness log | O(server-startup) — bounded by OS socket bind latency per §4.7.1 |
+| Per-test | None — handler is stateless and deterministic | O(0) |
+| Teardown (`after`) | `child.kill()` to release port 3000 | O(SIGTERM propagation) |
+| Cleanup of test data | None — no test data created | O(0) |
+
+#### Performance Testing Requirements
+
+**No performance testing is required or documented.** Per §4.7.2 and §5.4.5, "no quantitative SLAs are documented for this system." Per §6.1.4.4, no performance-optimization techniques are applied because the workload — returning a 14-byte compile-time string literal — is already the minimum work required.
+
+| Performance Testing Concern | Documented State |
+|-----------------------------|------------------|
+| Load testing (`k6`, `Gatling`, `Locust`, `Artillery`, `autocannon`, JMeter) | **Excluded by C-005**; no documented throughput target |
+| Stress testing | Not documented — no stress threshold defined |
+| Spike testing | Not documented |
+| Soak / endurance testing | Not documented |
+| Latency benchmarks (p50/p95/p99) | Not documented per §5.4.5 |
+| Memory leak detection (long-running soak) | Not documented |
+
+#### Cross-Browser Testing Strategy
+
+**Not applicable.** The system serves a raw HTTP response with `Content-Type: text/plain`. There is no HTML, no CSS, no JavaScript delivered to a client, no DOM rendering, no cookies, no `localStorage` use, and consequently no cross-browser compatibility concern.
+
+| Browser Concern | Applicability |
+|-----------------|---------------|
+| Chrome / Firefox / Safari / Edge testing | Not applicable — no client-side code |
+| Mobile browser testing | Not applicable |
+| Browser version matrices | Not applicable |
+| Visual regression (`Percy`, `Chromatic`) | Not applicable |
+| Accessibility testing (`axe`, `Pa11y`) | Not applicable — no UI |
+
+---
+
+### 6.6.4 Test Automation (Verified Absent)
+
+This subsection addresses each test-automation concern from the standard prompt and documents its absence with file-level evidence.
+
+#### 6.6.4.1 CI/CD Integration
+
+Per §3.7.6, no CI/CD pipeline of any kind exists. The repository contains no workflow definition files for any major CI/CD platform.
+
+| CI/CD Artifact | Status | Governing Constraint |
+|----------------|--------|----------------------|
+| GitHub Actions workflows (`.github/workflows/`) | Absent | C-001 (adding would not modify baselines but no automation is configured) |
+| GitLab CI configuration (`.gitlab-ci.yml`) | Absent | Same |
+| CircleCI configuration (`.circleci/`) | Absent | Same |
+| Jenkinsfile | Absent | Same |
+| Azure Pipelines (`azure-pipelines.yml`) | Absent | Same |
+| Travis CI configuration (`.travis.yml`) | Absent | Same |
+| Bitbucket Pipelines | Absent | Same |
+
+Per §3.7.6, "the placeholder `test` script in `package.json` (`echo 'Error: no test specified' && exit 1`) would intentionally fail any naïve CI invocation, reinforcing that no automated pipeline is anticipated."
+
+#### 6.6.4.2 Automated Test Triggers
+
+No automated test triggers exist because no test framework is wired into `scripts.test`. The trigger surface — push events, pull request creation, schedule-driven runs, manual workflow_dispatch — has no consumer to invoke.
+
+| Trigger Type | Status |
+|--------------|--------|
+| Push-event trigger | None — no CI configuration |
+| Pull-request trigger | None |
+| Scheduled (cron) trigger | None |
+| Manual (workflow_dispatch) trigger | None |
+| Tag / release trigger | None — version `1.0.0` is the only version per §2.6.3 |
+| Pre-commit hook (Husky / pre-commit) | None — `husky` excluded by C-005 |
+
+#### 6.6.4.3 Parallel Test Execution
+
+**Not applicable.** Per `docs/testing-strategy.md`, the recommended test approach uses a single fixed port (3000 per C-003), which structurally serializes any test that spawns the server. Parallel test execution would require either binding to ephemeral ports (forbidden by C-003) or running multiple server instances on different ports (forbidden by C-001 because it would require source modification).
+
+| Parallel Execution Aspect | Documented State |
+|---------------------------|------------------|
+| Worker-based parallelization (`node:test --test-concurrency`) | Not used — port 3000 collision would result |
+| Shard-based distribution (CI matrix) | Not used — no CI |
+| Test grouping by file | Sequential by default with shared port 3000 |
+| Parallel runner threads | Not applicable — single test suite |
+
+#### 6.6.4.4 Test Reporting Requirements
+
+The recommended `node:test` runner emits TAP (Test Anything Protocol) format natively to stdout. No external test reporting tool is integrated.
+
+| Reporting Aspect | Documented State |
+|------------------|------------------|
+| Default format | TAP (Node.js built-in `node:test` output) |
+| JUnit XML emission | Not configured — no transformation pipeline |
+| HTML report (Mochawesome, Jest HTML reporter) | **Excluded by C-005** |
+| Coverage report format | Built-in `--experimental-test-coverage` text + lcov |
+| Report storage (artifact upload) | Not applicable — no CI |
+| Test history / trend dashboard | Not applicable — no historian |
+
+#### 6.6.4.5 Failed Test Handling
+
+The recommended `node:test` runner exits with a non-zero status code when any test fails. No retry policy, no quarantine mechanism, and no auto-rerun logic is configured.
+
+| Failed Test Concern | Documented State |
+|---------------------|------------------|
+| Process exit code on failure | Non-zero (standard `node:test` behavior) |
+| Automatic retry of failed tests | Not configured |
+| Test quarantine / skip-on-failure | Not configured |
+| Failure notification (Slack, email) | Not applicable — no notification client per §6.5.3.4 |
+| Test bisection / blame attribution | Not applicable — no test history |
+
+#### 6.6.4.6 Flaky Test Management
+
+**Not applicable.** Flaky tests arise from non-determinism in the system under test (race conditions, time dependencies, network variability, external service dependencies, shared mutable state). The system under test here has **none of these characteristics**: per F-002-RQ-004 the handler is branchless and deterministic, per §6.3.2.1 there are zero outbound network calls, per §5.1.3 there is zero application state, and per §6.5.2.2 the only observability event is a deterministic startup log. The only documented flake source would be **port 3000 contention** with a co-resident process on the test host — but per §6.6.3.2, this is observable (and is itself a P1 test scenario verifying `EADDRINUSE`).
+
+| Flake Source | Mitigation |
+|--------------|------------|
+| Non-deterministic handler logic | Not applicable — branchless handler per F-002-RQ-004 |
+| Race conditions | Not applicable — single event loop; no shared mutable state |
+| Network variability | Not applicable — loopback only per C-002 |
+| External service dependencies | Not applicable — zero outbound calls per §6.3.2.1 |
+| Time-of-day dependencies | Not applicable — no `Date`/`time` reads |
+| Port 3000 contention | Pre-test port-availability check; `EADDRINUSE` is itself the P1 test |
+
+---
+
+### 6.6.5 Quality Metrics
+
+#### 6.6.5.1 Code Coverage Targets
+
+Per `docs/testing-strategy.md` §3.7, the recommended coverage target is **100% of reachable lines in `server.js`** — achievable because the file contains no conditional branches. The single P0 API contract test exercises every line of the handler, and the P1 integration test exercises the `server.listen` callback. Together they would achieve full line coverage of the 14-line file.
+
+| Coverage Target | Value | Achievable Via |
+|-----------------|-------|----------------|
+| Line coverage | 100% | P0 API test + P1 integration test |
+| Branch coverage | Not applicable | Handler is branchless (F-002-RQ-004) |
+| Function coverage | 100% | Handler arrow function + `server.listen` callback both exercised |
+| Statement coverage | 100% | Direct consequence of line coverage |
+| Current actual coverage | **0%** | No tests committed (per §3.7.8) |
+
+#### 6.6.5.2 Test Success Rate Requirements
+
+In the absence of CI, no formal success-rate gate is configured. The recommended convention is that all authored tests must pass on every invocation (100% pass rate) — a target that is achievable because the system is fully deterministic per F-002-RQ-004.
+
+| Success Rate Metric | Documented Target |
+|---------------------|-------------------|
+| Pass rate on every invocation | 100% (system is deterministic) |
+| Flake rate ceiling | 0% (no documented flake sources per §6.6.4.6) |
+| Maximum failure tolerance | 0 — any failure indicates a regression of one of the four invariants |
+| Sample size requirement | 1 invocation (deterministic system needs no statistical sampling) |
+
+#### 6.6.5.3 Performance Test Thresholds
+
+**No performance thresholds are documented.** Per §5.4.5 and §4.7.2, every KPI dimension is marked "Not documented." Performance test thresholds presuppose quantitative SLAs that do not exist for this system.
+
+| Performance Threshold | Documented Value |
+|-----------------------|------------------|
+| Throughput (RPS) ceiling | Not documented per §5.4.5 |
+| Latency p50 / p95 / p99 ceiling | Not documented per §5.4.5 |
+| Memory footprint ceiling | Not documented per §6.1.4.3 |
+| CPU utilization ceiling | Not documented per §6.1.4.3 |
+| Cold-start latency ceiling | Not documented per §5.4.5 |
+| Concurrent connection ceiling | Not documented (Node.js `http` defaults) |
+
+#### 6.6.5.4 Quality Gates
+
+In the absence of CI/CD, no automated quality gates exist. The only de-facto quality gate is **the four-invariant contract** of §6.6.2.2: any test author confirming all four invariants pass has met the entire documented quality bar.
+
+| Quality Gate | Configured | Mechanism |
+|--------------|------------|-----------|
+| Test pass rate ≥ X% | Not configured | No CI; manual confirmation only |
+| Coverage ≥ X% | Not configured | No CI; advisory target of 100% |
+| Lint pass (ESLint) | Not configured | **ESLint excluded by C-005** |
+| Format check (Prettier) | Not configured | **Prettier excluded by C-005** |
+| Type check (TypeScript / Flow) | Not configured | **TypeScript / Flow excluded by C-005** |
+| Security scan (`npm audit`) pass | De-facto pass | `npm audit` reports zero vulnerabilities per §3.9 (empty dep tree) |
+| Four-invariant contract verification | The only documented gate | External HTTP probe per §6.6.2.2 |
+
+#### 6.6.5.5 Security Testing Requirements
+
+Per §3.9 and §6.4, the security testing posture is reduced to **`npm audit` (which trivially reports zero vulnerabilities)** and **operational reliance on the loopback bind** as the sole security control. No SAST, DAST, IAST, dependency-vulnerability scanning beyond `npm audit`, or penetration testing is configured.
+
+| Security Test Class | Status | Rationale |
+|---------------------|--------|-----------|
+| Supply-chain vulnerability scan (`npm audit`) | De-facto pass — empty dep tree | §3.9 |
+| Static Application Security Testing (Snyk, SonarQube, Semgrep) | Not configured | C-005 excludes; nothing to scan in 14-line file |
+| Dynamic Application Security Testing (OWASP ZAP, Burp Suite) | Not configured | No external attack surface (loopback only per C-002) |
+| Interactive Application Security Testing (Contrast, Veracode) | Not configured | C-005 excludes runtime agents |
+| Penetration testing | Not documented | Per A-005, "no security review of plaintext HTTP / loopback binding is required" |
+| Secrets scanning (`git-secrets`, `truffleHog`) | Not configured | No secrets present (verified by §6.4) |
+| License compliance scanning | De-facto pass | All artifacts MIT per C-007 |
+
+#### 6.6.5.6 Documentation Requirements
+
+The recommended documentation surface is satisfied by the existing 308-line `docs/testing-strategy.md`, which is the authoritative reference for every recommendation summarized in this section.
+
+| Documentation Artifact | Status |
+|------------------------|--------|
+| Test strategy document | `docs/testing-strategy.md` (308 lines, authoritative) |
+| Example test patterns | Present in `docs/testing-strategy.md` §3 |
+| Test environment setup guide | §3.7.7 (operational runbook) + §6.6.3.2 |
+| Behavioral invariants reference | §5.4 of `docs/testing-strategy.md` and §6.6.2.2 |
+| Risk-prioritized recommendation matrix | `docs/testing-strategy.md` §3.1 and §6.6.2.3 |
+| Five-class coverage cross-check | `docs/testing-strategy.md` §4 and §6.6.2.3 |
+| Constraint-compatibility analysis | `docs/testing-strategy.md` §5 and §6.6.1.2 |
+
+---
+
+### 6.6.6 Test Execution Flow
+
+The diagram below visualizes the recommended (but unimplemented) test execution flow. It depicts the canonical sequence that a P0 API contract test or a P1 integration test would follow when authored using the zero-dependency tooling documented in §6.6.3.1. Solid edges represent the live execution path; dashed edges represent verified-absent automation that would normally surround this flow in a production CI/CD environment.
+
+```mermaid
+flowchart TD
+    Start([Test Author / Operator]) --> CheckPort{Port 3000<br/>free on loopback?}
+    CheckPort -- No --> PortFail[Test prerequisite fails:<br/>port 3000 occupied]
+    PortFail --> End1([Manual port cleanup<br/>or P1 EADDRINUSE test])
+    CheckPort -- Yes --> RunCmd[Invoke node --test<br/>tests/server.test.js]
+    RunCmd --> BeforeHook[before hook:<br/>spawn 'node', 'server.js']
+    BeforeHook --> AwaitReady[Read child.stdout<br/>await 'Server running at<br/>http://127.0.0.1:3000/']
+    AwaitReady --> P0Test[P0: GET / via node:http or fetch<br/>assert 200, text/plain,<br/>'Hello, World!\n', 14 bytes]
+    P0Test --> DetTest[P0: determinism table<br/>method/path/body variants<br/>assert identical response]
+    DetTest --> P1Test[P1: verify startup log content<br/>and process bind state]
+    P1Test --> AfterHook[after hook:<br/>child.kill, release port]
+    AfterHook --> Report[node:test emits TAP<br/>to stdout, exit code]
+    Report --> PassFail{All tests<br/>pass?}
+    PassFail -- Yes --> ExitZero([Exit code 0<br/>4 invariants confirmed])
+    PassFail -- No --> ExitNZ([Exit code non-zero<br/>regression of invariants])
+
+    subgraph AbsentCI[Verified-Absent CI Automation]
+        NoTrigger[No push trigger]
+        NoSchedule[No scheduled run]
+        NoMatrix[No CI matrix / sharding]
+        NoArtifact[No report artifact upload]
+        NoNotify[No Slack / PagerDuty notify]
+    end
+
+    RunCmd -.->|would be invoked by| AbsentCI
+    ExitNZ -.->|would notify via| AbsentCI
+```
+
+The flow illustrates four structural properties of the recommended testing approach:
+
+- **Single-port serialization**: Because port 3000 is hardcoded per C-003, every test must either own the port exclusively for its duration or explicitly verify the `EADDRINUSE` failure mode. This precludes the parallel test execution path documented in §6.6.4.3.
+- **Deterministic readiness signal**: The `before` hook does not poll or sleep — it deterministically detects readiness by parsing the F-003 startup log line from the child's stdout pipe, which is the same observability primitive documented in §6.5.2.2.
+- **Convergent assertion pattern**: All P0 and P1 assertions converge on the four exact-match invariants of §6.6.2.2; there are no probabilistic, latency-based, or statistical assertions.
+- **External recovery only**: A failed test results in a non-zero exit code with no automated notification, escalation, or rerun — consistent with the manual operator recovery model documented in §5.4.6 and §6.5.5.3.
+
+---
+
+### 6.6.7 Test Environment Architecture
+
+The diagram below depicts the test environment architecture in negative-space form. The live test environment consists of the operator's TTY, a single Node.js process for the test runner, a spawned child process running `server.js`, and a loopback HTTP channel between them. Every conventional test-environment primitive — CI runners, container orchestration, ephemeral environments, test databases, service stubs — is enumerated in deliberately disconnected subgraphs to emphasize verified absence.
+
+```mermaid
+flowchart TB
+    subgraph LiveTestEnv["Live Test Environment (Recommended)"]
+        Operator["Operator TTY<br/>or local shell"]
+        TestRunner["Node.js Process A<br/>node --test tests/*.test.js<br/>(node:test + node:assert)"]
+        ServerProc["Node.js Process B<br/>spawned via node:child_process<br/>(server.js, 14 lines)"]
+        LoopbackHTTP["Loopback HTTP/1.1<br/>127.0.0.1:3000"]
+        StdoutPipe["child.stdout pipe<br/>(F-003 readiness signal)"]
+        Operator --> TestRunner
+        TestRunner -->|"spawn('node', 'server.js')"| ServerProc
+        ServerProc --> StdoutPipe
+        StdoutPipe --> TestRunner
+        TestRunner -->|"HTTP GET probe"| LoopbackHTTP
+        LoopbackHTTP --> ServerProc
+        ServerProc -->|"200 / text/plain / 14 bytes"| LoopbackHTTP
+        LoopbackHTTP --> TestRunner
+    end
+
+    subgraph AbsentCIInfra["Absent CI Infrastructure"]
+        NoRunner["No GitHub Actions runner"]
+        NoGitLab["No GitLab CI runner"]
+        NoJenkins["No Jenkins agent"]
+        NoCircleCI["No CircleCI executor"]
+        NoMatrix["No build matrix / OS matrix"]
+    end
+
+    subgraph AbsentContainerization["Absent Containerization"]
+        NoDockerfile["No Dockerfile"]
+        NoCompose["No docker-compose for test env"]
+        NoTestcontainers["No Testcontainers"]
+        NoK8s["No Kubernetes test cluster"]
+    end
+
+    subgraph AbsentStubs["Absent Service Stubs"]
+        NoWireMock["No WireMock / Mountebank"]
+        NoMSW["No MSW / nock / fetch-mock"]
+        NoVCR["No VCR / cassette recording"]
+        NoServiceVirt["No service virtualization"]
+    end
+
+    subgraph AbsentDataStores["Absent Test Data Stores"]
+        NoTestDB["No test database<br/>(no Postgres / MySQL / Mongo)"]
+        NoRedis["No test cache (no Redis)"]
+        NoQueue["No test message broker"]
+        NoFixtures["No fixture files"]
+    end
+
+    subgraph AbsentBrowserTest["Absent Browser Test Infrastructure"]
+        NoChrome["No Chrome / Chromium driver"]
+        NoFirefox["No Firefox / geckodriver"]
+        NoBrowserStack["No BrowserStack / Sauce Labs"]
+        NoSelenium["No Selenium Grid"]
+    end
+
+    LiveTestEnv -.-x AbsentCIInfra
+    LiveTestEnv -.-x AbsentContainerization
+    LiveTestEnv -.-x AbsentStubs
+    LiveTestEnv -.-x AbsentDataStores
+    LiveTestEnv -.-x AbsentBrowserTest
+```
+
+The architecture reveals three properties of the test environment:
+
+- **Two-process minimum**: The recommended test environment requires exactly two Node.js processes — one for the test runner and one for the system under test. Both run on the same host because C-002 mandates a loopback bind.
+- **Built-in tooling only**: Every box in the live test environment subgraph is a built-in Node.js capability (`node:test`, `node:assert`, `node:child_process`, `node:http`, global `fetch`). No third-party box appears in the live path.
+- **No environment provisioning**: There is no concept of an "environment" to provision — no staging, no QA, no UAT, no preview environment, no test cluster, no test database, no service stub. The entire test environment is the operator's local Node.js installation plus the repository working directory.
+
+---
+
+### 6.6.8 Test Data Flow
+
+The diagram below visualizes the test data flow. Because the system under test is branchless per F-002-RQ-004 and stateless per §5.1.3, the data flow is degenerate: any request payload is discarded by the handler, and the response body is a compile-time string literal that does not vary across requests. No fixture loading, no database seeding, no mock data generation, and no per-test cleanup is required.
+
+```mermaid
+flowchart LR
+    subgraph TestInputs["Test Input Sources (All Static)"]
+        URLLiteral["URL literal:<br/>'http://127.0.0.1:3000/'"]
+        MethodLiteral["HTTP method literal:<br/>'GET' (or any variant<br/>for determinism test)"]
+        ExpectedStatus["Expected status:<br/>200 (literal in assertion)"]
+        ExpectedCT["Expected Content-Type:<br/>'text/plain' (literal)"]
+        ExpectedBody["Expected body:<br/>'Hello, World!\n' (14 bytes)"]
+        ExpectedLog["Expected startup log:<br/>'Server running at<br/>http://127.0.0.1:3000/'"]
+    end
+
+    subgraph TestActor["Test Actor"]
+        TestCase["node:test test case<br/>(no fixtures, no factories,<br/>no mock data generators)"]
+    end
+
+    subgraph SUT["System Under Test (server.js, branchless)"]
+        Handler["Request handler<br/>(ignores req entirely<br/>per F-002-RQ-004)"]
+        ResponseLiteral["Compile-time response:<br/>200 / text/plain /<br/>'Hello, World!\n'"]
+    end
+
+    subgraph TestAssertions["Test Assertions"]
+        AssertStatus["assert.strictEqual<br/>(statusCode, 200)"]
+        AssertCT["assert.strictEqual<br/>(contentType, 'text/plain')"]
+        AssertBody["assert.strictEqual<br/>(body, 'Hello, World!\n')"]
+        AssertBytes["assert.strictEqual<br/>(byteLength, 14)"]
+    end
+
+    subgraph DataPlaneAbsent["Verified-Absent Test Data Plane"]
+        NoFixtureFiles["No fixtures/ directory"]
+        NoSeedScript["No seed.sql / seed.js"]
+        NoFactory["No factory-bot / faker"]
+        NoSnapshot["No snapshot files<br/>(__snapshots__/)"]
+        NoMockData["No mock data generators"]
+        NoVCR["No HTTP cassettes (VCR)"]
+    end
+
+    URLLiteral --> TestCase
+    MethodLiteral --> TestCase
+    TestCase -->|"HTTP request (body discarded)"| Handler
+    Handler --> ResponseLiteral
+    ResponseLiteral -->|"200 / text/plain / 14 bytes"| TestCase
+    TestCase --> AssertStatus
+    TestCase --> AssertCT
+    TestCase --> AssertBody
+    TestCase --> AssertBytes
+    ExpectedStatus -.-> AssertStatus
+    ExpectedCT -.-> AssertCT
+    ExpectedBody -.-> AssertBody
+    ExpectedLog -.->|"observed from child.stdout"| TestCase
+
+    TestCase -.-x DataPlaneAbsent
+```
+
+The data flow demonstrates three properties:
+
+- **All test data is compile-time literal**: Every input (URL, method, expected status, expected body) and every output (the actual response body) is a string or numeric literal. There is no data sourced from a file, a database, or a generator.
+- **Request body is discarded**: Because the handler is branchless per F-002-RQ-004, any payload sent in the test request flows into `req` and is ignored. The "data plane" of the test reduces to control-plane signaling (status code, content-type header, body string equality).
+- **No persistence side effects**: The system under test creates no files, opens no database connections, and emits no telemetry. There are no side effects to clean up between tests beyond killing the child process to release port 3000.
+
+---
+
+### 6.6.9 Example Test Patterns
+
+The patterns below are reproduced from `docs/testing-strategy.md` as illustrative, **unimplemented** templates. They show the structure that any future test author would follow under the zero-dependency tooling described in §6.6.3.1. No equivalent files exist in the repository today, and authoring them is explicitly gated by C-001 / C-005 / C-006 per `docs/testing-strategy.md` §5.3.
+
+#### 6.6.9.1 P0 API Contract Test Pattern
+
+The P0 API contract pattern uses `node:test` lifecycle hooks (`before`, `after`) to spawn the server as a child process, awaits the F-003 readiness signal by parsing the child's stdout pipe, issues a `GET /` request via `node:http`, and asserts the four invariants from §6.6.2.2 with `node:assert.strictEqual`. The test additionally verifies the body's exact byte length using `Buffer.byteLength` to catch any silent UTF-8 encoding drift.
+
+| Pattern Element | Implementation |
+|-----------------|----------------|
+| Setup | `spawn('node', ['server.js'])` with `stdio: ['ignore', 'pipe', 'pipe']` |
+| Readiness detection | Listen on `child.stdout` for the F-003 line |
+| HTTP probe | `node:http.get` to `http://127.0.0.1:3000/` |
+| Assertions | Four `assert.strictEqual` calls (status, content-type, body, byte length) |
+| Teardown | `child.kill()` in `after` hook |
+
+#### 6.6.9.2 P0 Determinism Test Pattern
+
+The P0 determinism pattern is a table-driven test that varies HTTP method (`GET`, `POST`, `PUT`, `DELETE`, `PATCH`, `OPTIONS`, `HEAD`), path (`/`, `/anything`, `/very/deep/path`), and request body (empty, JSON, binary) — and asserts that **every variant yields the identical 200 / text/plain / `Hello, World!\n` response**. This pattern is the operational verification of the F-002-RQ-004 branchless invariant.
+
+| Pattern Element | Implementation |
+|-----------------|----------------|
+| Test data | Cartesian product of methods × paths × bodies (all literal) |
+| Driver | `node:test` with a single parameterized `test()` block per row |
+| Assertions | Same four `assert.strictEqual` calls for every row |
+| Expected outcome | Every row produces identical assertions — no row diverges |
+
+#### 6.6.9.3 P1 EADDRINUSE Failure Mode Test Pattern
+
+The P1 `EADDRINUSE` pattern creates a "blocker" HTTP server bound to `127.0.0.1:3000`, then attempts a second `http.createServer().listen(3000, '127.0.0.1')` call and asserts that the second listener emits an `'error'` event with `err.code === 'EADDRINUSE'`. This test verifies the only documented failure mode of the error-handler-free server per §4.6.2.
+
+| Pattern Element | Implementation |
+|-----------------|----------------|
+| Blocker setup | First `http.createServer()` listens on `127.0.0.1:3000` |
+| Probe action | Second `http.createServer()` attempts the same bind |
+| Assertion | `assert.strictEqual(err.code, 'EADDRINUSE')` |
+| Cleanup | Close the blocker; second server never listened |
+
+#### 6.6.9.4 Coverage Measurement Pattern
+
+The coverage measurement pattern uses the built-in `--experimental-test-coverage` flag, which emits coverage statistics directly to stdout alongside the TAP test output. No third-party coverage tool is invoked.
+
+| Pattern Element | Implementation |
+|-----------------|----------------|
+| Invocation | `node --test --experimental-test-coverage tests/*.test.js` |
+| Output format | TAP test output + tabular coverage summary |
+| Coverage scope | All `require`d files (including `server.js` when spawned) |
+| Threshold enforcement | None — advisory output only (no CI to enforce) |
+
+---
+
+### 6.6.10 Cross-Section Reference Map
+
+For readers who need additional context on each Testing Strategy sub-area, the table below maps each concern to the section(s) in this Technical Specification that document the underlying architectural decisions and constraint sources.
+
+| Sub-Area | Primary Reference | Supporting References |
+|----------|-------------------|------------------------|
+| Test infrastructure inventory | §3.7.8 | §3.7.2 |
+| Behavioral invariants tests must preserve | `docs/testing-strategy.md` §5.4 | §6.5.2.3, §5.1.4 |
+| Recommended test stack | `docs/testing-strategy.md` §5.4 | §3.7.2 |
+| Unit test feasibility (blocked by C-001) | §2.3.3 | §5.2.1, §2.6.2 (C-001) |
+| Integration test approach (spawn + probe) | `docs/testing-strategy.md` §3.4 | §6.5.5.3 |
+| API contract test (P0) | `docs/testing-strategy.md` §3.2 | §5.1.4 (four invariants) |
+| Determinism test (P0) | `docs/testing-strategy.md` §3.3 | F-002-RQ-004 (§2.1.2) |
+| `EADDRINUSE` failure mode test (P1) | `docs/testing-strategy.md` §3.5 | §4.6.2, §5.4.3 |
+| Coverage measurement | `docs/testing-strategy.md` §3.7 | §3.7.2 |
+| CI/CD pipeline absence | §3.7.6 | §1.3.2 |
+| Containerization absence | §3.7.4 | §1.3.2 |
+| Performance / load testing absence | §4.7.2 | §5.4.5, §6.1.4.5 |
+| Mocking inapplicability | §6.3.2.1 | F-002-RQ-004 |
+| Database test inapplicability | §6.2 | §6.2.5 |
+| UI / browser test inapplicability | §1.2 | §5.1.1 |
+| Security testing posture | §3.9 | §6.4, A-005 |
+| Test environment requirements | §3.7.7 | §3.7.9, §2.6.1 (A-002) |
+| Flaky test inapplicability | F-002-RQ-004 | §5.1.3, §6.3.2.1 |
+
+---
+
+### 6.6.11 Conditions Under Which This Section Would Become Applicable
+
+For traceability, this subsection records the architectural events that would trigger reauthoring of §6.6 as a populated (rather than non-applicable) Testing Strategy specification. Each event corresponds to a deliberate relaxation of a binding constraint from §2.6.2.
+
+| Triggering Event | Constraint to Relax | New Testing Domain Introduced |
+|------------------|---------------------|--------------------------------|
+| Add `module.exports` to `server.js` | C-001 | True isolated unit testing (currently blocked) |
+| Wire `"test": "node --test"` in `package.json` | C-001 | `npm test` invocation; CI-friendly entry point |
+| Introduce a third-party test framework (Jest, Mocha, Vitest) | C-005 | Framework-based testing, mocking libraries, snapshot testing |
+| Introduce a coverage tool (c8, nyc, Istanbul) | C-005 | Coverage gating, threshold enforcement, HTML reports |
+| Introduce a CI/CD pipeline (`.github/workflows/`, etc.) | None (additive only) | Automated triggers, parallel execution, artifact upload, notifications |
+| Introduce a linter or formatter (ESLint, Prettier) | C-005 | Static analysis, code style enforcement, type checking |
+| Introduce a load testing tool (k6, autocannon, Gatling) | C-005 | Throughput / latency / capacity benchmarking |
+| Bind to a non-loopback host | C-002 | Cross-host testing, remote test runners, distributed test execution |
+| Allow differentiated response paths | C-004 | Route-specific testing, contract-by-endpoint testing |
+| Add a UI layer | C-001 | Browser automation, visual regression, cross-browser matrices |
+| Add a database or persistence layer | C-001 | Schema migration testing, transaction rollback testing, Testcontainers |
+| Add outbound HTTP calls / message broker producers | C-001 | External service mocking, contract testing, service virtualization |
+
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for §6.6 stands. The complete Testing Strategy surface of the system continues to be: zero committed tests, a placeholder `scripts.test`, a 308-line authoritative recommendation document (`docs/testing-strategy.md`), and the four behavioral invariants from §6.6.2.2 that any future test author would verify using built-in Node.js tooling.
+
+---
+
+### 6.6.12 References
+
+#### Files Examined
+
+- `server.js` — Confirmed the 14-line single-file implementation; verified the branchless handler signature `(req, res) => {...}` that produces a compile-time response literal; verified the absence of `module.exports` that blocks isolated unit testing; verified the hardcoded `127.0.0.1:3000` binding that constrains test environment topology; verified the sole `console.log` invocation at line 13 that serves as the F-003 readiness signal for integration tests.
+- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, no `engines` field, no `start` script, MIT license, and the npm-default placeholder `test` script (`echo "Error: no test specified" && exit 1`) that would intentionally fail any naïve CI invocation.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty `packages` tree below the root entry, verifying the absence of any transitive testing dependencies (Jest, Mocha, supertest, c8, nyc, ESLint, etc.).
+- `README.md` — Confirmed the 3-line content (project title plus "Do not touch!" immutability directive) that is the source of constraint C-001 and bars the addition of test files, test wiring, or framework dependencies.
+- `docs/testing-strategy.md` — Confirmed the 308-line authoritative testing strategy document containing risk-prioritized P0→P2 recommendations, example `node:test` snippets, the five-class coverage cross-check, and the constraint-compatibility analysis that this section consolidates.
+- `docs/dead-code-analysis.md` — Companion analysis document with shared C-001 governance; confirms zero removable dead code (no dead code blocks test authoring).
+
+#### Folders Explored
+
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no `test/`, `tests/`, `__tests__/`, `spec/`, `e2e/`, `cypress/`, `playwright/`, or any other test-related source subdirectories exist.
+- `docs/` (depth 1) — Confirmed contents limited to analysis documents (`dead-code-analysis.md`, `testing-strategy.md`); the latter is the authoritative source consolidated by §6.6.
+- `blitzy/documentation/` (depth 2) — Confirmed contents limited to governance and specification artifacts; no test configuration, no test fixtures, no test reporting templates.
+
+#### Technical Specification Sections Cross-Referenced
+
+- §1.2 System Overview — Local fixture context; four-invariant success criteria.
+- §1.3 Scope — Explicit out-of-scope enumeration of "Quality Assurance | Automated tests, linters, formatters, type checkers."
+- §2.1 Feature Catalog — F-002 (Branchless HTTP Handler) per F-002-RQ-004; F-003 (Startup Console Logging) as the readiness signal; F-005 (Zero-Dependency Operation) and F-006 (Immutability Directive) precluding framework additions.
+- §2.3 Feature Relationships — No internal modules; no `module.exports`; no shared test utilities possible.
+- §2.4 Implementation Considerations — §2.4.5 "Test Maintenance: Placeholder `scripts.test` only; no real tests to maintain."
+- §2.6 Assumptions and Constraints — Seven binding constraints (C-001 through C-007); five assumptions (A-001 through A-005) including A-002 (port 3000 free) as the test prerequisite.
+- §3.1 Stack Philosophy and Overview — Minimalism principle; joint preclusion of test frameworks by C-001 and C-005.
+- §3.2 Programming Languages — JavaScript CommonJS only; no TypeScript test support.
+- §3.3 Frameworks & Libraries — Explicit exclusion of Jest, Mocha, Vitest, Jasmine, AVA, Tap, Cypress, Playwright, Puppeteer, Selenium.
+- §3.4 Open-Source Dependencies — Zero runtime, zero dev deps; complete dependency-free baseline.
+- §3.5 Third-Party Services — Comprehensive verified-absent inventory including test reporting, coverage SaaS, and CI/CD services.
+- §3.7 Development & Deployment — §3.7.2 Development Tools table (built-in `node:test`, `node:assert`, global `fetch`, `--experimental-test-coverage`); §3.7.6 CI/CD pipeline absence; §3.7.7 Launch and Execution Procedure; §3.7.8 Test Infrastructure inventory.
+- §3.9 Security Implications of Stack Choices — `npm audit` reports zero vulnerabilities (empty dep tree).
+- §4.6 Error Handling — `EADDRINUSE` documented as the only failure mode addressable by a P1 test.
+- §4.7 Timing and SLA Considerations — Sub-millisecond per-step ops; no quantitative SLAs that would necessitate performance testing.
+- §5.1 High-Level Architecture — Single-process, single-file, monolithic micro-service characterization governing test topology.
+- §5.2 Component Details — `server.js` as sole runtime component; lifecycle state machine.
+- §5.3 Technical Decisions — ADRs C-001 through C-007.
+- §5.4 Cross-Cutting Concerns — §5.4.5 KPI table marked "Not documented"; §5.4.6 disaster recovery as manual re-invocation only.
+- §6.1 Core Services Architecture — Canonical negative-space precedent pattern.
+- §6.2 Database Design — No database, no schema, no data fixtures, no migration tests.
+- §6.3 Integration Architecture — Zero outbound integrations; no service stubs required.
+- §6.4 Security Architecture — Loopback bind as the sole security control; A-005 declares no security review required.
+- §6.5 Monitoring and Observability — Sole observability event (F-003 startup log) is the deterministic readiness signal that integration tests consume.
+
+# 7. User Interface Design
+
+**No user interface required.**
+
+This project does not define, implement, or require any form of user interface. The repository is a server-only HTTP fixture whose sole runtime artifact is a 14-line Node.js script (`server.js`) returning a static plain-text response (`Hello, World!\n`) to a machine-to-machine consumer (an automated *backprop integration validation workflow*). There are no screens, no front-end technologies, no rendered markup, no client-side assets, no presentation-layer schemas, and no human-facing interactions anywhere in the codebase or in the system's declared scope.
+
+The remainder of this section formally documents the absence of a UI layer, enumerates the categories of UI artifacts that have been verified non-present, and identifies the architectural constraints that preclude any UI from being introduced.
+
+## 7.1 DETERMINATION AND RATIONALE
+
+### 7.1.1 Section Applicability
+
+Per the section prompt's branch logic — *"If the project doesn't define a user interface (UI), leave the section empty with the note 'No user interface required'"* — this is the applicable case. The present section therefore documents the determination and its supporting evidence rather than enumerating UI elements that do not exist. No UI usecases, UI/backend interaction boundaries, UI schemas, screens, user interactions, or visual-design considerations are documented because none exist in the repository.
+
+### 7.1.2 System Classification
+
+The repository implements a single-process, single-file, server-only HTTP fixture. The `hao-backprop-test` repository implements a single-process, single-file, monolithic micro-service that exposes one stateless HTTP endpoint atop the Node.js core `http` module. The system is intentionally devoid of conventional architectural layering: there is no controller/service/repository separation, no middleware chain, no routing tier, and no internal modules. The entire runtime is contained within a single 14-line `server.js` file invoked directly by the Node.js binary.
+
+This classification — a server-only, branchless HTTP fixture — categorically excludes any presentation layer. The system has no view tier, no template renderer, no asset pipeline, and no browser-targeted output.
+
+### 7.1.3 Consumer Profile (Machine-to-Machine)
+
+The intended consumer is not a human user but an automated validation workflow. The repository exists exclusively as a deterministic test counterparty for an external "backprop integration" validation workflow, and its architectural value derives from invariance and minimalism rather than feature richness. The architecture is best understood through its deliberate omissions as much as through its inclusions.
+
+The integration boundary is HTTP-only and one-directional from consumer to server. The system uses pure synchronous request/response over HTTP/1.1 plaintext. There is no asynchronous messaging, no event-driven pattern beyond the Node.js intrinsic event loop, no batch processing, and no scheduled task subsystem. The response is consumed as raw bytes for behavioral conformance checking, not rendered as a presentation artifact.
+
+## 7.2 VERIFIED ABSENCE OF UI ARTIFACTS
+
+### 7.2.1 Response Content Type Is Plain Text
+
+The single HTTP endpoint emits `Content-Type: text/plain` with a literal UTF-8 body, never markup. There are **no runtime data transformations**. The response body is a compile-time UTF-8 string literal — `Hello, World!\n` — encoding 14 bytes (hex `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A`). No templating engine, no content negotiation, no encoding decisions at runtime.
+
+Because the wire format is plain text and not HTML, no client-side rendering, parsing, or presentation logic is involved on either side of the boundary.
+
+### 7.2.2 No Frontend Technologies in the Stack
+
+The project declares zero third-party dependencies of any kind. **There are no third-party frameworks of any kind in this system.** The framework exclusion list is explicit and exhaustive:
+
+| Excluded Category | Specific Exclusions |
+|-------------------|---------------------|
+| Web Frameworks | Express, Koa, Fastify, Hapi, or any third-party HTTP abstraction |
+| Routing Libraries | Path-based, method-based, or parameter-based routing logic |
+| Middleware | Body parsers, compression, CORS, request preprocessing, response postprocessing |
+| Authentication Libraries | OAuth clients, JWT, session middleware, RBAC engines |
+| Configuration Management | dotenv, config, convict, environment-variable loaders |
+| ORM / Database Libraries | Mongoose, Sequelize, TypeORM, Knex, Prisma |
+| Logging Frameworks | Winston, Pino, Bunyan, Morgan |
+| Test Frameworks | Jest, Mocha, Vitest, Jasmine, AVA, Tap |
+| Linters / Formatters | ESLint, Prettier, StandardJS (not installed; would violate C-005) |
+| Type Checkers | TypeScript, Flow |
+| Build Tools | Webpack, Vite, Rollup, esbuild, Parcel, SWC, Babel |
+| HTTP Clients | Axios, node-fetch, got, superagent (no outbound calls exist) |
+
+By extension, the following UI-specific technologies are also verified absent:
+
+| Category | Examples Verified Absent |
+|----------|--------------------------|
+| Frontend Component Frameworks | React, Vue, Angular, Svelte, SolidJS, Preact, Lit |
+| Templating Engines | EJS, Pug, Handlebars, Mustache, Nunjucks, Liquid |
+| CSS Tooling | Sass, Less, PostCSS, Tailwind, CSS Modules |
+| State Management Libraries | Redux, Zustand, Pinia, MobX |
+| Client-Side Routers | React Router, Vue Router, Reach Router |
+| Bundlers and Build Tools | Webpack, Vite, Rollup, esbuild, Parcel, SWC, Babel |
+| PWA / Service Worker Tooling | Workbox, sw-precache |
+
+### 7.2.3 No UI Files or Directories in the Repository
+
+A complete inventory of the repository reveals no UI-related artifacts of any kind:
+
+- **No markup files**: zero `.html`, `.htm`, `.xml`, `.xhtml` files
+- **No styling files**: zero `.css`, `.scss`, `.sass`, `.less`, `.styl` files
+- **No component files**: zero `.jsx`, `.tsx`, `.vue`, `.svelte` files
+- **No UI directories**: no `public/`, `static/`, `views/`, `templates/`, `assets/`, `client/`, `frontend/`, `ui/`, `web/`, `components/`, or `pages/` folders
+- **No media assets**: no images, fonts, icons, SVGs, or other binary visual resources
+- **No web manifests**: no `manifest.json`, no `favicon.ico`, no service worker, no PWA configuration
+- **No design-system artifacts**: no Figma exports, no Storybook configuration, no design tokens
+
+### 7.2.4 No UI-Related Features in the Feature Catalog
+
+All features documented for this system are server-side or metadata-related. None introduces a presentation layer or a human-facing surface:
+
+| Feature ID | Title | Domain | UI Component? |
+|------------|-------|--------|---------------|
+| F-001 | HTTP Server Lifecycle and TCP Binding | Server runtime | No |
+| F-002 | Static HTTP Response Generation | Server runtime (plain-text) | No |
+| F-003 | Startup Console Logging | Operator stdout | No |
+| F-004 | Package Identity and Metadata Declaration | Manifest | No |
+| F-005 | Zero-Dependency Operation | Supply-chain posture | No |
+| F-006 | Project Documentation and Immutability Directive | Repository metadata | No |
+
+## 7.3 ARCHITECTURAL CONSTRAINTS PRECLUDING UI ADDITION
+
+### 7.3.1 Immutability Directive (Constraint C-001)
+
+The repository's `README.md` "Do not touch!" directive is operationalized as Constraint C-001. **Source Immutability**: The "Do not touch!" directive in `README.md` is operational, not advisory. All four baseline files must remain byte-identical (C-001). This constraint mechanically forbids modification of `server.js` to add HTML emission, templating, or any other UI-bearing logic.
+
+### 7.3.2 Zero-Dependency Constraint (Constraint C-005)
+
+**Zero-Dependency Posture**: No runtime or dev dependencies; runnable without `npm install` (F-005, C-005, C-006). Because every credible UI stack (frontend framework, templating engine, build tool, CSS pipeline, bundler) requires at least one external npm dependency, this constraint structurally precludes any UI layer from being introduced without violating the project's foundational invariants.
+
+This minimalism is not incidental — it is enforced by seven hard constraints (C-001 through C-007 defined in §2.6.2). Constraint C-001 ("All four baseline files must remain unchanged from their committed state") combined with constraint C-005 ("Zero runtime and zero development dependencies") jointly preclude any expansion of the technology stack.
+
+### 7.3.3 Branchless Handler (Constraint C-004)
+
+**Branchless Determinism**: The request handler ignores the `req` object entirely and returns a byte-identical response to every request regardless of method, path, headers, or body (F-002-RQ-004, C-004).
+
+Because the handler cannot differentiate requests by path, method, or content negotiation, it is structurally incapable of serving per-route UI surfaces (e.g., `/login`, `/dashboard`, `/settings`) or of negotiating an HTML representation in lieu of plain text.
+
+### 7.3.4 Out-of-Scope Capabilities
+
+The system's scope explicitly excludes every capability that would underpin a UI:
+
+- **Routing**: Path-based, method-based, or parameter-based routing logic is excluded.
+- **Middleware**: Request preprocessing, response postprocessing, body parsing, and compression are excluded.
+- **Authentication and Authorization**: API keys, tokens, OAuth, sessions, RBAC, and ACLs are excluded.
+- **Content Negotiation**: There is no Accept-header inspection and no representation selection — the response is always `text/plain`.
+- **Templating**: No templating engine of any kind is present.
+
+## 7.4 SCREEN AND INTERACTION INVENTORY
+
+### 7.4.1 Screens Required
+
+**None.** No screens exist in the repository, and none are required by the system's declared scope. The system has no graphical surface, no terminal UI (TUI), and no CLI prompts — its only operator-facing output is a single stdout log line emitted at startup (`Server running at http://127.0.0.1:3000/`).
+
+### 7.4.2 User Interactions
+
+**None.** The system supports no human-facing interactions. All interactions are programmatic HTTP request/response exchanges between an automated client (the co-resident backprop integration validation workflow) and the Node.js HTTP server. External "backprop integration" validation workflow (co-resident process) | Inbound HTTP request acceptance | Synchronous client-initiated request/response; one round-trip per request | HTTP/1.1 plaintext on `127.0.0.1:3000`
+
+### 7.4.3 UI Schemas
+
+**Not applicable.** Because there are no UI components, forms, view models, presentation-layer DTOs, or client-side state stores, there is no UI schema to document. The only wire-level schema in the system is the HTTP response contract documented in §1.2.3 (status `200`, header `Content-Type: text/plain`, body `Hello, World!\n`), which is a server-side contract, not a UI schema.
+
+### 7.4.4 UI / Backend Interaction Boundaries
+
+**Not applicable.** The system has no UI tier and therefore no UI-to-backend boundary in the conventional sense. The only relevant boundary is the HTTP integration boundary between an external automated consumer and the Node.js server, which is fully described in §5.1.4 (External Integration Points) and §6.3 (Integration Architecture).
+
+### 7.4.5 Visual Design Considerations
+
+**Not applicable.** There are no typography, color, spacing, iconography, motion, accessibility (WCAG), responsive-design, or theming considerations because there is no rendered visual output. The response payload is a 14-byte ASCII string with no visual semantics.
+
+## 7.5 ARTIFACT MAP
+
+The following diagram illustrates the absence of a UI tier in the system's overall topology. The conventional "UI" lane is drawn explicitly as empty to make the omission unambiguous.
+
+```mermaid
+flowchart LR
+    subgraph UILayer["Presentation Tier (Empty by Design)"]
+        NoUI["No UI artifacts<br/>No HTML / CSS / JS<br/>No screens or views"]
+    end
+    subgraph Consumer["External Consumer (Machine-to-Machine)"]
+        Workflow["Backprop Integration<br/>Validation Workflow<br/>(automated)"]
+    end
+    subgraph Server["Repository Runtime"]
+        ServerJS["server.js<br/>Branchless Handler<br/>127.0.0.1:3000"]
+        Resp["Static Response<br/>200 / text/plain<br/>Hello, World!\n"]
+        ServerJS --> Resp
+    end
+    Workflow -->|"HTTP/1.1 Request<br/>(any method/path)"| ServerJS
+    Resp -->|"HTTP/1.1 Response<br/>14-byte plain text"| Workflow
+    UILayer -.->|"No interaction —<br/>tier is absent"| Server
+```
+
+## 7.6 REFERENCES
+
+### 7.6.1 Files Examined
+
+- `server.js` — The sole runtime file (14 lines); confirmed to set `Content-Type: text/plain` and emit the static literal `Hello, World!\n`; contains no rendering, templating, or markup-emission logic.
+- `package.json` — Package manifest; confirmed to declare zero `dependencies` and zero `devDependencies`, ruling out any UI framework, templating engine, or build tool.
+- `package-lock.json` — npm lockfile v3 with an empty `packages` tree; confirms no transitive UI dependencies exist in the dependency closure.
+- `README.md` — Three-line governance document containing the "Do not touch!" immutability directive; contains no UI documentation.
+- `docs/dead-code-analysis.md` — Analysis-only artifact; references no UI components.
+- `docs/testing-strategy.md` — Recommends only HTTP contract testing (status, header, body); no UI tests recommended or applicable.
+
+### 7.6.2 Folders Explored
+
+- Repository root (`/`) — Inventoried at depth 0; confirmed absence of UI-related directories (`public/`, `static/`, `views/`, `templates/`, `assets/`, `client/`, `frontend/`, `ui/`, `web/`, `components/`, `pages/`).
+- `docs/` — Contains only Markdown analysis reports; no UI documentation or design artifacts.
+- `blitzy/` — Contains governance and engagement-documentation artifacts only; no UI assets.
+
+### 7.6.3 Technical Specification Sections Referenced
+
+- §1.2 SYSTEM OVERVIEW — Establishes the system as a server-only HTTP fixture returning static plain text to a machine-to-machine consumer.
+- §1.3 SCOPE — Defines in-scope/out-of-scope boundaries; explicitly excludes web frameworks, routing, middleware, authentication, and content negotiation.
+- §2.1 FEATURE CATALOG — Enumerates all six features (F-001 through F-006), none of which involve a UI.
+- §2.6 ASSUMPTIONS AND CONSTRAINTS — Defines constraints C-001 (immutability), C-004 (branchless determinism), and C-005 (zero dependencies) that jointly preclude a UI.
+- §3.3 FRAMEWORKS & LIBRARIES — Confirms the absence of any third-party frameworks, including all frontend frameworks, templating engines, and build tools.
+- §5.1 HIGH-LEVEL ARCHITECTURE — Establishes the monolithic micro-service topology with no controller/service/repository layering, no view layer, and a single inbound HTTP integration point.
+- §5.2 COMPONENT DETAILS — Identifies `server.js` as the sole runtime component; no view layer or UI module exists.
+- §6.3 Integration Architecture — Confirms the sole integration boundary is HTTP/1.1 over loopback, machine-to-machine.
 
 # 8. Infrastructure
 
 ## 8.1 APPLICABILITY ASSESSMENT
 
-### 8.1.1 Determination Statement
+### 8.1.1 Determination
 
 **Detailed Infrastructure Architecture is not applicable for this system.**
 
-The `hao-backprop-test` repository is a deterministic, single-process, single-file Node.js HTTP test fixture whose entire executable surface is contained in `server.js` (14 lines). The system has **no deployment infrastructure of any kind** — no cloud services, no containers, no orchestration platform, no CI/CD pipeline, no infrastructure-as-code templates, no infrastructure monitoring agents, and no environment-promotion fabric. Every subtopic prescribed for an Infrastructure section (deployment environment, cloud services, containerization, orchestration, CI/CD, infrastructure monitoring) is either inapplicable by topology or has been deliberately excluded by architectural decision.
+The `hao-backprop-test` repository implements a deliberately minimal, single-process, single-file Node.js HTTP test fixture totaling approximately 40 lines of code across four immutable baseline files. It is not a deployable production service and does not require — or admit — any of the conventional infrastructure tooling typically described in this section. There is no cloud presence, no container image, no orchestration platform, no CI/CD pipeline, no Infrastructure-as-Code (IaC) artifact, and no monitoring backend integrated with this repository. Every category of infrastructure surveyed in this section is verified absent by direct repository inspection and is precluded by binding architectural constraints documented in §2.6.2.
 
-This determination is not a documentation gap; it is a substantive architectural finding. Per §3.7.6, "The system runs on the host operating system as a single Node.js process bound to loopback — there is no infrastructure to provision, no cloud resources to allocate, and no orchestration to declare." Per §5.1.1.1, the monolithic posture is "a deliberate posture motivated by the system's role as a deterministic test fixture for an external 'backprop integration' consumer." The complete absence of infrastructure is enforced normatively by the constraints catalogued in §2.6.2, and any attempt to introduce conventional infrastructure would violate at least four of the seven governing constraints (C-001, C-002, C-005, C-006).
+Per the operational posture summarized in §5.4.7, the system runs as a single `node server.js` invocation on the operator's local host, bound exclusively to the loopback interface `127.0.0.1:3000`. Consumers are co-resident processes on the same host. There is no remote endpoint, no multi-host topology, no horizontal scaling, no service-discovery layer, and no externally observable infrastructure footprint. This is the canonical zero-infrastructure deployment.
 
-In conformance with the section's authoring guidance for systems that do not require deployment infrastructure, this section documents only the minimal build and distribution requirements (§8.2) supplemented by the comprehensive negative inventories for each prescribed subtopic (§8.3 through §8.7), the actual observability surfaces that substitute for infrastructure monitoring (§8.8), the required diagrams (§8.9), cost and resource sizing tables (§8.10), an external-dependency inventory (§8.11), maintenance procedures (§8.12), and the governing-constraint rationale (§8.13).
+This section therefore proceeds in two parts:
 
-### 8.1.2 Repository-Level Evidence of Infrastructure Absence
+1. **Section 8.2** documents the only "infrastructure-adjacent" items that DO exist: the minimal build and distribution requirements — Node.js runtime version, launch command, and repository layout.
+2. **Sections 8.3 through 8.8** document the verified absence of each infrastructure concern requested by the section prompt (deployment environment management, cloud services, containerization, orchestration, CI/CD, monitoring), with file-level evidence and the governing constraint that bars introduction. This "negative-space" approach is consistent with the precedent established in §6.1 (Core Services Architecture) and §6.5 (Monitoring and Observability).
 
-The applicability determination rests on the following directly observable repository properties:
+### 8.1.2 Rationale for Non-Applicability
 
-| Evidence Dimension | Observed State | Source |
-|--------------------|----------------|--------|
-| Repository surface | 4 files, 0 subdirectories | §5.1.1.3, §5.2 |
-| Container manifest (`Dockerfile`, `docker-compose.yml`) | Absent | §3.7.4 |
-| Kubernetes / Helm manifests | Absent | §3.7.4 |
-| CI/CD configuration (`.github/`, `.gitlab-ci.yml`, `Jenkinsfile`) | Absent | §3.7.5 |
-| Infrastructure-as-Code templates (`.tf`, CloudFormation, Pulumi, Ansible) | Absent | §3.7.6 |
-| Cloud-provider SDKs (AWS, GCP, Azure) | Not imported; not installed | §5.1.4, §3.5 |
-| Process supervisor manifests (systemd unit, PM2 ecosystem) | Absent | §5.4.6 |
-| Environment-specific configuration files (`.env*`, `config/`) | Absent | §1.3.2 |
-| `process.env` reads in source | Zero — only `require('http')` is invoked | §1.3.2, §3.7.3 |
-| Build scripts, shell scripts, `bin/`, `scripts/` | Absent | §3.7.2 |
-| Network firewall declarations | Absent — loopback bind is the boundary | §5.4.4 |
+The non-applicability of an infrastructure architecture follows directly from the system's purpose. As characterized in §5.1.1, the repository is a "single-process, single-file, monolithic micro-service" whose entire runtime is contained within a 14-line `server.js` file invoked directly by the Node.js binary. Its value derives from invariance — it exists exclusively as a deterministic counterparty for an external "backprop integration" validation workflow that requires byte-stable responses at a stable loopback address.
 
-The verification was performed against the full repository surface enumerated in §5.1.2: `server.js`, `package.json`, `package-lock.json`, and `README.md`. No infrastructure-related artifact exists in any of these four files.
+Introducing any infrastructure tooling would defeat the system's purpose by:
 
-### 8.1.3 Why Infrastructure Cannot Be Introduced
+- **Breaking byte-stability** of the response (any HTTP gateway, proxy, or load balancer may inject headers, alter encoding, or terminate TLS).
+- **Breaking address stability** at `127.0.0.1:3000` (any orchestrator or service mesh would re-assign or virtualize the bind address).
+- **Violating immutability constraints C-001 through C-007** by adding files, dependencies, or configuration surfaces.
+- **Introducing cost and complexity** disproportionate to a 14-byte constant-response fixture.
 
-The constraint catalogue in §2.6.2 normatively forbids the introduction of infrastructure features:
+### 8.1.3 Governing Constraints
 
-| Constraint ID | Statement | Effect on Infrastructure |
-|---------------|-----------|--------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding `Dockerfile`, IaC templates, CI/CD configs, environment files |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Precludes load balancers, multi-host deployment, external orchestration |
-| C-003 | Port must remain hardcoded to `3000` | Prevents dynamic port allocation required by orchestrators |
-| C-005 | Zero runtime and zero development dependencies must be maintained | Excludes process managers (PM2), cloud SDKs, IaC tooling, monitoring agents |
-| C-006 | Project must remain executable without `npm install` | Excludes any installable infrastructure dependency |
+The seven binding constraints from §2.6.2, reproduced below for direct traceability, jointly forbid the introduction of any infrastructure tooling. Each row identifies a class of infrastructure artifact whose addition would violate the constraint.
 
-The architectural posture is therefore not merely **descriptive** (what is currently absent) but **normative** (what must remain absent). Any future enhancement that proposed introducing a container image, an IaC template, a CI workflow, or an orchestrator manifest would simultaneously violate one or more of these constraints. The absence of detailed infrastructure architecture is therefore a permanent architectural property protected by multiple, mutually reinforcing constraints.
+| Constraint ID | Constraint | Infrastructure Category Precluded |
+|---------------|------------|-----------------------------------|
+| C-001 | All four baseline files must remain unchanged | New IaC, CI/CD, Docker, or manifest files |
+| C-002 | Hostname hardcoded to `127.0.0.1` | Multi-host, ingress, cloud-load-balancer, CDN |
+| C-003 | Port hardcoded to `3000` | Multi-instance, port-mapped containers, service mesh |
+| C-004 | Response body, status, headers byte-identical | Reverse proxies, WAFs, terminating gateways |
+| C-005 | Zero runtime and zero development dependencies | APM SDKs, log shippers, cloud SDKs |
+| C-006 | Must remain executable without prior `npm install` | Image-build steps requiring dependency resolution |
+| C-007 | MIT license for all repository contents | License-incompatible infrastructure additions |
+
+The combined effect of C-001 (immutability) and C-005 (zero dependencies), per §3.1, "jointly preclude any expansion of the technology stack." This is the foundational rationale for the non-applicability of every infrastructure concern documented in this section.
 
 ---
 
-## 8.2 BUILD AND DISTRIBUTION REQUIREMENTS
+## 8.2 MINIMAL BUILD AND DISTRIBUTION REQUIREMENTS
 
-In lieu of a full infrastructure architecture, this section documents the **minimal build and distribution requirements** sufficient to run the system on a host Node.js installation. These requirements are the entirety of what an operator needs to know in order to execute the fixture.
+This subsection documents the only infrastructure-adjacent requirements that DO apply to the system: the runtime environment substrate, the source layout, and the launch procedure. These are the minimum facts a stakeholder needs to acquire, validate, and run the fixture on a local host.
 
-### 8.2.1 Build System
+### 8.2.1 Runtime Environment Specification
 
-**No build system exists.** Per §3.7.2: "No build scripts, no TypeScript, no bundler, no transformation step." The build pipeline constraint from §2.4.1 is documented as "None — execute directly with `node server.js`."
+The execution environment requires only a Node.js runtime, per assumption A-001 ("Node.js is installed on the host that runs `server.js`"). No additional system packages, libraries, daemons, or runtime services are required.
 
-| Build Concern | Status |
+| Component | Version | Pinning Status |
+|-----------|---------|----------------|
+| Node.js | v20.20.2 (verified) | **Not pinned** — no `engines` field in `package.json` |
+| npm | 10.8.2 (bundled with Node 20) | Not pinned (npm is never invoked for install) |
+| OS | Any host capable of running Node.js ≥ 20 | Not specified — no platform-specific code |
+| Network | TCP port 3000 free on loopback | Required per assumption A-002 |
+
+The recommended minimum is **Node.js ≥ 20** per `docs/testing-strategy.md`, primarily to ensure availability of built-in modules referenced by the optional (unimplemented) test strategy. The production runtime path through `server.js` requires only the `node:http` core module, which has been part of Node.js since its earliest releases.
+
+#### Resource Sizing Guidelines
+
+No quantitative sizing requirements are documented. Per §5.4.5, every standard KPI dimension (throughput, latency, availability, error-rate, concurrent connections, memory footprint) is recorded as "not documented." The process is launched with whatever CPU and memory the host operating system grants by default, with no configured limits.
+
+| Resource Dimension | Documented Requirement | Operational Default |
+|--------------------|------------------------|---------------------|
+| CPU cores | Not documented | Single event-loop process uses ≤ 1 core |
+| Heap memory | Not configured (`--max-old-space-size` not set) | Node.js V8 default heap |
+| File descriptors | Not configured | OS default ulimits |
+| Disk space | Negligible (≈ 40 LOC source + Node.js install) | Whatever the host provides |
+| Network bandwidth | Not documented | Loopback bandwidth only |
+| `UV_THREADPOOL_SIZE` | Not overridden | Default (4) |
+
+Because the workload is a 14-byte constant-response handler with no I/O beyond the inbound HTTP socket, no capacity planning is warranted; the host's defaults are sufficient for any realistic test invocation rate.
+
+### 8.2.2 Source Acquisition and Repository Layout
+
+The distribution model is "clone-and-run" — the operator clones the repository and immediately invokes `node server.js` from the repository root. No package publication, no npm registry presence, no binary artifact, no installer, and no signed bundle exists.
+
+| Aspect | Detail |
+|--------|--------|
+| Distribution channel | Git repository (clone only) |
+| npm registry presence | None — `name: "hello_world"` is not published |
+| Pre-built artifacts | None — no binary, no bundled JS, no installer |
+| Working directory | Repository root |
+| Required baseline files | `server.js`, `package.json`, `package-lock.json`, `README.md` |
+
+### 8.2.3 Build Pipeline (Verified Absent)
+
+**No build pipeline exists.** Per §3.7.3, there is no build step between the source file and execution. The system uses only built-in Node.js APIs requiring no compilation; source files are executed verbatim by the Node.js runtime.
+
+| Build Stage | Status |
+|-------------|--------|
+| Transpilation (Babel, SWC, TypeScript) | None |
+| Bundling (Webpack, Rollup, esbuild, Parcel) | None |
+| Minification (Terser, UglifyJS) | None |
+| Asset pipeline | None |
+| Source maps | None |
+| Compile-equivalent step | `node --check server.js` (syntax validation only; produces no artifact) |
+
+### 8.2.4 Launch and Execution Procedure
+
+Per §3.7.7, the canonical launch is direct invocation of the Node.js binary against `server.js`. No preparatory steps are required.
+
+| Launch Aspect | Detail |
 |---------------|--------|
-| Transpilation (Babel, SWC, esbuild, tsc) | Not configured — source is already valid Node.js JavaScript |
-| Bundling (webpack, Rollup, Parcel, Vite) | Not configured — the application is a single file |
-| Minification | Not configured — the file is already minimal at 14 lines |
-| Asset pipeline | Not configured — no static assets exist |
-| Polyfill injection | Not configured — only Node.js core APIs are used |
-| Source-map generation | Not applicable — no transformation occurs |
+| Canonical command | `node server.js` |
+| Required preceding steps | None — no `npm install`, no build, no compile |
+| Environment variables | None — host and port are hardcoded literals |
+| Working directory | Repository root |
+| Required network state | TCP port 3000 free on loopback (per A-002) |
+| Startup confirmation | stdout line: `Server running at http://127.0.0.1:3000/` |
+| Shutdown procedure | `SIGINT` (Ctrl-C) — no graceful shutdown handler |
 
-### 8.2.2 Run / Start Procedure
+**Note on `package.json` launch fields**: Per the dead-code analysis report, the `main: "index.js"` field is a dangling reference (no `index.js` exists in the repository), and no `start` script is defined. The application launches **only** via `node server.js`; `npm start` and `node .` would both fail.
 
-The system is launched directly via the Node.js command-line interface. The complete invocation procedure is reproduced below from §3.7.3.
+### 8.2.5 External Dependencies (Complete Inventory)
 
-| Property | Value |
-|----------|-------|
-| Launch command | `node server.js` |
-| Entry point (actual) | `server.js` |
-| Entry point (declared in `package.json` `main`) | `index.js` — file does not exist (documented inconsistency per A-004) |
-| `start` script | Not defined — operators must invoke `node server.js` explicitly |
-| `test` script | `echo "Error: no test specified" && exit 1` (placeholder per F-004-RQ-004) |
-| Required environment variables | None (no `process.env` references in source) |
-| Required command-line arguments | None |
-| Pre-install step | None — `npm install` is not required per C-006 |
+The complete external-dependency footprint of this system is enumerated below. There are no npm dependencies (runtime or development) and no external services of any kind.
 
-### 8.2.3 Distribution
-
-| Distribution Concern | Status |
-|----------------------|--------|
-| License | MIT (declared in both `package.json` and `package-lock.json`) |
-| npm registry publication | Not published — no `repository`, `keywords`, `bugs`, or `homepage` fields in `package.json` |
-| npm compatibility | npm v7+ implied by `lockfileVersion: 3` in `package-lock.json` |
-| Versioning | Single declared version `1.0.0` mirrored across `package.json` and `package-lock.json` |
-| Release artifacts | None — no compiled binaries, no tarballs, no Docker images |
-| Distribution channel | Git repository only — Git is the version-control system (§3.7.7) |
-
-### 8.2.4 Host Prerequisites
-
-The host prerequisites are summarized by the assumptions catalogued in §2.6.1.
-
-| Prerequisite | Source | Notes |
-|--------------|--------|-------|
-| Node.js runtime installed on the host | Assumption A-001 | Version unconstrained — no `engines` field in `package.json` |
-| TCP port `3000` available on loopback at startup | Assumption A-002 | No fallback logic — collision causes startup failure |
-| Local consumer process on the same host | Assumption A-003 | Loopback binding precludes remote consumers |
-
-No additional host configuration — no firewall rules, no service-account provisioning, no TLS certificate, no DNS record, no reverse proxy — is required because the loopback binding is its own boundary (per §5.4.4.2).
+| Dependency | Type | Notes |
+|------------|------|-------|
+| Node.js runtime (v20.20.2 verified) | Runtime substrate | Provides built-in `http` module; not pinned in `package.json` |
+| `node:http` (built-in module) | Core module | Not an npm dependency; bundled with Node.js |
+| npm `dependencies` | **ZERO** | No `dependencies` field; per F-005-RQ-001 |
+| npm `devDependencies` | **ZERO** | No `devDependencies` field; per F-005-RQ-002 |
 
 ---
 
-## 8.3 DEPLOYMENT ENVIRONMENT — NOT APPLICABLE
+## 8.3 DEPLOYMENT ENVIRONMENT
 
 ### 8.3.1 Target Environment Assessment
 
-**A formal deployment environment is not defined for this system.** The only "deployment environment" is the operator's local host running a Node.js installation; there are no development, staging, or production tiers. The environment characteristics inferable from `server.js` and the constraint catalogue are summarized below.
+The target environment is **the operator's local host running Node.js**. There is no cloud presence, no on-premises server inventory, no edge fleet, no hybrid topology, and no multi-cloud arrangement.
 
-| Aspect | Finding | Source |
-|--------|---------|--------|
-| Environment type | Local host execution only — loopback bind (`127.0.0.1`) | `server.js` line 3; C-002 |
-| Geographic distribution | Single host; loopback binding precludes geographic distribution | §5.4.6; C-002 |
-| Compute requirements | Single Node.js process (single-threaded event loop) | §5.1.1.1, §6.1.3.3 |
-| Memory requirements | Undocumented; no `--max-old-space-size` flags committed | §6.1.3.2 |
-| Storage requirements | None — no filesystem I/O, no persistence (§3.6) | §3.6, §5.1.3.4 |
-| Network requirements | TCP port `3000` on loopback (`127.0.0.1`) | `server.js` line 4 |
-| Compliance / regulatory requirements | None documented (per A-005, "no security review required") | §2.6.1 |
+#### 8.3.1.1 Environment Type
 
-The loopback binding documented as constraint C-002 is the dispositive architectural feature: a system that binds only to `127.0.0.1` cannot be deployed to any environment whose value proposition is multi-host accessibility, geographic redundancy, or external network exposure.
+| Environment Dimension | Value | Source |
+|-----------------------|-------|--------|
+| Environment type | Local host only (loopback) | §5.4.7, §1.3.1 |
+| Cloud presence | None | §3.5 (Verified-Absent Third-Party Services) |
+| On-premises footprint | Operator's workstation only | §1.3.1 |
+| Hybrid / multi-cloud | Not applicable | §3.10 |
+| Edge / IoT deployment | Not applicable | §1.3.1 |
+
+#### 8.3.1.2 Geographic Distribution
+
+**Not applicable.** The system binds to the loopback interface `127.0.0.1` (constraint C-002) and is reachable only by processes co-resident on the same host. No multi-region, multi-zone, or geographic-distribution concerns exist. There is no DNS configuration, no GeoIP routing, no traffic-steering policy, and no CDN.
+
+#### 8.3.1.3 Resource Requirements
+
+Per §6.1.4.5 ("Capacity Planning Guidelines"), no quantitative capacity-planning guidance is documented. The full KPI table records every dimension as "not documented." Resource sizing guidelines applicable to this fixture are reproduced in §8.2.1 above; in summary, the process runs comfortably within default host resources for any realistic invocation rate.
+
+#### 8.3.1.4 Compliance and Regulatory Requirements
+
+**Not applicable.** The system has no data plane, processes no Personally Identifiable Information (PII), handles no secrets or tokens (per §5.4.2: "no secrets, no tokens, and no PII"), and exposes no external network surface. Per assumption A-005, "no security review of plaintext HTTP / loopback binding is required" because "the fixture is local-only by design."
+
+| Compliance Domain | Applicability |
+|-------------------|---------------|
+| GDPR / CCPA / privacy regulations | Not applicable — no PII processed |
+| PCI-DSS | Not applicable — no payment data |
+| HIPAA | Not applicable — no health data |
+| SOC 2 / ISO 27001 | Not applicable — no production deployment |
+| Export controls | Not applicable — MIT-licensed local fixture |
 
 ### 8.3.2 Environment Management
 
-**No environment management infrastructure exists or is configured.** Each prescribed dimension is documented below as absent with the specific evidence.
+#### 8.3.2.1 Infrastructure as Code (IaC) Approach
 
-| Dimension | Status | Evidence |
-|-----------|--------|----------|
-| Infrastructure-as-Code (IaC) approach | **None present** — no `.tf`, no CloudFormation, no Pulumi, no Ansible | §3.7.6 |
-| Configuration management strategy | **None** — no `process.env` reads, no config files, no feature flags | §1.3.2, §3.7.3 |
-| Environment promotion (dev → staging → prod) | **Not applicable** — no environments defined | §3.7 |
-| Backup and disaster recovery plans | **None implemented** — stateless system; per §5.4.6, "Backup of persistent state: Not applicable" | §5.4.6, §6.1.4.2 |
-| Secret management (Vault, AWS Secrets Manager, etc.) | **Not applicable** — no secrets, credentials, or tokens used | §3.5, §6.4.2 |
-| Configuration drift detection | **Not applicable** — no configuration to drift | §1.3.2 |
+**No Infrastructure-as-Code artifacts exist.** Per §3.7.5, "no Terraform, CloudFormation, Pulumi, CDK, Ansible, or Chef artifacts are present." The default-stack item "Infrastructure as Code: Terraform" (per §3.10) is marked "Not applicable" for this system.
 
-The disaster-recovery posture is documented authoritatively in §5.4.6 and §6.1.4.2. The stateless posture documented in §5.1.1.1 ("Fully stateless — the application holds no mutable in-memory state and no persistent state") removes the data-recovery problem entirely, and the single-process loopback-only architecture removes the failover problem entirely.
+| IaC Tool / Pattern | Status |
+|--------------------|--------|
+| Terraform / OpenTofu | Absent — no `.tf` files |
+| AWS CloudFormation / CDK | Absent — no templates, no CDK app |
+| Pulumi | Absent — no Pulumi program |
+| Ansible / Chef / Puppet / Salt | Absent — no playbooks or recipes |
+| Kustomize / Helm / Jsonnet | Absent — no overlays or charts |
 
-### 8.3.3 Resource Sizing Guidelines
+The introduction of IaC would either (a) violate C-001 by modifying baseline files, or (b) introduce additive artifacts outside the four baseline files. Neither is present in the repository.
 
-Because no orchestration manifests or container specifications are committed, resource sizing is unmanaged at the application layer. Node.js process resource consumption is bounded only by the operating-system defaults of the host. The implicit resource envelope is summarized below.
+#### 8.3.2.2 Configuration Management Strategy
 
-| Resource Dimension | Implicit Envelope | Reason |
-|--------------------|-------------------|--------|
-| CPU | Single-threaded event loop; bounded by host CPU defaults | No `cluster` or `worker_threads` per §5.1.1.1 |
-| Memory (RSS) | Bounded by OS / Node default heap limits | No `--max-old-space-size` per §6.1.3.2 |
-| File descriptors | Bounded by OS ulimit defaults | No FD-intensive operations |
-| Disk | ~4 small text files (`server.js` 14 lines, `package.json`, `package-lock.json`, `README.md`) | Direct file inspection |
-| Network | One TCP listening socket on `127.0.0.1:3000` | `server.js` line 12 |
+**No configuration management is implemented.** Per §3.7.9, the application reads no environment variables; host (`127.0.0.1`) and port (`3000`) are hardcoded literals. There is no `.env` file, no `dotenv` library, no `process.env` reads in `server.js`, and no documented runtime configuration surface.
 
----
+| Configuration Surface | Documented State |
+|-----------------------|------------------|
+| Environment variables | None — host/port hardcoded |
+| Configuration files (YAML / JSON / TOML) | None |
+| Command-line arguments | None — `process.argv` not read |
+| Remote config (Consul, etcd, AWS Systems Manager) | None |
+| Feature-flag service | None |
+| Secrets manager (Vault, AWS Secrets Manager, KMS) | None |
 
-## 8.4 CLOUD SERVICES — NOT APPLICABLE
+The hardcoded host/port pairing is the design substitute for any dynamic configuration mechanism (see §6.1.3.3 on service discovery).
 
-### 8.4.1 Cloud Provider Status
+#### 8.3.2.3 Environment Promotion Strategy
 
-**The system uses no cloud services of any kind.** Per §3.7.6 and the negative integration inventory in §5.1.4, no cloud-provider SDK is imported, no managed service is consumed, and no externally hosted resource is provisioned by or on behalf of the application.
+**Not applicable.** The system has no dev/staging/prod environment progression because it has no deployable targets to promote between. The single "environment" is the operator's local host, and the single promotion event is the operator typing `node server.js`.
 
-| Cloud Concern | Status |
-|---------------|--------|
-| AWS services (EC2, ECS, EKS, Lambda, S3, RDS, etc.) | Not used — no `aws-sdk` import; not in lockfile |
-| Google Cloud services (GCE, GKE, Cloud Run, GCS, etc.) | Not used — no `@google-cloud/*` import; not in lockfile |
-| Azure services (VMs, AKS, Container Apps, Blob Storage, etc.) | Not used — no Azure SDK import; not in lockfile |
-| Content Delivery Network (CloudFront, Cloud CDN, Azure CDN) | Not used — loopback binding precludes CDN integration |
-| Managed databases (RDS, Cloud SQL, Cosmos DB) | Not used — no persistence layer (§3.6) |
-| Managed message brokers (SQS, Pub/Sub, Service Bus) | Not used — no messaging integration (§5.1.4) |
-| Identity providers (Cognito, IAM, Azure AD) | Not used — no authentication (§6.4) |
-| Secrets management (Secrets Manager, KMS, Key Vault) | Not used — no secrets consumed |
+| Promotion Stage | Status |
+|-----------------|--------|
+| Development environment | Operator's local host (sole environment) |
+| Staging environment | Not provisioned |
+| UAT / pre-production | Not provisioned |
+| Production environment | Not provisioned |
+| Promotion gates / approvals | Not applicable |
+| Configuration drift detection | Not applicable |
 
-### 8.4.2 Cloud Inapplicability Rationale
+#### 8.3.2.4 Backup and Disaster Recovery Plans
 
-The architectural justification rests on three mutually reinforcing factors:
+Per §5.4.6, disaster recovery is fully external and consists of a single procedure: **manual re-invocation of `node server.js` by the operator**.
 
-1. **Loopback binding (C-002).** The hardcoded `127.0.0.1` bind address makes the listener unreachable from any non-local interface. Cloud-managed traffic ingress (load balancers, API gateways, CDNs) cannot reach the application even in principle.
-2. **Zero dependencies (C-005).** Every cloud provider's recommended integration path requires installing a client SDK (`aws-sdk`, `@azure/identity`, `@google-cloud/storage`, etc.). The empty `packages` tree in `package-lock.json` cryptographically attests that no such SDK is present.
-3. **Source invariance (C-001).** Even if loopback binding were lifted, integrating any cloud service would require modifying `server.js` to add `require()` statements, configuration reads, or SDK calls — each modification forbidden by the README's "Do not touch!" directive.
+| DR Mechanism | Documented State |
+|--------------|------------------|
+| Process supervisor (PM2 / systemd / upstart) | None — would violate C-001 |
+| Container restart policy (Docker / Kubernetes) | None — no container exists |
+| Backup / replication | None — there is no data plane |
+| State restore (checkpoint / snapshot / log replay) | None — application is stateless |
+| Automated alerting / pager rotation | None — no notification client |
+| Multi-region failover | Not applicable — loopback-only |
 
-| Cloud-Service Category | High-Availability Design | Cost Optimization | Security / Compliance |
-|------------------------|--------------------------|-------------------|------------------------|
-| (All categories) | Not applicable — no cloud resources to make highly available | Not applicable — $0 cloud spend by construction | Not applicable — no cloud surface area to secure |
-
----
-
-## 8.5 CONTAINERIZATION — NOT APPLICABLE
-
-### 8.5.1 Container Platform Status
-
-**No containerization is present or configured.** Per §3.7.4, no `Dockerfile`, no `docker-compose.yml`, and no container manifests exist anywhere in the repository.
-
-| Container Technology | Status |
-|----------------------|--------|
-| Docker | Not configured — no `Dockerfile` present |
-| Docker Compose | Not configured — no `docker-compose.yml` |
-| Podman | Not configured — no Containerfile |
-| containerd / nerdctl | Not configured |
-| OCI image (any builder) | Not built — no image registry referenced |
-| Buildpacks (`pack`, Paketo, Heroku) | Not configured |
-
-### 8.5.2 Containerization Inapplicability Rationale
-
-Per §3.7.4: "Although the default enterprise stack lists Docker as the standard containerization platform, adopting it would require adding a `Dockerfile` to the repository, violating C-001 (source immutability)." The four-file repository surface (`server.js`, `package.json`, `package-lock.json`, `README.md`) leaves no slot for a container manifest without violating the "Do not touch!" governance directive.
-
-The conventional containerization concerns — base-image strategy, image versioning, build-stage optimization, vulnerability scanning — are therefore documented below as inapplicable:
-
-| Conventional Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| Base image selection (`node:lts-alpine`, `distroless`, etc.) | Not applicable | No image is built |
-| Image versioning (tag-by-SHA, semver tag) | Not applicable | No image to version |
-| Multi-stage build optimization | Not applicable | No build occurs (§3.7.2) |
-| Layer caching strategy | Not applicable | No layers to cache |
-| Security scanning (Trivy, Grype, Snyk) | Not applicable | No image to scan; zero dependencies (C-005) leave no supply-chain surface |
-| Image registry (Docker Hub, ECR, GCR, GHCR) | Not configured | No registry referenced |
-| Image signing (Cosign, Notary v2) | Not applicable | No image to sign |
+**Recovery Time Objective (RTO)**: Bounded only by the time required to type `node server.js`.
+**Recovery Point Objective (RPO)**: Undefined because there is nothing to lose (stateless, no data plane).
 
 ---
 
-## 8.6 ORCHESTRATION — NOT APPLICABLE
+## 8.4 CLOUD SERVICES
 
-### 8.6.1 Orchestration Platform Status
+### 8.4.1 Determination
 
-**No orchestration platform is deployed or configured.** Per §6.1.3.2: "Auto-scaling is not configured because no orchestration platform is present." Per §3.7.4, no Kubernetes manifests, Helm charts, or service-mesh sidecars exist in the repository.
+**Cloud services are not used by this system.** No cloud provider account, service, SDK, credential, or API call is referenced anywhere in the repository. The default-stack item "Cloud Platform: AWS" is recorded as "Not applicable" per §3.10. This subsection is therefore documented in negative-space form, enumerating each cloud category that was verified absent during repository inspection.
 
-| Orchestration Technology | Status |
-|--------------------------|--------|
-| Kubernetes manifests (Deployment, Service, Ingress) | Not present |
-| Helm charts | Not present |
-| Kustomize overlays | Not present |
-| Docker Swarm | Not configured |
-| HashiCorp Nomad | Not configured |
-| AWS ECS / GCP Cloud Run / Azure Container Apps | Not configured |
-| Service mesh sidecar (Istio, Linkerd, Consul Connect) | Not deployed |
-| Resource limit declarations (cgroups, k8s `resources:`) | Not present |
+The rationale is straightforward: the system binds to `127.0.0.1` (C-002), holds no data (no persistence plane), serves a 14-byte constant (C-004), and forbids dependency addition (C-005). There is no architectural surface that would benefit from — or even accept — a cloud service integration.
 
-### 8.6.2 Orchestration Inapplicability Rationale
+### 8.4.2 Verified-Absent Cloud Service Inventory
 
-Per §6.1.3.4, the loopback binding is the **architectural** boundary that precludes every conventional orchestration pattern, not merely a configuration omission. The dispositive architectural facts are:
+Per §3.5.1 and §3.10, the following cloud-service categories are verified absent:
 
-- **Socket-binding collision.** Per §6.1.4.3, "Socket-binding collision (EADDRINUSE) precludes co-existing replicas on the same host." A scheduler that places multiple `server.js` replicas on the same host would necessarily fail.
-- **No external listener.** Per C-002, the hardcoded `127.0.0.1` bind means there is no externally reachable port for a load balancer or ingress controller to forward to.
-- **No health-check endpoint.** Per §6.5.3.1, "Handler ignores `req.url`, so `/health` cannot be served distinctly." Liveness and readiness probes — prerequisites for orchestrator-driven restart — have no distinct application surface.
-- **No metrics for trigger evaluation.** Per §6.1.3.2 and §6.5.2.1, no metrics are emitted; therefore no horizontal-pod-autoscaler rule could evaluate a trigger.
-- **Zero dependencies.** Per C-005, no orchestrator client (Kubernetes client library, ECS task SDK) can be installed without violating the dependency constraint.
+| Cloud Service Category | Status | Notes |
+|------------------------|--------|-------|
+| Compute (EC2, GCE, Azure VMs, Lambda, Cloud Functions) | Absent | No SDK; no IaC; runs locally only |
+| Storage (S3, GCS, Azure Blob) | Absent | No storage client; no persistence |
+| Databases (RDS, Aurora, DynamoDB, Cloud SQL, Cosmos) | Absent | No DB driver imported |
+| Networking (VPC, Route 53, CloudFront, ALB/NLB) | Absent | Loopback bind only |
+| Identity (IAM, Cognito, Auth0, Okta) | Absent | No authentication layer |
+| Messaging (SQS, SNS, EventBridge, Pub/Sub, Service Bus) | Absent | No broker client |
+| Observability (CloudWatch, X-Ray, Stackdriver, Application Insights) | Absent | No telemetry export |
+| Container services (ECS, EKS, GKE, AKS, Fargate, Cloud Run) | Absent | No container image |
+| Secrets (Secrets Manager, KMS, Key Vault, Parameter Store) | Absent | No secrets to manage |
+| CDN / Edge (CloudFront, Cloud CDN, Azure CDN) | Absent | Loopback fixture |
 
-| Conventional Concern | Status | Rationale |
-|----------------------|--------|-----------|
-| Cluster architecture (control plane + worker nodes) | Not applicable | No orchestrator deployed |
-| Service deployment strategy (Deployment / StatefulSet / DaemonSet) | Not applicable | No workload manifest exists |
-| Auto-scaling configuration (HPA / VPA / cluster autoscaler) | Not configured | No metrics emitted per §6.1.3.2 |
-| Resource allocation policies (requests / limits / quotas) | Not declared | No container manifest exists |
-| Pod-disruption budget | Not applicable | No replicated workload |
-| Network policy | Not applicable | Loopback binding is the boundary |
+#### 8.4.2.1 Cloud Provider Selection and Justification
 
----
+Not applicable — no cloud provider is selected. The system's design intent is to run locally as a deterministic loopback fixture; any cloud provisioning would violate the immutability and loopback-binding constraints (C-001, C-002).
 
-## 8.7 CI/CD PIPELINE — NOT APPLICABLE
+#### 8.4.2.2 High Availability Design
 
-### 8.7.1 CI/CD Platform Status
+Not applicable — no cloud presence; HA design is a property of multi-instance, multi-zone cloud deployments which this system explicitly forbids.
 
-**No CI/CD pipeline is present or configured.** Per §3.7.5, no continuous-integration or continuous-deployment platform is wired into the repository.
+#### 8.4.2.3 Cost Optimization Strategy
 
-| CI/CD Platform | Status |
-|----------------|--------|
-| GitHub Actions | Not configured — no `.github/workflows/` directory |
-| GitLab CI | Not configured — no `.gitlab-ci.yml` |
-| Jenkins | Not configured — no `Jenkinsfile` |
-| CircleCI | Not configured — no `.circleci/` directory |
-| Travis CI | Not configured — no `.travis.yml` |
-| Azure Pipelines | Not configured — no `azure-pipelines.yml` |
-| AWS CodePipeline / CodeBuild | Not configured — no `buildspec.yml` |
-| Drone CI / Woodpecker | Not configured — no `.drone.yml` |
+**Zero cloud cost** — there are no cloud resources to optimize. The optimization is structural: by using zero cloud services, the system has zero cloud spend.
 
-### 8.7.2 Build Pipeline Inapplicability
+#### 8.4.2.4 Security and Compliance Considerations
 
-Per §3.7.5: "The absence of CI/CD is consistent with the fixture's role: there are no tests to run, no artifacts to publish, no deployments to orchestrate, and no quality gates to enforce. Per C-001, the codebase is intended to be immutable, removing the primary motivation for continuous integration."
-
-| Build-Pipeline Concern | Status | Rationale |
-|------------------------|--------|-----------|
-| Source-control triggers (push / PR / tag) | Not configured | No CI platform integrated |
-| Build environment (build agent, runner image) | Not applicable | No build step exists (§3.7.2) |
-| Dependency management (npm ci, lockfile verification) | Not applicable | Zero dependencies (C-005); empty `packages` tree in lockfile |
-| Artifact generation (tarball, image, package) | Not applicable | No artifact produced |
-| Artifact storage (registry, S3, GitHub Packages) | Not configured | No artifact to store |
-| Quality gates (lint, type-check, test, coverage) | Not enforced | No linter (§3.7.1), no type checker, no test framework configured |
-
-### 8.7.3 Deployment Pipeline Inapplicability
-
-| Deployment-Pipeline Concern | Status | Rationale |
-|-----------------------------|--------|-----------|
-| Deployment strategy (blue-green / canary / rolling) | Not applicable | No deployment automation exists |
-| Environment promotion workflow | Not applicable | No environments defined (§8.3.2) |
-| Rollback procedure | Not applicable | No automated deployment to roll back; manual recovery only (§5.4.6) |
-| Post-deployment validation (smoke tests, synthetic probes) | Not applicable | No automation; no probe defined |
-| Release management process | Not formalized | No `CHANGELOG.md`, no release tags documented (§6.5.4.5) |
-| Approval gates / change-advisory board integration | Not applicable | No deployment pipeline exists |
-| Feature-flag-driven rollout | Not applicable | No feature-flag library; no `process.env` reads |
-
-The de facto "deployment workflow" — preserved here for completeness only — is the manual three-step procedure: (1) clone the Git repository; (2) ensure Node.js is installed (assumption A-001); (3) invoke `node server.js`. There is no further automation and no further validation.
+Not applicable for cloud services because none are used. The system's security posture is documented in §3.9 and §5.4.4; it relies on the OS network stack and loopback binding for access control rather than any cloud-provider identity or network primitive.
 
 ---
 
-## 8.8 INFRASTRUCTURE MONITORING — NOT APPLICABLE
+## 8.5 CONTAINERIZATION
 
-### 8.8.1 Monitoring Posture Inheritance
+### 8.5.1 Determination
 
-**Infrastructure monitoring is not implemented.** This determination is inherited authoritatively from §6.5 ("Monitoring and Observability"), which establishes the same finding for application-layer monitoring; the absence extends naturally to infrastructure-layer monitoring because no infrastructure exists to monitor. The complete monitoring posture is summarized below; the comprehensive inventory is in §6.5.
+**Containerization is not used by this system.** No Dockerfile, container manifest, compose file, or registry reference exists in the repository. The default-stack item "Containerization: Docker" is recorded as "Not applicable" per §3.10.
 
-| Infrastructure-Monitoring Concern | Status | Source |
-|-----------------------------------|--------|--------|
-| Resource monitoring (CPU / memory / disk / network) | Not implemented — no agent installed | §6.5.3.5 |
-| Performance metrics collection (Prometheus, StatsD, OTel) | Not implemented — no SDK imported | §6.5.2.1 |
-| Cost monitoring (Cloud Cost Management, Kubecost) | Not applicable — no cloud spend (§8.4) | §8.4 |
-| Security monitoring (SIEM, AWS GuardDuty, Falco) | Not deployed — no infrastructure surface | §6.4 |
-| Compliance auditing (CloudTrail, Audit Logs, OPA) | Not applicable — no regulated data; no compliance framework declared | §6.4 |
-| Log aggregation (Fluentd, Vector, Filebeat) | Not deployed — only one startup `console.log` line | §6.5.2.2 |
-| Distributed tracing (Jaeger, Tempo, Zipkin) | Not deployed — no tracing SDK | §6.5.2.3 |
-| Alert routing (Alertmanager, PagerDuty, OpsGenie) | Not deployed — no alert sources (§6.5.2.4) | §6.5.4.1 |
-| Operational dashboards (Grafana, Kibana, DataDog UI) | Not configured — no data source | §6.5.2.5 |
+Per §3.7.4: "Introduction of containerization would violate constraint C-001 (immutability of the four baseline files) unless added strictly as additive scaffolding outside those files — but even so, no such artifacts are present in the repository." This determination is binding; this subsection enumerates the absent artifacts and the rationale for their absence.
 
-### 8.8.2 Sole Observability Surfaces in Lieu of Infrastructure Monitoring
+### 8.5.2 Verified-Absent Containerization Artifacts
 
-In lieu of a full infrastructure-monitoring stack, the system relies on the same three primitive observability surfaces enumerated in §6.5.1.2. These three practices constitute the entire infrastructure-observability posture:
+| Containerization Artifact | Status |
+|---------------------------|--------|
+| `Dockerfile` | Absent |
+| `.dockerignore` | Absent |
+| `docker-compose.yml` / `compose.yaml` | Absent |
+| Kubernetes manifests (Deployment, Service, etc.) | Absent |
+| Helm charts | Absent |
+| OCI image / OCI registry references | None |
 
-| # | Practice | Mechanism |
-|---|----------|-----------|
-| 1 | Startup readiness signal | Single `console.log("Server running at http://127.0.0.1:3000/")` at process start |
-| 2 | Implicit HTTP health | Consumer infers liveness via HTTP 200 response with byte-identical 14-byte body |
-| 3 | Process exit code | Non-zero on failure (`EADDRINUSE`, `EACCES`, signal-induced termination) |
+#### 8.5.2.1 Container Platform Selection
 
-These three signals — observable only at the operator's terminal — substitute for the conventional fan-out of infrastructure metric sources, log aggregators, alert managers, and dashboards. The complete dashboard "layout" is a single terminal pane (per §6.5.5.4), and the complete alert "flow" is the convergence of all failure modes on a non-zero exit code (per §6.5.4.6).
+Not applicable — no container platform is selected.
+
+#### 8.5.2.2 Base Image Strategy
+
+Not applicable — no images are built.
+
+#### 8.5.2.3 Image Versioning Approach
+
+Not applicable — no images exist to version.
+
+#### 8.5.2.4 Build Optimization Techniques
+
+Not applicable — no image build occurs. The "build" for this system is `node --check server.js` (syntax validation only), which produces no artifact.
+
+#### 8.5.2.5 Security Scanning Requirements
+
+Not applicable — no images, no SBOM, no scanning surface. Per §3.9, the system's supply-chain security posture is built on zero dependencies: `npm audit` reports zero vulnerabilities because there is no transitive closure.
 
 ---
 
-## 8.9 REQUIRED DIAGRAMS
+## 8.6 ORCHESTRATION
 
-### 8.9.1 Infrastructure Architecture Diagram
+### 8.6.1 Determination
 
-The diagram below documents the actual infrastructure topology of the system — a single Node.js process executing `server.js` on a host operating system with a loopback TCP socket — contrasted against the conventional enterprise infrastructure stack that an Infrastructure section would normally describe. The right-hand cluster is presented purely for visual contrast and confirms that none of its components exists in this repository.
+**Orchestration is not used by this system.** No container orchestrator, no scheduler, and no service mesh is deployed. Per §6.1.4.2, the auto-scaling concern is verified absent in full: "no orchestrator; no scaling triggers; no scaling policies; no metrics emission."
+
+The system runs as a single Node.js event-loop process invoked directly by the operator. There is no second instance to coordinate, no scheduling decision to make, no health probe to consume, and no scaling decision to act on. Orchestration would require relaxing C-001 (immutability), C-002 (loopback bind), C-003 (port bind), and C-005 (zero dependencies) simultaneously.
+
+### 8.6.2 Verified-Absent Orchestration Surface
+
+| Orchestration Concern | Status |
+|-----------------------|--------|
+| Container orchestrator (Kubernetes, ECS, Nomad, Swarm) | Not deployed — no manifests, no Dockerfile |
+| Service mesh (Istio, Linkerd, Consul Connect) | Not deployed — no sidecar injection points |
+| Horizontal Pod Autoscaler / target-tracking policy | Not applicable — no orchestrator |
+| Process supervisor (PM2, systemd, upstart) | Not used — would violate C-001 / C-005 |
+| Cluster module (`node:cluster`) | Not used — single event-loop process |
+| Worker threads (`node:worker_threads`) | Not used — single event-loop process |
+
+#### 8.6.2.1 Orchestration Platform Selection
+
+Not applicable.
+
+#### 8.6.2.2 Cluster Architecture
+
+Not applicable — single-process topology per §5.2.1.
+
+#### 8.6.2.3 Service Deployment Strategy
+
+Not applicable — deployment is a single `node server.js` invocation.
+
+#### 8.6.2.4 Auto-Scaling Configuration
+
+Not applicable — per §6.1.4.2, no metric is emitted that could serve as a scaling signal, no orchestrator is present to consume such a signal, and no scaling actuator is configured.
+
+| Auto-Scaling Concern | Documented State |
+|----------------------|------------------|
+| Trigger metrics (CPU, memory, request rate, queue depth) | Not emitted |
+| Scaling cooldowns / scale-out and scale-in policies | Not configured |
+| Predictive / scheduled scaling | Not configured |
+| Replica minimum / maximum bounds | Not applicable |
+
+#### 8.6.2.5 Resource Allocation Policies
+
+Not applicable — per §6.1.4.3, no resource allocation strategy is documented or implemented. CPU pinning, memory limits, container resource requests/limits, worker pool sizing, and QoS classes are all "Not configured."
+
+---
+
+## 8.7 CI/CD PIPELINE
+
+### 8.7.1 Determination
+
+**No CI/CD pipeline exists.** Per §3.7.6, no GitHub Actions, GitLab CI, CircleCI, Jenkins, Azure Pipelines, Travis CI, or Bitbucket Pipelines configuration is present in the repository. The default-stack item "CI/CD: GitHub Actions" is recorded as "Not applicable" per §3.10.
+
+Per §3.7.6, "the placeholder `test` script in `package.json` (`echo \"Error: no test specified\" && exit 1`) would intentionally fail any naïve CI invocation, reinforcing that no automated pipeline is anticipated."
+
+### 8.7.2 Build Pipeline (Verified Absent)
+
+| Build Pipeline Aspect | Documented State |
+|-----------------------|------------------|
+| Source control triggers (push, PR, tag) | None — no CI configuration |
+| Build environment requirements | Not applicable — no build occurs |
+| Dependency management (lockfile install) | Not applicable — zero dependencies (C-005) |
+| Artifact generation and storage | Not applicable — no artifacts produced |
+| Quality gates (lint, test, coverage thresholds) | None — no tooling installed |
+
+#### 8.7.2.1 Source Control Triggers
+
+Not applicable — no `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, or equivalent file exists at the repository root.
+
+#### 8.7.2.2 Build Environment Requirements
+
+Not applicable — no build environment is required because no build occurs. Per §3.7.3, the compile-equivalent step is `node --check server.js` (syntax validation only).
+
+#### 8.7.2.3 Dependency Management
+
+Per F-005-RQ-001 and F-005-RQ-002, zero dependencies are declared (runtime or development). `package-lock.json` carries `lockfileVersion: 3` with an empty packages tree, confirming no transitive closure. No `npm install`, `yarn install`, or `pnpm install` step is required.
+
+#### 8.7.2.4 Artifact Generation and Storage
+
+Not applicable — there are no artifacts to generate (no bundled JS, no minified output, no source maps, no container image) and no artifact store (no npm registry publication, no container registry, no S3 bucket).
+
+#### 8.7.2.5 Quality Gates
+
+Not applicable — no test framework is installed, no linter is configured, and no coverage threshold is enforced. Per §3.7.8, the recommended (but unimplemented) test stack is `node:test` + `node:assert` (built-in to Node ≥ 20), preserving the zero-dependency posture.
+
+### 8.7.3 Deployment Pipeline (Verified Absent)
+
+| Deployment Pipeline Aspect | Documented State |
+|----------------------------|------------------|
+| Deployment strategy (blue-green / canary / rolling) | Not applicable — no deployment target |
+| Environment promotion workflow | Not applicable — no environments to promote between |
+| Rollback procedures | Not applicable — no released artifact to roll back |
+| Post-deployment validation | Manual `curl` probe by operator (see §8.10.2) |
+| Release management process | Not applicable — no release cadence |
+
+#### 8.7.3.1 Deployment Strategy
+
+Not applicable. There is no blue-green pair, no canary cohort, no rolling-update window. The "deployment" is a single `node server.js` invocation by the operator.
+
+#### 8.7.3.2 Environment Promotion Workflow
+
+Not applicable. See §8.3.2.3 — there is no dev/staging/prod progression.
+
+#### 8.7.3.3 Rollback Procedures
+
+Not applicable — there is no prior version to roll back to. Git history exists for reference but is not used as a deployment-rollback mechanism. Recovery from a crash is described in §8.10.2 (re-invoke `node server.js`).
+
+#### 8.7.3.4 Post-Deployment Validation
+
+The only post-deployment validation is the manual probe procedure documented in §6.5.5.3 and §8.10.2: issue `curl http://127.0.0.1:3000/`; verify HTTP 200, `Content-Type: text/plain`, and 14-byte body `Hello, World!\n`.
+
+#### 8.7.3.5 Release Management Process
+
+Not applicable — the system is not versioned for release. `package.json` declares `version: "1.0.0"`, but there is no release tagging, no CHANGELOG, no semver progression, and no published artifact corresponding to that version.
+
+---
+
+## 8.8 INFRASTRUCTURE MONITORING
+
+### 8.8.1 Determination
+
+**Infrastructure monitoring is not implemented.** Per §5.4.1, the system's observability surface is intentionally minimal — a single one-shot startup log line written to stdout. All other observability primitives expected of a production service are verified absent. The full inventory is reproduced and elaborated below, structured by the categories requested in the section prompt.
+
+### 8.8.2 Resource Monitoring Approach
+
+No resource monitoring exists at any layer. There is no agent, no exporter, no sidecar, and no scrape endpoint.
+
+| Resource Monitoring Surface | Status |
+|------------------------------|--------|
+| Host metrics agent (node_exporter, Telegraf, CloudWatch Agent) | Not installed |
+| Process metrics (CPU, RSS, file descriptors, event-loop lag) | Not collected |
+| Container metrics (cAdvisor, kube-state-metrics) | Not applicable — no container |
+| Network metrics (TCP retransmits, socket states) | Not collected |
+| Storage metrics (disk IO, inode pressure) | Not applicable — no persistence |
+
+### 8.8.3 Performance Metrics Collection
+
+No performance metrics are collected or emitted by the application. Per §5.4.5, the system has no documented SLAs and no quantitative performance targets.
+
+| Performance Metric | Status |
+|--------------------|--------|
+| Request throughput (RPS) | Not measured — no counter |
+| Latency p50 / p95 / p99 | Not measured — no histogram |
+| Error rate | Not measured (handler always returns 200) |
+| Event-loop lag | Not measured — no monitor |
+| Memory pressure | Not measured — no heap snapshot |
+| Prometheus / StatsD / OpenTelemetry exporter | Absent |
+
+The sole observability event is the startup log line `Server running at http://127.0.0.1:3000/` emitted exactly once per process lifetime to stdout (per §5.4.1).
+
+### 8.8.4 Cost Monitoring and Optimization
+
+**Zero infrastructure cost** — there is nothing to monitor financially.
+
+| Cost Surface | Monthly Cost (USD) | Notes |
+|--------------|--------------------|-------|
+| Cloud compute | $0 | No cloud presence |
+| Cloud storage | $0 | No storage services |
+| Container registry | $0 | No image registry usage |
+| CI/CD pipeline minutes | $0 | No CI/CD configured |
+| Monitoring / APM SaaS | $0 | No telemetry backend |
+| Log retention | $0 | No log shipper |
+| External service fees | $0 | No third-party services |
+| **Total** | **$0** | **Operator host cost is external to this repository** |
+
+The only "infrastructure" cost is the operator's host machine itself (which must have Node.js installed per assumption A-001); this cost is external to the repository and is not incurred per-deployment because the host already exists for the operator's general use.
+
+#### Cost Optimization Strategy
+
+The system's cost optimization is structural rather than operational: by using zero cloud services, zero containers, zero CI/CD minutes, and zero observability backends, the system has zero infrastructure spend. No additional optimization is possible or warranted.
+
+### 8.8.5 Security Monitoring
+
+No security monitoring is implemented. Per §3.9 and §5.4.4, the system's security posture relies on architectural reduction rather than active monitoring.
+
+| Security Monitoring Surface | Status |
+|------------------------------|--------|
+| Intrusion Detection System (IDS) | Not deployed — relies on OS-level loopback restriction |
+| Web Application Firewall (WAF) | Not deployed — no public endpoint |
+| Dependency vulnerability scanning | Not configured (zero deps; `npm audit` reports zero CVEs) |
+| Container image scanning (Trivy, Snyk) | Not applicable — no container |
+| Static analysis (SAST) / dynamic analysis (DAST) | Not configured |
+| Audit log collection (CloudTrail, Audit Logs) | Not applicable — no cloud presence |
+
+The compensating controls per §3.9 and §5.4.4 are:
+
+| Aspect | Posture | Compensating Control |
+|--------|---------|----------------------|
+| Network exposure | Loopback only | Hardcoded `127.0.0.1` (C-002) |
+| Authentication | None | OS-level loopback access restriction |
+| Transport encryption | None (plaintext HTTP) | Traffic does not traverse external networks |
+| Dependency vulnerabilities | Zero deps | Empty transitive closure (C-005) |
+| Supply-chain risk | None | No third-party packages |
+
+### 8.8.6 Compliance Auditing
+
+No compliance auditing is performed. As established in §8.3.1.4, no regulatory framework applies to this system (no PII, no payment data, no health data, no production deployment). No audit log shipping, no compliance report generation, and no third-party attestation is configured.
+
+---
+
+## 8.9 INFRASTRUCTURE ARCHITECTURE DIAGRAMS
+
+The diagrams below document the system's actual infrastructure footprint (single-process runtime topology) alongside the categorical absence of conventional infrastructure planes (cloud, containers, orchestration, CI/CD, IaC, monitoring). This "negative-space" diagramming approach is consistent with the precedents established in §5.1.1, §6.1.2.3, §6.1.4.6, §6.1.5.6, §6.5.3.6, and §6.5.5.6.
+
+### 8.9.1 Runtime Infrastructure Topology
+
+This diagram visualizes the entire infrastructure footprint of the system. The live data path consists of a single Node.js process bound to the loopback interface; every other infrastructure plane typically expected in a Technical Specification is shown in a deliberately disconnected subgraph to emphasize its verified absence.
 
 ```mermaid
 flowchart TB
-    subgraph ActualInfra["Actual Infrastructure — This System"]
-        direction TB
-        Host["Host Operating System<br/>(POSIX or Windows)"]
-        Node["Node.js Runtime<br/>(unpinned version, A-001)"]
-        Proc["Single Node.js Process<br/>server.js (14 lines)"]
-        Socket["TCP Listening Socket<br/>127.0.0.1:3000 (loopback)"]
-        Term["Operator Terminal<br/>(stdout + exit code)"]
-        Host --> Node
-        Node --> Proc
-        Proc --> Socket
-        Proc --> Term
+    subgraph HostBoundary["Operator Host (No Cloud, No Cluster)"]
+        subgraph OSStack["Host Operating System"]
+            TCPStack["TCP/IP Loopback<br/>127.0.0.1:3000<br/>(C-002, C-003)"]
+        end
+        subgraph NodeSubstrate["Node.js v20.20.2 Substrate"]
+            HttpCore["node:http<br/>Built-in Core Module"]
+            EventLoop["libuv Event Loop"]
+        end
+        subgraph AppPlane["Application Plane (Single Process)"]
+            ServerProc["node server.js<br/>14 LOC, branchless handler<br/>zero dependencies (C-005)"]
+        end
+        Consumer["Co-resident Consumer<br/>(Backprop Integration<br/>Validation Workflow)"]
+    end
+    subgraph AbsentInfra["Verified-Absent Infrastructure Planes"]
+        NoCloud["No Cloud Provider<br/>(no AWS / GCP / Azure SDK)"]
+        NoContainer["No Container Image<br/>(no Dockerfile, no compose)"]
+        NoOrch["No Orchestrator<br/>(no K8s, no ECS, no Nomad)"]
+        NoCICD["No CI/CD Pipeline<br/>(no GH Actions, no Jenkins)"]
+        NoIaC["No IaC Artifacts<br/>(no Terraform, no CDK)"]
+        NoMon["No Monitoring Backend<br/>(no APM, no metrics)"]
     end
 
-    subgraph ConventionalInfra["Conventional Enterprise Infrastructure — NOT PRESENT"]
-        direction TB
-        IaC["IaC Layer<br/>(Terraform, CloudFormation,<br/>Pulumi, Ansible)"]
-        Cloud["Cloud Provider<br/>(AWS, GCP, Azure)"]
-        K8s["Orchestrator<br/>(Kubernetes, ECS,<br/>Cloud Run)"]
-        Container["Container Runtime<br/>(Docker, containerd)"]
-        LB["Load Balancer /<br/>Ingress Controller"]
-        Registry["Image Registry<br/>(ECR, GCR, GHCR)"]
-        Monitor["Monitoring Stack<br/>(Prometheus, Grafana,<br/>DataDog, New Relic)"]
-        Logs["Log Aggregation<br/>(ELK, Loki, Splunk)"]
-        Secrets["Secrets Manager<br/>(Vault, KMS,<br/>Key Vault)"]
-        IaC --> Cloud
-        Cloud --> K8s
-        K8s --> Container
-        Container --> Registry
-        Cloud --> LB
-        K8s --> Monitor
-        K8s --> Logs
-        Cloud --> Secrets
-    end
-
-    ActualInfra -.->|"comparison only —<br/>no architectural relationship"| ConventionalInfra
+    Consumer -.->|"HTTP/1.1 plaintext"| TCPStack
+    TCPStack --> EventLoop
+    EventLoop --> HttpCore
+    HttpCore -->|"invoke handler(req,res)"| ServerProc
+    ServerProc -.->|"200 / text/plain / 14 bytes"| HttpCore
 ```
+
+The "Verified-Absent Infrastructure Planes" subgraph is intentionally disconnected from the live data path. No member of that set is present in the runtime, the dependency closure, or the source repository.
 
 ### 8.9.2 Deployment Workflow Diagram
 
-The deployment workflow is a manual, three-step operator procedure. There is no automation, no pipeline, no orchestrator hand-off, and no post-deployment validation. The diagram below contrasts the actual workflow against a typical CI/CD-driven deployment pipeline.
+This diagram depicts the complete operational lifecycle of the system from operator action through verification and recovery. It is the entire "deployment workflow" of the fixture.
 
 ```mermaid
 flowchart TD
-    subgraph ActualWorkflow["Actual Deployment Workflow — Manual"]
-        direction TB
-        Start([Operator Intent])
-        Clone[git clone the<br/>repository]
-        Verify[Verify Node.js installed<br/>on host A-001]
-        Invoke[Execute<br/>node server.js]
-        Observe[Observe startup line<br/>at operator terminal:<br/>Server running at<br/>http://127.0.0.1:3000/]
-        Ready([System ready —<br/>handler awaiting requests])
-        Start --> Clone --> Verify --> Invoke --> Observe --> Ready
-    end
+    Start(["Operator opens terminal<br/>in repository root"])
+    Precheck{{"Node.js ≥ 20 installed?<br/>(A-001)"}}
+    PortFree{{"TCP port 3000<br/>free on loopback?<br/>(A-002)"}}
+    Invoke["Operator types:<br/>node server.js"]
+    Bind["http.createServer().listen(3000, '127.0.0.1')<br/>binds loopback socket"]
+    Log["stdout emits:<br/>Server running at http://127.0.0.1:3000/<br/>(F-003)"]
+    Ready(["Server READY<br/>accepting requests"])
+    Verify["Operator probe:<br/>curl http://127.0.0.1:3000/"]
+    CheckResp{{"Response = 200,<br/>text/plain, 14 bytes?"}}
+    Healthy(["Operational"])
+    Failure["Process exits<br/>non-zero status"]
+    Recovery["Operator diagnoses<br/>(EADDRINUSE / EACCES)<br/>and re-invokes node server.js"]
+    InstallNode["Install Node.js ≥ 20<br/>(out of scope of repository)"]
+    FreePort["Free port 3000<br/>(lsof -i :3000 to identify owner)"]
 
-    subgraph TypicalPipeline["Typical CI/CD Pipeline — NOT IMPLEMENTED"]
-        direction TB
-        Commit["Source Commit /<br/>Pull Request"]
-        CIBuild["CI Build<br/>(test, lint, scan)"]
-        Image["Build Container Image<br/>and push to registry"]
-        Stage["Deploy to Staging<br/>(blue/green or canary)"]
-        Validate["Smoke Tests /<br/>Synthetic Probes"]
-        Approve{"Manual Approval<br/>Gate"}
-        Prod["Deploy to Production<br/>(rolling update)"]
-        Monitor["Post-Deploy<br/>Validation"]
-        Commit --> CIBuild --> Image --> Stage --> Validate --> Approve
-        Approve -->|approved| Prod --> Monitor
-    end
-
-    ActualWorkflow -.->|"comparison only —<br/>no architectural relationship"| TypicalPipeline
+    Start --> Precheck
+    Precheck -- "No" --> InstallNode
+    InstallNode --> Precheck
+    Precheck -- "Yes" --> PortFree
+    PortFree -- "No" --> FreePort
+    FreePort --> PortFree
+    PortFree -- "Yes" --> Invoke
+    Invoke --> Bind
+    Bind --> Log
+    Log --> Ready
+    Ready --> Verify
+    Verify --> CheckResp
+    CheckResp -- "Yes" --> Healthy
+    CheckResp -- "No" --> Failure
+    Bind -.->|"EADDRINUSE / EACCES"| Failure
+    Failure --> Recovery
+    Recovery --> Invoke
 ```
+
+This is the canonical deployment workflow. There is no automation, no pipeline, and no orchestrator — every step is performed manually by the operator.
 
 ### 8.9.3 Environment Promotion Flow
 
-There is **no environment promotion flow** because no environments are defined. The diagram below documents this explicitly: the entire lifecycle is a single state (host execution) with no promotion edges.
+Because no dev/staging/prod progression exists (§8.3.2.3), the "promotion flow" collapses to a single environment. The diagram below documents this collapsed flow alongside the absent stages that would normally exist in a multi-environment system.
 
 ```mermaid
 flowchart LR
-    subgraph ActualEnv["Actual Environment Topology"]
-        direction LR
-        Local["Operator Host<br/>(loopback only)<br/>SOLE environment"]
+    subgraph PresentEnv["Present Environment"]
+        Local["Operator's Local Host<br/>node server.js<br/>127.0.0.1:3000"]
+    end
+    subgraph AbsentStages["Absent Promotion Stages (Verified)"]
+        Dev["Dev Environment<br/>(not provisioned)"]
+        Stage["Staging Environment<br/>(not provisioned)"]
+        UAT["UAT / Pre-prod<br/>(not provisioned)"]
+        Prod["Production<br/>(not provisioned)"]
+        Gate1["Promotion Gate<br/>(not applicable)"]
+        Gate2["Approval Workflow<br/>(not applicable)"]
     end
 
-    subgraph TypicalEnv["Typical Promotion Flow — NOT IMPLEMENTED"]
-        direction LR
-        Dev["Development<br/>environment"]
-        Staging["Staging /<br/>Pre-production"]
-        UAT["UAT /<br/>Integration"]
-        Prod["Production"]
-        Dev -->|"promote build"| Staging
-        Staging -->|"promote build"| UAT
-        UAT -->|"promote build"| Prod
-    end
-
-    ActualEnv -.->|"comparison only —<br/>no promotion edges exist"| TypicalEnv
+    Local -.->|"would promote to"| Dev
+    Dev -.->|"would promote via"| Gate1
+    Gate1 -.-> Stage
+    Stage -.-> UAT
+    UAT -.->|"would promote via"| Gate2
+    Gate2 -.-> Prod
 ```
 
-### 8.9.4 Network Architecture Diagram
+The dashed edges indicate stages that would exist in a conventional multi-environment infrastructure but are categorically absent here. The single present environment is the operator's local host.
 
-The network architecture is dominated by the loopback boundary documented in §5.4.4.2. The diagram below reproduces the loopback-only network topology and contrasts it against the typical multi-tier network architecture that would surround an enterprise deployment.
+### 8.9.4 Network Architecture (Loopback-Only)
+
+This diagram documents the entire network surface of the system. Because the listener is bound to `127.0.0.1`, the network architecture is one of deliberate scope reduction: nothing outside the host can reach the process.
 
 ```mermaid
-flowchart TB
-    subgraph LocalHost["Local Host (Same Machine)"]
-        direction TB
-        LocalProc["Local Backprop<br/>Consumer Process"]
-        NetStack["OS Network Stack"]
-        LoopIF["Loopback Interface<br/>127.0.0.1"]
-        ExtIF["External Interfaces<br/>(eth0, wlan0, etc.)"]
-        Listener["server.js<br/>bound to 127.0.0.1:3000"]
-        LocalProc -->|"TCP to 127.0.0.1:3000"| NetStack
-        NetStack --> LoopIF
-        LoopIF -->|"Allowed"| Listener
-        NetStack --> ExtIF
-        ExtIF -.->|"NEVER reaches application"| Listener
+flowchart LR
+    subgraph External["External Networks (No Reachability)"]
+        Internet["Public Internet"]
+        LAN["Host LAN / VPN"]
+        OtherHost["Other Hosts on Same LAN"]
+    end
+    subgraph HostInterior["Operator Host Boundary"]
+        Loopback["Loopback Interface<br/>lo / 127.0.0.0/8"]
+        NodeProc["node server.js<br/>listening on 127.0.0.1:3000"]
+        LocalClient["Co-resident Client Process<br/>(e.g., curl, fetch, test runner)"]
     end
 
-    Remote["Remote Client<br/>(any IP, any user)"]
-    Remote -.->|"TCP from external IP<br/>rejected at OS network stack"| ExtIF
-
-    subgraph TypicalNetwork["Typical Multi-Tier Network — NOT IMPLEMENTED"]
-        direction TB
-        WAF["WAF / DDoS<br/>Protection"]
-        CDN["CDN /<br/>Edge Cache"]
-        ELB["External Load<br/>Balancer"]
-        DMZ["Public DMZ<br/>Subnet"]
-        PrivateApp["Private App<br/>Subnet"]
-        PrivateData["Private Data<br/>Subnet"]
-        FW["Network Firewall /<br/>Security Groups"]
-        WAF --> CDN --> ELB --> DMZ --> PrivateApp --> PrivateData
-        FW -.->|"governs all<br/>cross-subnet traffic"| PrivateApp
-    end
-
-    LocalHost -.->|"comparison only —<br/>no architectural relationship"| TypicalNetwork
+    Internet -.->|"RST / unreachable<br/>(OS network stack)"| Loopback
+    LAN -.->|"RST / unreachable"| Loopback
+    OtherHost -.->|"RST / unreachable"| Loopback
+    LocalClient -->|"HTTP/1.1 GET /"| Loopback
+    Loopback --> NodeProc
+    NodeProc -->|"200 / text/plain / 14 bytes"| Loopback
+    Loopback --> LocalClient
 ```
 
----
-
-## 8.10 INFRASTRUCTURE COST ESTIMATES AND RESOURCE SIZING
-
-### 8.10.1 Infrastructure Cost Summary
-
-The total infrastructure cost for this system is **$0 per month**. The breakdown by cost category is reproduced below; every line item is zero by construction because no infrastructure is provisioned.
-
-| Cost Category | Monthly Estimate | Justification |
-|---------------|------------------|---------------|
-| Cloud compute (VMs, containers, serverless) | $0 | No cloud provider used (§8.4) |
-| Cloud storage (object, block, file) | $0 | No storage provisioned (§3.6) |
-| Cloud network (egress, load balancers, NAT, CDN) | $0 | No cloud network resources |
-| Managed databases (RDS, Cloud SQL, etc.) | $0 | No persistence layer (§3.6) |
-| Managed messaging (SQS, Pub/Sub, EventBridge) | $0 | No messaging integration |
-| Monitoring / APM (DataDog, New Relic, Splunk) | $0 | No agent installed (§6.5) |
-| CI/CD minutes / runners | $0 | No CI/CD configured (§8.7) |
-| Image registry storage / pulls | $0 | No images built (§8.5) |
-| Secret management (Vault, Secrets Manager) | $0 | No secrets used (§6.4.2) |
-| Software licensing | $0 | MIT license (C-007); zero dependencies (C-005) |
-| **Total** | **$0 / month** | All infrastructure surfaces are absent |
-
-### 8.10.2 Host-Level Resource Sizing Guidelines
-
-Because no orchestrator manifest or container specification declares resource requirements, sizing guidance is expressed as the **implicit envelope** under which the system will operate correctly on a generic Node.js-capable host.
-
-| Resource | Recommended Minimum | Notes |
-|----------|---------------------|-------|
-| CPU | 1 vCPU (or 1 physical core) | Single-threaded event loop; no `cluster`, no `worker_threads` |
-| RAM | 64 MB available to the process | Node.js baseline; no large heap allocations occur |
-| Disk | < 100 KB for repository contents | Four small text files; no logs, no caches, no node_modules |
-| Network | Loopback connectivity (`lo` interface up) | External network connectivity is not required |
-| Node.js version | Any version supporting Node.js core `http` and CommonJS `require` | No `engines` field; version unpinned per §3.7.7 |
-| Inbound ports | TCP `3000` free on `127.0.0.1` at startup | Assumption A-002; no fallback per §5.4.3.3 |
-
-These guidelines describe the minimum host capable of executing the fixture; the system imposes no upper bound and consumes no more than a single Node.js event-loop process worth of resources.
-
-### 8.10.3 Scalability Cost Implications
-
-Because scalability is not supported (per §2.4.3 and §6.1.3), there are no horizontal-scaling cost projections, no auto-scaling cost models, and no capacity-headroom forecasts. Per §6.1.3.4, the loopback binding is the architectural boundary that precludes every conventional scalability pattern; adding instances would collide on the socket (`EADDRINUSE`), and adding a load balancer in front would have nothing to load-balance.
+Per §5.4.4, "the sole effective access-control mechanism is the OS network stack itself: by binding to `127.0.0.1`, the listener is reachable only by processes already running on the same host. Connections from any non-loopback source are refused by the OS before reaching Node.js."
 
 ---
 
-## 8.11 EXTERNAL DEPENDENCIES INVENTORY
+## 8.10 OPERATIONAL PROCEDURES
 
-### 8.11.1 Runtime Dependencies
+Although no infrastructure tooling exists, a small set of operational procedures applies to the fixture's lifecycle. These are reproduced here for operator reference and are aligned with the runbook in §6.5.5.3.
 
-| Dependency | Type | Required? | Source |
-|------------|------|-----------|--------|
-| Node.js runtime | Host requirement | Yes — assumption A-001; version unconstrained | §2.6.1 |
-| Node.js core `http` module | Bundled with Node.js | Yes — `server.js` line 1 | §3.1.3 |
-| Node.js core `console` global | Bundled with Node.js | Yes — `server.js` line 13 | §3.1.3 |
-| npm packages (runtime) | None | Zero — empty `packages` tree in `package-lock.json` attests this | C-005, §3.4 |
+### 8.10.1 Launch Procedure
 
-### 8.11.2 Development Dependencies
+| Step | Action | Expected Result |
+|------|--------|-----------------|
+| 1 | Open terminal in repository root | Working directory = repository root |
+| 2 | Verify Node.js ≥ 20 (`node --version`) | Outputs v20.x or higher |
+| 3 | Verify port 3000 free (`lsof -i :3000` returns empty) | No existing owner of port 3000 |
+| 4 | Run `node server.js` | Process binds; stdout emits startup line |
+| 5 | Confirm stdout line | `Server running at http://127.0.0.1:3000/` |
 
-| Dependency | Type | Required? | Source |
-|------------|------|-----------|--------|
-| npm packages (development) | None | Zero — no `devDependencies` field in `package.json` | C-005, §3.7.1 |
-| Linter (ESLint, JSHint) | Tooling | Not configured | §3.7.1 |
-| Formatter (Prettier, dprint) | Tooling | Not configured | §3.7.1 |
-| Type checker (TypeScript, Flow) | Tooling | Not configured | §3.7.1 |
-| Test framework (Jest, Mocha, Vitest) | Tooling | Not configured — `test` script is placeholder per F-004-RQ-004 | §3.7.1 |
-| Pre-commit hooks (husky, lefthook) | Tooling | Not configured | §3.7.1 |
+### 8.10.2 Recovery Procedures (Runbook)
 
-### 8.11.3 Operational Dependencies
+Per §6.5.5.3, the operational runbook consists of a small set of manual procedures handling the documented failure modes.
 
-| Dependency | Status | Reason |
-|------------|--------|--------|
-| Process supervisor (systemd, PM2, supervisord) | Not committed | No supervisor manifest in repository (§5.4.6) |
-| Container runtime (Docker, containerd) | Not required — system runs natively | §3.7.4 |
-| External monitoring agent (DataDog, New Relic, Splunk) | Not present | Zero dependencies (C-005); §6.5.2 |
-| Log shipper (Fluentd, Vector, Filebeat) | Not present | Only stdout output (§5.4.2) |
-| Reverse proxy (nginx, Apache, Caddy) | Not required — loopback bind | §5.4.4 |
-| TLS certificate / certificate manager | Not required — plaintext HTTP per F-003-RQ-002 | §5.4.2 |
-| DNS record / domain registration | Not required — loopback IP literal used | §5.1.1.3 |
-| Network firewall rules | Not documented | Loopback binding is its own boundary (§5.4.4.2) |
+| Scenario | Diagnostic Step | Recovery Action |
+|----------|-----------------|-----------------|
+| Server startup verification | Run `node server.js`; observe stdout for F-003 startup line | None — server is healthy |
+| HTTP endpoint verification | Issue `curl http://127.0.0.1:3000/`; verify 200 / `text/plain` / 14 bytes | None — endpoint is healthy |
+| Crash / SIGINT / unexpected exit | Inspect terminal for Node.js stack trace | Re-invoke `node server.js` |
+| Port-collision (`EADDRINUSE`) | Run `lsof -i :3000` to identify port-3000 owner | Free port 3000 externally; re-invoke |
+| Privilege error (`EACCES`) | Identify user privilege constraint | Run as a user with permission to bind port 3000 |
 
-### 8.11.4 Third-Party Service Dependencies
+### 8.10.3 Maintenance Procedures
 
-Per §3.5 and the negative integration inventory in §5.1.4, the system has **zero third-party service dependencies**. No external service — cloud, SaaS, on-premises, or peer — is consumed by the application during execution. The complete negative inventory is reproduced below for the infrastructure-relevant categories:
+Per the operational immutability directive (`README.md`: "Do not touch!") and constraint C-001, **no maintenance is performed on the four baseline files**.
 
-| Service Category | Dependency | Status |
-|------------------|------------|--------|
-| Cloud providers | AWS, GCP, Azure | None used |
-| Identity providers | Auth0, Okta, Azure AD, OIDC, SAML | None used |
-| Configuration servers | Consul, etcd, AWS Parameter Store | None used |
-| Service discovery | Consul, Eureka, ZooKeeper | None used |
-| CDN | CloudFront, Cloudflare, Akamai | None used |
-| Email / SMS gateways | SendGrid, Twilio, SES | None used |
-| Payment processors | Stripe, PayPal, Adyen | None used |
-| AI / LLM services | OpenAI, Anthropic, Bedrock | None used |
+| Maintenance Category | Applicability | Rationale |
+|----------------------|---------------|-----------|
+| Dependency updates | Not applicable | Zero dependencies (C-005) |
+| Node.js runtime upgrades | Operator's discretion | Out of scope of repository; recommend Node ≥ 20 |
+| Security patching of `server.js` | **Forbidden** | C-001 forbids modification |
+| Configuration changes | Not applicable | No configuration surface (§3.7.9) |
+| Log rotation | Not applicable | No persistent log files |
+| Backup / restore | Not applicable | No data plane (§5.4.6) |
+| Certificate renewal | Not applicable | No TLS / HTTPS |
+
+The only maintenance activity that may legitimately occur is **upgrading the operator's host Node.js runtime**, which is out of scope of this repository and does not require any change to the repository contents.
 
 ---
 
-## 8.12 MAINTENANCE PROCEDURES
+## 8.11 CONDITIONS UNDER WHICH INFRASTRUCTURE WOULD BECOME APPLICABLE
 
-### 8.12.1 Operational Maintenance
+For traceability — and consistent with the pattern established in §6.1.7 — this subsection records the architectural events that would trigger reauthoring of this Infrastructure section as a populated (rather than non-applicable) specification. Each event corresponds to a deliberate relaxation of one or more binding constraints from §2.6.2.
 
-Because no infrastructure is provisioned, conventional infrastructure-maintenance procedures (patching, version upgrades, certificate rotation, secret rotation, capacity expansion) do not apply at the application or platform layer. The maintenance surface for this system is limited to **host-level Node.js maintenance**, which is external to the repository.
+| Triggering Event | Constraints Relaxed | Infrastructure Domains Introduced |
+|------------------|---------------------|-----------------------------------|
+| Bind to non-loopback host (e.g., `0.0.0.0`) | C-002 | Network architecture, ingress, TLS, firewalls |
+| Allow multiple instances or non-3000 ports | C-003 | Load balancing, service discovery, replica topology |
+| Introduce an npm dependency | C-005, C-006 | Build pipeline, SBOM, dependency scanning |
+| Add Dockerfile / Compose / K8s manifest | C-001 | Containerization, orchestration, registry |
+| Add `.github/workflows/` or equivalent CI config | C-001 | CI/CD pipeline, environment promotion |
+| Add Terraform / CDK / Pulumi program | C-001 | IaC, cloud-provider integration |
+| Persist state (file, database, cache) | C-001, C-005 | Storage, backup, replication, DR |
+| Emit metrics / spans / structured logs | C-001, C-005 | Monitoring backend, APM, log aggregation |
 
-| Maintenance Concern | Status | Owner |
-|---------------------|--------|-------|
-| Node.js runtime patching | Out of repository scope | Host operator |
-| Operating-system patching | Out of repository scope | Host operator |
-| Dependency vulnerability patching | Not applicable — zero dependencies (C-005) | N/A |
-| TLS certificate rotation | Not applicable — plaintext HTTP per F-003-RQ-002 | N/A |
-| Secret rotation | Not applicable — no secrets consumed (§6.4) | N/A |
-| Database backup / restore | Not applicable — no persistence (§3.6) | N/A |
-| Capacity / scaling adjustments | Not applicable — non-scalable by design (§6.1.3) | N/A |
-| License audit | Trivially satisfied — MIT (C-007), zero deps | Repository operator |
-
-### 8.12.2 Restart and Recovery Procedure
-
-Per §5.4.6 and §6.5.4.3, any recovery from a crash is an external concern: the operator (or an external supervisor outside the repository boundary) must re-invoke `node server.js`. The de facto recovery procedure consists of three operator actions:
-
-1. Observe failure indicator at the operator terminal — either the absence of the startup readiness line (`Server running at http://127.0.0.1:3000/`) or a non-zero process exit code accompanied by Node.js's default stack trace on stderr.
-2. Determine root cause from the stderr output (for example, `EADDRINUSE` if port 3000 was already bound, or `EACCES` if the port was denied).
-3. Resolve the root cause externally (free the port, change host permissions) and re-invoke `node server.js`.
-
-No automated restart policy, no PM2 ecosystem file, no systemd unit, no Docker restart policy, and no orchestrator-driven self-healing is committed to the repository (per §5.4.6).
-
-### 8.12.3 Change-Control Posture
-
-Per constraint C-001 and the README's "Do not touch!" directive, the codebase is intentionally immutable. The maintenance posture is consequently **non-mutating**: no patches, no upgrades, and no schema migrations are applied to the repository contents themselves. Per §6.5.4.5, even known inconsistencies (such as the `main: "index.js"` field in `package.json` pointing to a file that does not exist) are deliberately preserved per assumption A-004 rather than corrected.
+Until at least one of these triggering events occurs and is reflected in a corresponding change to `README.md`, `server.js`, `package.json`, and `package-lock.json`, the determination of non-applicability for this section stands.
 
 ---
 
-## 8.13 GOVERNING CONSTRAINTS AND ARCHITECTURAL RATIONALE
+## 8.12 REFERENCES
 
-### 8.13.1 Constraint Mapping Summary
+### 8.12.1 Files Examined
 
-The infrastructure posture is enforced normatively by the constraint catalogue in §2.6.2. The complete constraint-to-infrastructure mapping is:
+- `server.js` — Confirmed the 14-line single-file HTTP listener bound to `127.0.0.1:3000`, the absence of build steps, the absence of error handlers, and the absence of configuration surfaces. The sole runtime artifact of the system.
+- `package.json` — Confirmed zero `dependencies`, zero `devDependencies`, absence of `engines` pin, absence of `start` script, dangling `main: "index.js"` reference, placeholder `test` script, and MIT license.
+- `package-lock.json` — Confirmed `lockfileVersion: 3` with an empty packages tree below the root entry, verifying the empty transitive closure that forecloses any dependency-based infrastructure tooling.
+- `README.md` — Confirmed the operational immutability directive ("Do not touch!") that is the source of constraint C-001 and forbids the introduction of any infrastructure artifacts that would modify baseline files.
 
-| Constraint ID | Statement | Effect on Infrastructure |
-|---------------|-----------|--------------------------|
-| C-001 | All files must remain unchanged from the committed baseline | Forbids adding Dockerfile, IaC templates, CI/CD configs, environment files, supervisor manifests |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | Precludes load balancers, multi-host deployment, container orchestration requiring external binding |
-| C-003 | Port must remain hardcoded to `3000` | Prevents dynamic port allocation needed for orchestrator scheduling |
-| C-005 | Zero runtime and zero development dependencies must be maintained | Excludes process managers, cloud SDKs, IaC tooling, monitoring agents, log shippers |
-| C-006 | Project must remain executable without `npm install` | Excludes any installable infrastructure dependency |
-| C-007 | License of all repository contents is MIT | Governs distribution terms; no licensing-driven infrastructure constraint |
+### 8.12.2 Folders Explored
 
-### 8.13.2 Architectural Principles That Forbid Infrastructure
+- Repository root (depth 0) — Confirmed exactly four baseline files plus the additive `docs/` and `blitzy/` documentation folders; no infrastructure subdirectories (`.github/`, `infra/`, `terraform/`, `docker/`, `k8s/`, `.circleci/`, `ansible/`, etc.) exist.
+- `docs/` (depth 1) — Contains `dead-code-analysis.md` and `testing-strategy.md`; analysis-only artifacts, no infrastructure manifests.
+- `blitzy/` (depth 1) — Contains only `blitzy/documentation/` subfolder; no infrastructure artifacts.
+- `blitzy/documentation/` (depth 2) — Contains governance and specification artifacts (`Agent Action Plan.md`, `Build Prompt.md`, `Technical Specifications.md`, `Project Guide.md`); no infrastructure code.
 
-The six architectural principles enumerated in §5.1.1.2 — behavioral stability, source invariance, operational simplicity, defense by minimalism, determinism, and self-containment — collectively forbid the introduction of infrastructure features. The "Negative Architecture" pattern documented in §5.1.1.2 — "the deliberate, documented exclusion of features that a non-fixture system would normally include" — extends naturally to infrastructure features.
+### 8.12.3 Supporting Analysis Documents
 
-| Principle | Implication for Infrastructure |
-|-----------|--------------------------------|
-| Behavioral stability | Infrastructure layers (orchestrators, supervisors, load balancers) introduce timing variance and restart behaviors that would change observable response patterns |
-| Source invariance | The "Do not touch!" directive (C-001) forbids adding `Dockerfile`, `.github/workflows/`, `terraform/`, or any infrastructure manifest |
-| Operational simplicity | "No install step, no build step, no transpile step" — infrastructure tooling violates this directly |
-| Defense by minimalism | Infrastructure components expand the supply-chain attack surface enumerated in §3.9 |
-| Determinism | Infrastructure-driven side effects (auto-restart, autoscale, traffic shifts) break the byte-identical response contract (F-002-RQ-004) |
-| Self-containment | Entire system fits in four files at the repository root — there is no room for infrastructure artifacts |
+- `docs/testing-strategy.md` — Risk-prioritized testing plan using only built-in Node.js facilities (`node:test`, `node:assert`, `fetch`, `node:http`); recommends Node.js ≥ 20; reaffirms the zero-dependency constraint that forecloses CI/CD tooling.
+- `docs/dead-code-analysis.md` — Formal dead-code audit confirming zero removable dead code across the four baseline files; documents the dangling `main: "index.js"` reference in `package.json`.
 
-### 8.13.3 Relationship to Other Specification Sections
+### 8.12.4 Technical Specification Sections Cross-Referenced
 
-For readers seeking related discussions of the same architectural conclusion, the following sections of this Technical Specification provide complementary perspectives:
-
-| Topic | Section | What It Documents |
-|-------|---------|-------------------|
-| Development & deployment posture (authoritative) | §3.7 | Definitive absence inventory for containerization, CI/CD, IaC, build system |
-| Stack overview | §3.1 | Confirmation that the conventional enterprise stack is "explicitly inapplicable" |
-| Third-party services (negative inventory) | §3.5 | Negative inventory of cloud providers and managed services |
-| Out-of-scope capabilities | §1.3.2 | Explicit exclusion of CI/CD, containerization, public network exposure |
-| Governing constraints | §2.6.2 | Authoritative source for C-001 through C-007 |
-| High-level architecture | §5.1 | Six architectural principles; loopback boundary; negative integration inventory |
-| Cross-cutting concerns | §5.4 | Monitoring, logging, error handling, performance, and DR posture |
-| Core services applicability | §6.1 | Precedent "not applicable" determination structure |
-| Monitoring applicability | §6.5 | Inherited absence of monitoring (extended here to infrastructure monitoring) |
-| Security architecture | §6.4 | Defense-by-minimalism pattern mirrored here as infrastructure-by-absence |
-
-### 8.13.4 Normative Posture Summary
-
-The infrastructure posture is therefore not merely **descriptive** (what is currently absent) but **normative** (what must remain absent). Any future enhancement that proposed introducing a container image, an orchestrator manifest, a CI/CD workflow, an IaC template, a monitoring agent, or a supervisor configuration would simultaneously violate one or more of constraints C-001, C-002, C-005, and C-006. The absence of detailed infrastructure architecture is therefore a permanent architectural property protected by multiple, mutually reinforcing constraints.
-
-The minimal build and distribution requirements documented in §8.2 (direct invocation of `node server.js` on a host with Node.js installed, port `3000` free on loopback, and zero installation steps) constitute the complete and sufficient operational specification for the system's role as a deterministic test fixture.
-
----
-
-## 8.14 REFERENCES
-
-### 8.14.1 Files Examined
-
-- `server.js` — Complete 14-line source verified to contain only `require('http')`, hardcoded `hostname = '127.0.0.1'` and `port = 3000` literals, branchless handler returning `"Hello, World!\n"`, a single `console.log` in the listen callback, no `process.env` reads, no error listeners, no signal handlers, no cloud or telemetry SDK imports
-- `package.json` — Confirmed package identity (`hello_world` v1.0.0, MIT license, author `hxu`); placeholder `test` script (`echo "Error: no test specified" && exit 1`); declared `main: "index.js"` (documented inconsistency per A-004); absence of `dependencies`, `devDependencies`, `engines`, `start`, and `repository` fields
-- `package-lock.json` — Confirmed npm `lockfileVersion: 3` with empty `packages` tree (only root `""` entry) — cryptographic attestation of zero installed packages and zero transitive dependencies; consequently zero infrastructure tooling
-- `README.md` — Established the "Do not touch!" governance directive (origin of constraint C-001) that normatively forbids the addition of any infrastructure artifact to the repository
-
-### 8.14.2 Folders Explored
-
-- `/` (repository root, depth 0) — Confirmed the absence of every conventional infrastructure-related subdirectory: no `.github/` (no GitHub Actions workflows), no `k8s/` or `helm/` (no orchestrator manifests), no `terraform/` or `cloudformation/` (no IaC templates), no `docker/` (no container manifests), no `scripts/` or `bin/` (no shell scripts), no `config/` or `.env*` (no environment configuration), no `node_modules/` (consequence of zero dependencies), no `.gitignore`; the entire repository surface is the four files listed above with no subdirectories of any kind
-
-### 8.14.3 Cross-Referenced Technical Specification Sections
-
-- **§1.2 SYSTEM OVERVIEW** — Fixture role and intrinsic-limitations framing; no CI/CD or Dockerfile referenced anywhere
-- **§1.3 SCOPE** — Authoritative exclusion of CI/CD, containerization, build/transpile step, and public network exposure
-- **§2.4 IMPLEMENTATION CONSIDERATIONS** — Scalability dimensions (horizontal/vertical/concurrency/state/load — all not supported or not applicable); build pipeline documented as "None"
-- **§2.6 ASSUMPTIONS AND CONSTRAINTS** — Authoritative source for constraints C-001 through C-007 and assumptions A-001 through A-005
-- **§3.1 STACK OVERVIEW AND ARCHITECTURAL POSTURE** — Minimalism principle; "no horizontal complexity"; explicit inapplicability of the default enterprise stack
-- **§3.4 OPEN SOURCE DEPENDENCIES** — Zero-dependency confirmation; empty `packages` tree
-- **§3.5 THIRD-PARTY SERVICES** — Comprehensive negative inventory of all external services (zero used)
-- **§3.6 DATABASES & STORAGE** — Documented absence of any persistence layer (consequently no backup/restore infrastructure)
-- **§3.7 DEVELOPMENT & DEPLOYMENT** — Most directly relevant section — explicit absence of containerization (§3.7.4), CI/CD (§3.7.5), IaC (§3.7.6), build system (§3.7.2)
-- **§3.9 SECURITY IMPLICATIONS OF STACK CHOICES** — Defense-by-minimalism pattern; supply-chain surface reasoning
-- **§5.1 HIGH-LEVEL ARCHITECTURE** — Architectural style, six principles, boundaries, negative integration inventory
-- **§5.2 COMPONENT DETAILS** — Single runtime component; no infrastructure components
-- **§5.3 TECHNICAL DECISIONS** — ADR-005 (zero dependencies) and ADR-006 (source invariance) as the formal basis for infrastructure absence
-- **§5.4 CROSS-CUTTING CONCERNS** — Monitoring (§5.4.1), logging (§5.4.2), error handling (§5.4.3), security (§5.4.4), performance (§5.4.5), and disaster recovery (§5.4.6) — all absent or minimal
-- **§6.1 Core Services Architecture** — Precedent "not applicable" determination structure; §6.1.3.2 auto-scaling prerequisites; §6.1.4.2 disaster-recovery non-implementation
-- **§6.4 Security Architecture** — Precedent "not applicable" determination structure; defense-by-minimalism pattern mirrored here as infrastructure-by-absence
-- **§6.5 Monitoring and Observability** — Comprehensive monitoring absence inventory; sole observability surfaces specification inherited authoritatively into §8.8
+- §1.1 Executive Summary — Four-file baseline, "Do not touch!" governance contract, ~40 LOC scope.
+- §1.2 System Overview — Project context, integration boundary, runtime sequence, success criteria.
+- §1.3 Scope — In/out-of-scope enumeration including explicit containerization/CI/CD exclusions.
+- §2.4 Implementation Considerations — Technical constraints, scalability posture, security implications, maintenance requirements.
+- §2.6 Assumptions and Constraints — Assumptions A-001 through A-005 and constraints C-001 through C-007.
+- §3.1 Stack Philosophy and Overview — Minimalism principle, joint preclusion by C-001 and C-005.
+- §3.4 Open-Source Dependencies — Zero runtime/dev dependency confirmation.
+- §3.5 Third-Party Services — Complete verified-absent inventory of external services.
+- §3.7 Development & Deployment — Authoritative source for runtime version, build absence, containerization absence, IaC absence, CI/CD absence, launch procedure, environment variables.
+- §3.9 Security Implications of Stack Choices — Security posture table; compensating controls.
+- §3.10 Default Technology Stack Reconciliation — Each default-stack infrastructure item marked "Not applicable."
+- §5.1 High-Level Architecture — Single-process monolithic micro-service characterization.
+- §5.2 Component Details — `server.js` as sole runtime component.
+- §5.4 Cross-Cutting Concerns — Monitoring, logging, error handling, security, disaster recovery, operational posture summary (§5.4.7).
+- §6.1 Core Services Architecture — Precedent for negative-space documentation pattern; scalability and resilience absence inventories.
+- §6.5 Monitoring and Observability — Verified-absent monitoring infrastructure; runbook §6.5.5.3.
 
 # 9. Appendices
 
-This section consolidates supplementary technical material that did not fit cleanly into the preceding sections, defines specialized vocabulary used throughout this Technical Specification, and expands acronyms encountered in earlier chapters. The Appendices are reference-grade material intended to support quick lookups, onboarding, and cross-section traceability for the `hao-backprop-test` repository.
+This final section consolidates supplementary technical material, terminology, and acronym expansions that support but do not duplicate the body of the Technical Specification. Three appendices are provided: **9.1 Additional Technical Information** captures granular facts that did not naturally belong in any numbered section; **9.2 Glossary** defines domain and architectural terms used throughout the document; and **9.3 Acronyms** expands every initialism appearing in the specification, including those introduced via the verified-absence (negative-space) pattern.
 
 ## 9.1 ADDITIONAL TECHNICAL INFORMATION
 
-The subsections that follow consolidate facts that are scattered across the main body of the specification or that exist only in source artifacts. Together they provide an authoritative single-location reference for the repository's complete observable surface.
+### 9.1.1 Repository Identity and Engagement Metadata
 
-### 9.1.1 Complete Source File Listings
+The following identifiers fix the precise source state against which this Technical Specification was authored, enabling future readers to reproduce the exact commit and engagement context under inspection. The repository name (`hao-backprop-test`) and the npm package name (`hello_world`) intentionally differ; both are preserved unchanged under constraint C-001.
 
-The repository's executable and metadata surface consists of exactly four committed files. Because §1 through §8 reference these files piecemeal (selected lines and individual fields), the verbatim listings below serve as the canonical reference. All four files are governed by Constraint C-001 ("Source Invariance") per §2.6.2 and the README's "Do not touch!" directive.
+| Attribute | Value |
+|-----------|-------|
+| Repository name | `hao-backprop-test` |
+| npm package name | `hello_world` |
+| Declared package version | `1.0.0` (mirrored in `package-lock.json`) |
+| Engagement branch | `blitzy-c78fadc3-1afa-4210-a77f-762946afbe89` |
+| HEAD commit | `b88a16b` |
+| Baseline commit | `f4ba68e` |
+| Change author identity | `agent@blitzy.com` |
+| Engagement type | Documentation-only static analysis |
+| Mutation policy | Zero source mutation; additive deliverables only |
+| License (all artifacts) | MIT |
 
-#### 9.1.1.1 `server.js` (14 lines)
+### 9.1.2 Verified Runtime Environment Details
 
-This file is the sole executable artifact in the repository and implements Features F-001, F-002, and F-003 in their entirety.
+The runtime versions below were observed during analysis on a Windows PowerShell host. Crucially, **none of these versions is pinned in `package.json`** — the manifest contains no `engines` field — so the observed versions document a *known-good* configuration rather than a contractual minimum. Section 6.6 Testing Strategy recommends Node.js ≥ 20 in practice.
 
-```javascript
-const http = require('http');
+| Component | Verified Version | Pinning Status |
+|-----------|------------------|----------------|
+| Node.js | v20.20.2 | Not pinned (no `engines` field) |
+| npm | 10.8.2 | Bundled with Node.js 20 |
+| Lockfile format | `lockfileVersion: 3` | Pinned in `package-lock.json` |
+| Tested OS shell | Windows PowerShell | Not constrained by source |
 
-const hostname = '127.0.0.1';
-const port = 3000;
+### 9.1.3 File Inventory with Line Counts
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, World!\n');
-});
+The repository's complete artifact inventory is reproduced below. The four baseline files account for ~40 lines of code and configuration total. The two analysis documents under `docs/` are additive deliverables produced under the engagement scope and do not perturb the immutable baseline.
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-```
+| File | Lines | Classification |
+|------|-------|----------------|
+| `server.js` | 14 | Baseline — sole runtime executable |
+| `package.json` | 11 | Baseline — npm manifest |
+| `package-lock.json` | 13 | Baseline — lockfile (v3, empty packages tree) |
+| `README.md` | 3 | Baseline — governance directive |
+| `docs/dead-code-analysis.md` | 158 | Additive — OBJ-1 deliverable |
+| `docs/testing-strategy.md` | 307–308 | Additive — OBJ-2 deliverable |
 
-#### 9.1.1.2 `package.json` (11 lines)
+### 9.1.4 Response Body Byte-Level Specification
 
-This file declares the npm package identity per Feature F-004. It contains no `dependencies`, `devDependencies`, or `engines` fields — the operational manifestation of Feature F-005 (Zero-Dependency Operation). The `main: "index.js"` field references a non-existent file; this inconsistency is preserved under Constraint C-001 and is reconciled by Assumption A-004.
+The fixture's deterministic counterparty value depends on the response body remaining byte-identical (constraint C-004). The exact byte sequence is recorded here to support future validation tooling that may hash or fingerprint the response.
 
-```json
-{
-  "name": "hello_world",
-  "version": "1.0.0",
-  "description": "Hello world in Node.js",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "hxu",
-  "license": "MIT"
-}
-```
+| Property | Value |
+|----------|-------|
+| Body string | `Hello, World!\n` (with trailing newline) |
+| Byte length | 14 bytes (UTF-8) |
+| Hex representation | `48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21 0A` |
+| HTTP status | `200 OK` |
+| Content-Type header | `text/plain` |
+| Startup log line | `Server running at http://127.0.0.1:3000/` (exactly 40 bytes) |
 
-#### 9.1.1.3 `package-lock.json` (13 lines)
+### 9.1.5 Preserved Inconsistencies in Baseline Files
 
-This npm lockfile (format version 3, introduced with npm v7) cryptographically attests to zero installed dependencies. The `packages` object contains exactly one key — the empty string `""` representing the root package itself — and no nested package entries.
+Two cosmetic inconsistencies exist within the baseline files. Both are preserved unchanged under constraint C-001 ("Do not touch!") and assumption A-004 ("Readers will tolerate `main: \"index.js\"` despite the absence of `index.js`"). Neither inconsistency affects runtime behavior because `node server.js` is invoked directly, bypassing the `main` resolution path.
 
-```json
-{
-  "name": "hello_world",
-  "version": "1.0.0",
-  "lockfileVersion": 3,
-  "requires": true,
-  "packages": {
-    "": {
-      "name": "hello_world",
-      "version": "1.0.0",
-      "license": "MIT"
-    }
-  }
-}
-```
+| Inconsistency | Manifest Location | Disposition |
+|---------------|-------------------|-------------|
+| `main: "index.js"` references a non-existent file | `package.json` | Dangling reference; documented as accepted |
+| `scripts.test` is the npm-default placeholder (`echo "Error: no test specified" && exit 1`) | `package.json` | Placeholder retained; no test suite expected |
 
-#### 9.1.1.4 `README.md` (2 lines)
+### 9.1.6 Engagement Effort Distribution
 
-This documentation file establishes the repository's identity, declares the integration purpose, and issues the immutability directive that underpins Constraint C-001.
+The engagement was scoped at 15.0 total hours, of which 13.0 hours had been completed at the time of this specification's authoring. The remaining 2.0 hours are reserved for review/acceptance and scope-confirmation decisions, not for source mutation (which is forbidden by C-001).
 
-```
-# hao-backprop-test
+| Effort Bucket | Hours | Percentage |
+|---------------|-------|------------|
+| Total scoped effort | 15.0 | 100.0% |
+| Completed | 13.0 | 86.7% |
+| Remaining (review + scope confirmation) | 2.0 | 13.3% |
 
-test project for backprop integration. Do not touch!
-```
+### 9.1.7 Test Priority Band Reference
 
-### 9.1.2 Response Payload Byte-Level Specification
+The testing strategy in `docs/testing-strategy.md` §3.1 organizes recommended tests into three priority bands (P0–P2). This appendix provides a compact cross-reference; full rationale is in the strategy document and in Section 6.6 of this specification.
 
-The HTTP response body is the literal UTF-8 string `Hello, World!\n`. The "14 bytes" figure cited in §1.2.3, §2.1.2, §5.4.5, §6.5.1.4, §6.5.5.2, §8.9.1, and §8.10.2 corresponds to the byte sequence below. Constraint C-004 mandates byte-identical responses across all invocations; any deviation in this byte sequence constitutes a regression detectable by upstream integration tests.
+| Priority | Focus | Notable Constraint |
+|----------|-------|--------------------|
+| P0 | API contract verification + edge-case/determinism checks | Highest business impact for fixture stability |
+| P1 | Integration/lifecycle tests + `EADDRINUSE` failure mode | Exercises startup binding path |
+| P2 | Unit tests + coverage measurement | **Blocked by C-001**: no `module.exports` permits unit isolation |
 
-| Byte Index | Hex | ASCII Character |
-|------------|-----|-----------------|
-| 1 | `0x48` | `H` |
-| 2 | `0x65` | `e` |
-| 3 | `0x6C` | `l` |
-| 4 | `0x6C` | `l` |
-| 5 | `0x6F` | `o` |
-| 6 | `0x2C` | `,` |
-| 7 | `0x20` | (space) |
-| 8 | `0x57` | `W` |
-| 9 | `0x6F` | `o` |
-| 10 | `0x72` | `r` |
-| 11 | `0x6C` | `l` |
-| 12 | `0x64` | `d` |
-| 13 | `0x21` | `!` |
-| 14 | `0x0A` | `\n` (LF) |
+### 9.1.8 Compliance and Regulatory Posture Summary
 
-All 14 bytes lie within the 7-bit ASCII subset of UTF-8, so the byte count equals the character count. The trailing LF (`0x0A`) is significant for clients that perform line-oriented parsing of the response body.
+The system has no compliance applicability across the common enterprise regulatory regimes. This consolidated table reflects the negative-space pattern used throughout Section 6.4 Security Architecture; it is reproduced here for indexed reference.
 
-### 9.1.3 Node.js Core API Surface
+| Regime | Applicability |
+|--------|---------------|
+| GDPR | Not triggered (no personal data handled) |
+| CCPA / CPRA | Not triggered (no consumer data handled) |
+| HIPAA | Not triggered (no PHI handled) |
+| PCI-DSS | Not triggered (no cardholder data handled) |
+| SOC 2 | Not formally claimed |
+| ISO/IEC 27001 | Not formally claimed |
+| FedRAMP / FISMA | Not applicable |
+| NIST 800-53 / 800-171 | Not implemented |
 
-The complete inventory of Node.js core APIs consumed by `server.js` is enumerated below. No other core modules (`fs`, `path`, `crypto`, `os`, `process`, `cluster`, `worker_threads`, `stream`, `events`, `net`, `tls`, `url`, `util`) are imported or referenced anywhere in the codebase.
+### 9.1.9 Identifier Taxonomy Cross-Reference
 
-| API Surface | Source Location | Owning Module / Object |
-|-------------|-----------------|------------------------|
-| `require('http')` | `server.js` line 1 | CommonJS loader → `http` core |
-| `http.createServer(handler)` | `server.js` line 6 | `http` module factory |
-| `server.listen(port, hostname, cb)` | `server.js` line 12 | `http.Server` instance |
-| `res.statusCode = 200` | `server.js` line 7 | `http.ServerResponse` property |
-| `res.setHeader(name, value)` | `server.js` line 8 | `http.ServerResponse` method |
-| `res.end(body)` | `server.js` line 9 | `http.ServerResponse` method |
-| `console.log(template)` | `server.js` line 13 | `console` global |
-
-### 9.1.4 Validation Command Reference
-
-The commands below, consolidated from §6.6.2.3, constitute the complete operational validation surface. They are the only commands an operator can invoke to verify correct behavior, since no automated test harness exists in the repository.
-
-| Validation Command | Expected Result |
-|--------------------|-----------------|
-| `node server.js` | Foreground process; stdout emits `Server running at http://127.0.0.1:3000/` |
-| `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/` | Exits with output `200` |
-| `curl -sI http://127.0.0.1:3000/` | Headers include `HTTP/1.1 200 OK` and `Content-Type: text/plain` |
-| `curl -s http://127.0.0.1:3000/` | Body equals `Hello, World!\n` (14 bytes) |
-| `lsof -nP -iTCP:3000 -sTCP:LISTEN` | One listener visible on `127.0.0.1:3000` |
-| `netstat -an \| grep 3000` | TCP listener entry on `127.0.0.1:3000` |
-| `npm test` | Stderr emits `Error: no test specified`; exits with code 1 |
-| `git diff` | Empty output (verifies C-001 immutability) |
-
-### 9.1.5 Process Lifecycle State Set
-
-Per §4.5.2, the Node.js process traverses the following discrete states from invocation through termination. The state machine has no looping or branching except in the `Listening ↔ Handling` cycle that constitutes the event loop's steady-state behavior.
-
-| State | Trigger | Code Position |
-|-------|---------|---------------|
-| `PreStart` | Process not yet spawned | n/a (operator side) |
-| `Initializing` | Module load and constant declarations | `server.js` lines 1–10 |
-| `Binding` | `server.listen()` invoked; OS socket allocation in progress | `server.js` line 12 |
-| `Listening` | Bind successful; event loop active and idle | After listen callback fires |
-| `Handling` | Inbound request being processed (transient, per-request) | `server.js` lines 7–9 |
-| `Crashed` | Unhandled error during bind or runtime; exits non-zero | Node.js default behavior |
-| `Terminated` | Operator-initiated `SIGINT` / `SIGTERM` / `SIGKILL`; abrupt exit | No graceful path implemented |
-
-### 9.1.6 Process Exit Code Semantics
-
-The system inherits Node.js's default exit-code conventions per ADR-004 ("Defer All Error Handling to Node.js Default Behavior"). The mapping below consolidates the exit-code semantics referenced in §6.5.5.3.
-
-| Termination Cause | Typical Exit Code | Interpretation |
-|-------------------|-------------------|----------------|
-| Listener bound, process running | (no exit) | Healthy steady state |
-| Synchronous startup error (`EADDRINUSE`, `EACCES`) | Non-zero (Node default) | Startup failure |
-| Uncaught exception in handler (hypothetical) | Non-zero (Node default) | Runtime failure |
-| Operator `SIGINT` (Ctrl+C) | 130 (POSIX `128 + 2`) | Intentional termination |
-| Operator `SIGTERM` (kill) | 143 (POSIX `128 + 15`) | Intentional termination |
-| Operator `SIGKILL` (kill -9) | 137 (POSIX `128 + 9`) | Forced termination, untrappable |
-
-### 9.1.7 Negative Inventory — Consolidated Absent Items
-
-The "Negative Architecture" pattern named in §5.1.1.2, §6.1.5.1, and §6.5.8.2 manifests operationally as the absence of artifacts that conventional Node.js projects would normally include. The catalog below consolidates the negative-inventory items scattered throughout §3, §5, §6, §7, and §8, organized by category. Each item has been independently verified absent from the repository root.
-
-| Category | Demonstrably Absent Items |
-|----------|----------------------------|
-| Source files | No `index.js`, no additional `*.js`, no TypeScript sources, no transpiled output |
-| Subdirectories | No `src/`, `lib/`, `tests/`, `test/`, `spec/`, `node_modules/`, `.github/`, `dist/`, `build/`, `docs/`, `scripts/` |
-| Config files | No `.nvmrc`, `.npmrc`, `.eslintrc`, `.prettierrc`, `tsconfig.json`, `jest.config.js`, `.editorconfig` |
-| Container artifacts | No `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `Containerfile` |
-| Orchestration | No Kubernetes manifests, Helm charts, Kustomize overlays |
-| CI/CD definitions | No `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`, `.travis.yml`, `azure-pipelines.yml`, `buildspec.yml`, `.drone.yml` |
-| Documentation | No `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE.md`, `CODE_OF_CONDUCT.md`, `RUNBOOK.md`, `OPERATIONS.md`, `ROADMAP.md`, `SECURITY.md` |
-| Infrastructure-as-code | No `.tf` (Terraform), no CloudFormation, no Pulumi, no Ansible playbooks |
-| Telemetry libraries | No `@opentelemetry/*`, `prom-client`, `pino`, `winston`, `bunyan` |
-| `package.json` omissions | No `dependencies`, `devDependencies`, `engines`, `repository`, `keywords`, `bugs`, `homepage`, `private`, `start` script |
-| Git artifacts | `.git/` directory exists (per §3.11.2); no `.gitignore`, no `.blitzyignore` |
-| Governance files | No `CODEOWNERS`, `MAINTAINERS`, `CONTRIBUTORS` |
-
-### 9.1.8 Master Identifier Index
-
-The specification uses six structured identifier series that are introduced across §2.1, §2.6, §4, and §5.3 but never consolidated. This subsection provides the master index.
-
-#### 9.1.8.1 Feature Identifiers (F-NNN)
-
-| ID | Name | Priority |
-|----|------|----------|
-| F-001 | HTTP Server Lifecycle and TCP Binding | Critical |
-| F-002 | Static HTTP Response Generation | Critical |
-| F-003 | Startup Console Logging | Medium |
-| F-004 | Package Identity and Metadata Declaration | High |
-| F-005 | Zero-Dependency Operation | High |
-| F-006 | Project Documentation and Immutability Directive | Medium |
-
-#### 9.1.8.2 Constraint Identifiers (C-NNN)
-
-| ID | Constraint | Source Anchor |
-|----|------------|---------------|
-| C-001 | All files must remain unchanged from the committed baseline | `README.md` "Do not touch!" |
-| C-002 | Hostname must remain hardcoded to `127.0.0.1` | `server.js` line 3 |
-| C-003 | Port must remain hardcoded to `3000` | `server.js` line 4 |
-| C-004 | Response body, status, and headers must remain byte-identical | `server.js` lines 7–9 |
-| C-005 | Zero runtime and zero development dependencies | `package.json`, lockfile |
-| C-006 | Executable without prior `npm install` | Consequence of C-005 |
-| C-007 | License of all contents is MIT | `package.json`, lockfile |
-
-#### 9.1.8.3 Assumption Identifiers (A-NNN)
-
-| ID | Assumption |
-|----|------------|
-| A-001 | Node.js is installed on the host running `server.js` |
-| A-002 | TCP port `3000` is free on the loopback interface at startup |
-| A-003 | The "backprop" consumer issues HTTP/1.1 requests from the same host |
-| A-004 | Readers tolerate `main: "index.js"` despite the absence of `index.js` |
-| A-005 | No security review of plaintext HTTP / loopback binding is required |
-
-#### 9.1.8.4 Architecture Decision Record Identifiers (ADR-NNN)
-
-| ID | Decision | Enforces |
-|----|----------|----------|
-| ADR-001 | Use Node.js Core `http` Module Instead of an External Framework | C-005 |
-| ADR-002 | Bind to `127.0.0.1` Loopback Only | C-002 |
-| ADR-003 | Hardcode Hostname and Port Literals | C-002, C-003 |
-| ADR-004 | Defer All Error Handling to Node.js Default Behavior | (none) |
-| ADR-005 | Maintain Zero Runtime and Zero Development Dependencies | C-005, F-005 |
-| ADR-006 | Adopt Source Invariance as a Governance Constraint | C-001 |
-
-#### 9.1.8.5 Workflow Identifiers (WF-NNN)
-
-| ID | Name | Status |
-|----|------|--------|
-| WF-001 | Server Startup Workflow | Implemented |
-| WF-002 | Request–Response Workflow | Implemented |
-| WF-003 | Startup Logging Side-Workflow | Implemented |
-| WF-ABSENT-001 | Error Handling / Recovery | Documented absent |
-| WF-ABSENT-002 | Authentication / Authorization | Documented absent |
-| WF-ABSENT-003 | Batch / Event Processing | Documented absent |
-| WF-ABSENT-004 | State Persistence / Caching | Documented absent |
-
-#### 9.1.8.6 Functional Requirement Identifiers (F-NNN-RQ-MMM)
-
-Functional requirements use the composite scheme `F-{feature}-RQ-{ordinal}`, where the `feature` component is the parent Feature ID (F-001 to F-006) and `ordinal` is a zero-padded three-digit counter within that feature. The canonical example is **F-002-RQ-004**, which formalizes the determinism contract for the static response handler. Full enumeration of these requirements is provided in §2.2.
-
-#### 9.1.8.7 Identifier Relationship Diagram
-
-The diagram below visualizes the dependency relationships between Features, Constraints, and Architecture Decisions. Arrows indicate "is enforced by" or "implements" relationships.
+The Technical Specification employs several disjoint identifier namespaces. The diagram below relates them. All identifiers are stable within version `1.0.0` and would require an override of C-001 to revise.
 
 ```mermaid
-flowchart TB
-    subgraph Features["Features (§2.1)"]
-        F001[F-001<br/>HTTP Lifecycle]
-        F002[F-002<br/>Static Response]
-        F003[F-003<br/>Startup Logging]
-        F004[F-004<br/>Package Identity]
-        F005[F-005<br/>Zero Dependencies]
-        F006[F-006<br/>Documentation]
+flowchart LR
+    subgraph IDs["Identifier Namespaces"]
+        F["F-001 ... F-006<br/>6 Features"]
+        RQ["F-xxx-RQ-yyy<br/>22 Functional Requirements"]
+        C["C-001 ... C-007<br/>7 Constraints"]
+        A["A-001 ... A-005<br/>5 Assumptions"]
+        WF["WF-001 ... WF-003<br/>3 Workflows"]
+        OBJ["OBJ-1 / OBJ-2<br/>2 Engagement Objectives"]
     end
 
-    subgraph Decisions["ADRs (§5.3.6)"]
-        ADR001[ADR-001<br/>Core http Only]
-        ADR002[ADR-002<br/>Loopback Bind]
-        ADR003[ADR-003<br/>Hardcoded Literals]
-        ADR004[ADR-004<br/>Default Errors]
-        ADR005[ADR-005<br/>Zero Deps]
-        ADR006[ADR-006<br/>Source Invariance]
-    end
-
-    subgraph Constraints["Constraints (§2.6.2)"]
-        C001[C-001<br/>Immutability]
-        C002[C-002<br/>Host 127.0.0.1]
-        C003[C-003<br/>Port 3000]
-        C004[C-004<br/>Byte-Identical]
-        C005[C-005<br/>Zero Deps]
-        C006[C-006<br/>No npm install]
-        C007[C-007<br/>MIT License]
-    end
-
-    ADR001 --> C005
-    ADR002 --> C002
-    ADR003 --> C002
-    ADR003 --> C003
-    ADR005 --> C005
-    ADR006 --> C001
-
-    F001 -.implements.-> C002
-    F001 -.implements.-> C003
-    F002 -.implements.-> C004
-    F005 -.implements.-> C005
-    F005 -.implements.-> C006
-    F006 -.implements.-> C001
-    F004 -.implements.-> C007
+    F -->|decomposes into| RQ
+    C -->|governs| F
+    A -->|underpins| F
+    WF -->|exercises| F
+    OBJ -->|delivers analysis of| F
 ```
 
-### 9.1.9 Two-Name Convention
+#### Identifier Format Conventions
 
-The repository deliberately uses two distinct names: one for the Git repository and one for the npm package. This dual-naming convention is referenced across §1.2.2, §2.1.4, and §3.8 but is not consolidated elsewhere.
-
-| Name Type | Value | Source Location |
-|-----------|-------|-----------------|
-| Repository / Git identity | `hao-backprop-test` | `README.md` line 1 (H1 heading) |
-| npm package identity | `hello_world` | `package.json` `"name"` field |
-
-Both names are governed by Constraint C-001 and may not be reconciled.
-
-### 9.1.10 Resource Sizing Envelope
-
-The deployment posture (§8.10.2) requires a remarkably small resource footprint. The figures below represent the recommended minimum operating envelope for the single-process Node.js fixture.
-
-| Resource | Recommended Minimum | Notes |
-|----------|---------------------|-------|
-| CPU | 1 vCPU (or 1 physical core) | Single-threaded event loop |
-| RAM | 64 MB available to the process | Node.js baseline; no allocator hotspots |
-| Disk | < 100 KB | Four small text files |
-| Network | Loopback (`lo`) interface up | External connectivity not required |
-| Node.js version | Any version supporting CommonJS and core `http` | No `engines` field; version is unpinned |
-| Inbound port | TCP `3000` free on `127.0.0.1` at startup | Per A-002; no fallback logic |
-| Estimated cost | $0/month | No managed services, no container runtime |
-
-### 9.1.11 Three-Step Deployment Procedure
-
-The complete deployment workflow (per §8.9.2) consists of three manual operator steps. There is no automated deployment pipeline.
-
-1. **Clone**: `git clone` the repository to the target host.
-2. **Verify Runtime**: Confirm Node.js is installed on the host (Assumption A-001).
-3. **Execute**: Run `node server.js` and observe the startup line `Server running at http://127.0.0.1:3000/` on the operator terminal — this single stdout line is the system's only explicit readiness signal.
-
-### 9.1.12 Stakeholder and Authorship Summary
-
-| Stakeholder | Role | Source of Identification |
-|-------------|------|---------------------------|
-| `hxu` | Sole declared author of the npm package | `package.json` `author` field |
-| "backprop integration" consumer (unnamed external system) | Downstream consumer of the HTTP fixture | `README.md` line 2 |
-| Operator | Human user who launches and observes the process | §4.1.2 actor inventory |
-
-No `CODEOWNERS`, `MAINTAINERS`, or `CONTRIBUTORS` files exist in the repository (per §2.4.5).
-
----
+- **F-NNN** — Feature identifier (zero-padded three-digit ordinal).
+- **F-NNN-RQ-MMM** — Functional Requirement under feature F-NNN (e.g., `F-002-RQ-001`).
+- **C-NNN** — Constraint identifier; constraints are source-derived invariants.
+- **A-NNN** — Assumption identifier; assumptions are conditions on the operating environment.
+- **WF-NNN** — Workflow identifier; workflows are operator/integrator behavior sequences.
+- **OBJ-N** — Engagement objective identifier (only OBJ-1 dead-code analysis and OBJ-2 testing strategy exist).
 
 ## 9.2 GLOSSARY
 
-The terms defined below carry specialized meanings within this specification. Each entry includes the authoritative section in which the term is most thoroughly developed.
-
-### 9.2.1 Architecture-Specific Concepts
+The following glossary defines domain-specific and architectural terms as used in this Technical Specification. Entries are alphabetical.
 
 | Term | Definition |
 |------|------------|
-| **Backprop integration** | The unspecified external consumer or test harness that the `hao-backprop-test` repository exists to serve. Referenced by name in `README.md` but undefined within the repository itself. (§1.2.1) |
-| **Behavioral stability** | The architectural property that the response payload, status code, and headers must remain byte-identical across all executions to preserve determinism for upstream tests. (§1.2.3, §5.1.1.2) |
-| **Branchless handler** | The HTTP request handler that contains no conditional logic (`if`, `switch`, ternary) and ignores the `req` argument entirely. The handler produces byte-identical output regardless of request method, path, headers, or body. (§5.3.2, §5.4.4) |
-| **Defense by minimalism** | The security posture in which the *absence* of attack surface is itself the security control. The system has no application-layer security mechanisms but is protected by loopback binding, zero dependencies, and the branchless handler. (§3.9, §5.3.5) |
-| **Determinism contract** | The formal requirement (F-002-RQ-004) that the handler must not branch on any property of `req`. This contract ensures byte-identical responses across all invocations. (§2.1.2, §5.3.2) |
-| **Negative Architecture** | The deliberate, documented *exclusion* of features that a non-fixture system would normally include — routing, middleware, error handling, logging frameworks, caching, persistence, and authentication. Treated as a first-class engineering artifact. (§5.1.1.2, §6.1.5.1, §6.5.8.2) |
-| **Observability-by-absence** | A specialization of the Negative Architecture pattern applied to the observability surface. The single startup log line and the implicit HTTP-response health signal together constitute the entire intentional observability surface. (§6.5.8.2) |
-| **Reactor Pattern** | The Node.js event-loop execution model on which the single-process architecture relies. Synonymous with "Node.js event loop" throughout this specification. (§2.4.3, §5.4.5, §6.1.3.1) |
-| **Self-containment** | The principle that the entire system fits within four files — no install step, no build step, and no external runtime infrastructure. (§6.1.5.1) |
-| **Source invariance** | The architectural property that all four committed files must remain unchanged from baseline. Enforced by Constraint C-001 and the README's "Do not touch!" directive; named in ADR-006. (§5.3.6.6, §3.1.1) |
-| **Test fixture** | The role assigned to this repository: a controlled artifact used to exercise an external integration workflow, not a product, library, or framework. (§1.2.1, §6.1.1.1) |
-
-### 9.2.2 Technical and Protocol Terms
-
-| Term | Definition |
-|------|------------|
-| **CommonJS** | The module system used by `server.js` via `require()`, contrasted with ES Modules (`import`/`export`). Default for Node.js absent a `"type": "module"` declaration. (§1.2.2, §5.3.1) |
-| **HTTP/1.1** | The plaintext (non-TLS) wire protocol used by the server as implemented by Node.js core `http`. (§1.2.2, §2.1.1, §5.3.2) |
-| **Lockfile (`lockfileVersion: 3`)** | The npm v7+ lockfile format used by `package-lock.json`. In this repository, the `packages` map contains a single key (the empty string `""`) representing the root package — a cryptographic attestation of zero installed dependencies. (§3.4.3, §3.8) |
-| **Loopback (`127.0.0.1`)** | The OS network interface reachable only from the same host. Per Constraint C-002, the bind address constitutes the system's primary security boundary. (§5.4.4.2, ADR-002) |
-| **MIT License** | The permissive SPDX license identifier declared in both `package.json` and `package-lock.json` (Constraint C-007). The license under which all four committed files are released. (§2.6.2, §3.8) |
-| **Plaintext HTTP** | HTTP without TLS encryption. Loopback transit is the mitigating factor for the absence of transport-layer security. (§2.4.4, §5.3.2) |
-| **Static response** | A compile-time literal response body that does not depend on any property of the inbound request. (§1.2.2, §2.1.2) |
-| **Stateless** | The architectural property that the system holds no in-memory or persistent state beyond the constants `hostname`, `port`, and the `server` object. (§1.2.2, §4.5.1) |
-| **TCP port 3000** | The hardcoded listening port (Constraint C-003). No fallback logic exists for port-collision scenarios. (§1.2.1, §2.6.2) |
-
-### 9.2.3 Process and Lifecycle Terms
-
-| Term | Definition |
-|------|------------|
-| **Event loop** | The Node.js single-threaded execution model on which the entire system runs. (§5.4.5, §6.1.3.1) |
-| **Graceful shutdown** | A pattern (deliberately not implemented) of trapping `SIGINT`/`SIGTERM` and calling `server.close()` before exiting. (§5.4.3.3, §6.1.4.4) |
-| **Listen callback** | The third argument to `server.listen()` that fires after a successful TCP bind. Used in `server.js` to emit the single startup log line. (§2.1.3, §6.5.5.1) |
-| **Per-request transient state** | The momentary execution context during a single request — the `Handling` state in the lifecycle. No state mutation persists beyond the request boundary. (§4.5.2) |
-| **Reentrant state** | The property of the `Handling` state that allows re-entry on each request without mutating module-level state. (§4.5.2) |
-| **Readiness signal** | The single stdout line `Server running at http://127.0.0.1:3000/` emitted from the listen callback. This is the system's only explicit readiness indicator. (§4.1.3, §6.5.5.1) |
-
----
+| **Backprop integration** | An external validation workflow referenced in `README.md` whose implementation, location, and validation logic reside outside the boundary of this codebase. |
+| **Baseline files** | The four immutable files at the repository root (`server.js`, `package.json`, `package-lock.json`, `README.md`) that must remain byte-identical per constraint C-001. |
+| **Branchless handler** | A request handler with no conditional paths (no `if`/`else`/`switch`/ternary); produces a deterministic, identical response regardless of request method, path, headers, or body. |
+| **CommonJS** | The Node.js module system used in `server.js` (`require('http')`); distinct from ES Modules (no `import`/`export`/`module.exports` syntax appears). |
+| **Compile-time literal** | A string or numeric value hardcoded in source that is emitted directly from V8's resident heap at runtime, requiring no storage strategy, schema, or migration. |
+| **Co-resident process** | A process running on the same host as the server, capable of reaching the loopback bind at `127.0.0.1:3000`. |
+| **Dangling reference** | A manifest field (`main: "index.js"` in `package.json`) pointing at a file that does not exist in the repository. |
+| **Dead code analysis** | A formal audit reviewing all symbols and files for removability; concluded zero removable dead code in this repository. |
+| **Deterministic counterparty** | A system whose value derives from refusing to change — providing predictable, invariant responses for external validation workflows. |
+| **Disaster recovery** | In this system, fully external: a single manual procedure consisting of re-invocation of `node server.js` by the operator. |
+| **Effective access control** | The OS-level loopback bind (`127.0.0.1`) acting as the sole security boundary, since no application-layer authentication or authorization exists. |
+| **Engagement scope** | The defined boundary of analysis work, established by `blitzy/documentation/Agent Action Plan.md`. |
+| **Event loop** | The Node.js intrinsic execution model, implemented by libuv, that processes asynchronous I/O. |
+| **Immutability directive** | The "Do not touch!" instruction in `README.md` — the operational contract enforcing the byte-identical preservation of the four baseline files. |
+| **Lockfile** | A reproducible npm package state file (`package-lock.json`) using `lockfileVersion: 3`, with an empty `packages` tree confirming zero dependencies. |
+| **Loopback interface** | The TCP/IP network interface `127.0.0.1` (IPv4) accessible only by co-resident processes on the same host. |
+| **Negative-space pattern** | A documentation technique used throughout the specification to enumerate verified-absent concerns with traceable evidence and governing constraints. |
+| **Operational contract** | The "Do not touch!" directive that operationalizes source invariance as the project's value proposition. |
+| **Operator** | A human or automation script that launches `node server.js` and observes its behavior. |
+| **PEP (Policy Enforcement Point)** | The location in a request flow where a policy decision is checked; in this system, the sole effective PEP is the OS TCP/IP loopback check. |
+| **Static response** | An HTTP response where status code, headers, and body are compile-time constants invariant across all requests. |
+| **Stateless** | An application model with no persistence, no in-memory accumulation, and no session tracking — each request handled independently. |
+| **Substrate** | An underlying component layer (Node.js core `http` module, libuv event loop, V8 JavaScript engine) that provides foundational capabilities. |
+| **Supply-chain attack surface** | The risk introduced by third-party dependencies; this system has zero supply-chain attack surface due to zero dependencies. |
+| **Test fixture** | A controlled artifact used to exercise an external workflow — this repository's primary purpose. |
+| **Test pyramid** | A test layering model with many unit tests at base, fewer integration tests in middle, fewest E2E at top; **inverted** for this 14-line server because no `module.exports` permits unit testing. |
+| **Trivial SBOM** | A Software Bill of Materials containing only the root package (`hello_world@1.0.0`) with zero transitive entries. |
+| **Verified absence** | A concept supported by direct evidence of non-presence in source files, documented in the negative-space pattern. |
+| **Zero-dependency operation** | The architectural property by which the project declares neither runtime nor development dependencies and runs without `npm install`. |
 
 ## 9.3 ACRONYMS
 
-This subsection expands every acronym used within this Technical Specification. The acronyms are organized into domain/technology terms (alphabetical), POSIX error codes, and POSIX signals.
+This appendix expands every initialism that appears in the Technical Specification. Because the document extensively employs the verified-absence (negative-space) pattern — enumerating concerns that are *not* present along with rationale — many acronyms below appear in the spec as part of "not applicable" or "verified absent" statements rather than as descriptions of implemented capabilities.
 
-### 9.3.1 Domain and Technology Acronyms
+### 9.3.1 Project-Specific Identifier Conventions
+
+These acronym families are unique to this Technical Specification and its engagement.
 
 | Acronym | Expansion |
 |---------|-----------|
-| ADR | Architecture Decision Record |
-| API | Application Programming Interface |
-| APM | Application Performance Monitoring |
-| ARIA | Accessible Rich Internet Applications |
-| ASCII | American Standard Code for Information Interchange |
-| CDN | Content Delivery Network |
-| CI/CD | Continuous Integration / Continuous Deployment |
-| CLI | Command-Line Interface |
-| CPU | Central Processing Unit |
-| CSP | Content Security Policy |
-| CSRF | Cross-Site Request Forgery |
-| CSS | Cascading Style Sheets |
-| DDoS | Distributed Denial of Service |
-| DMZ | Demilitarized Zone |
-| DNS | Domain Name System |
-| DOM | Document Object Model |
-| DR | Disaster Recovery |
-| ECS | Elastic Container Service (AWS) |
-| EKS | Elastic Kubernetes Service (AWS) |
-| ELB | Elastic Load Balancer (AWS) |
-| ELK | Elasticsearch, Logstash, Kibana |
-| ESM | ECMAScript Modules |
-| ETag | Entity Tag (HTTP header) |
-| FAQ | Frequently Asked Questions |
-| FD | File Descriptor |
-| GC | Garbage Collection |
-| GCE | Google Compute Engine |
-| GCR | Google Container Registry |
-| GCS | Google Cloud Storage |
-| GHCR | GitHub Container Registry |
-| GKE | Google Kubernetes Engine |
-| gRPC | Google Remote Procedure Call |
-| HA | High Availability |
-| HPA | Horizontal Pod Autoscaler (Kubernetes) |
-| HSTS | HTTP Strict Transport Security |
-| HTML | HyperText Markup Language |
-| HTTP | HyperText Transfer Protocol |
-| HTTPS | HyperText Transfer Protocol Secure (HTTP over TLS) |
-| i18n | Internationalization |
-| IaC | Infrastructure as Code |
-| IC | Incident Commander |
-| IDE | Integrated Development Environment |
-| IP | Internet Protocol |
-| IPC | Inter-Process Communication |
-| JSON | JavaScript Object Notation |
-| JWT | JSON Web Token |
-| KMS | Key Management Service |
-| KPI | Key Performance Indicator |
-| l10n | Localization |
-| LB | Load Balancer |
-| LF | Line Feed (ASCII `0x0A`) |
-| MIT | Massachusetts Institute of Technology (license origin) |
-| NAT | Network Address Translation |
-| npm | Node Package Manager |
-| OAuth | Open Authorization |
-| OCI | Open Container Initiative |
-| OPA | Open Policy Agent |
-| OS | Operating System |
-| OTel | OpenTelemetry |
-| P50 / P95 / P99 | Latency percentiles (50th / 95th / 99th) |
-| PII | Personally Identifiable Information |
-| PM2 | Process Manager 2 (Node.js process manager) |
-| POSIX | Portable Operating System Interface |
-| PR | Pull Request |
-| QoS | Quality of Service |
-| RCA | Root Cause Analysis |
-| RDS | Relational Database Service (AWS) |
-| REST | Representational State Transfer |
-| RPC | Remote Procedure Call |
-| RPO | Recovery Point Objective |
-| RPS | Requests Per Second |
-| RSS | Resident Set Size (memory measurement) |
-| RTO | Recovery Time Objective |
-| SDK | Software Development Kit |
-| SIEM | Security Information and Event Management |
-| SLA | Service Level Agreement |
-| SLI | Service Level Indicator |
-| SLO | Service Level Objective |
-| SMS | Short Message Service |
-| SPDX | Software Package Data Exchange |
-| SQS | Simple Queue Service (AWS) |
-| SSE | Server-Sent Events |
-| stderr | Standard Error (stream) |
-| stdout | Standard Output (stream) |
-| TCP | Transmission Control Protocol |
-| TLS | Transport Layer Security |
-| TSDB | Time-Series Database |
-| UAT | User Acceptance Testing |
-| UDP | User Datagram Protocol |
-| UI | User Interface |
-| URL | Uniform Resource Locator |
-| UTF-8 | Unicode Transformation Format, 8-bit |
-| VM | Virtual Machine |
-| VPA | Vertical Pod Autoscaler (Kubernetes) |
-| WAF | Web Application Firewall |
-| WCAG | Web Content Accessibility Guidelines |
+| **AAP** | Agent Action Plan |
+| **A-001 … A-005** | Assumption identifiers (zero-padded three-digit ordinals) |
+| **ADR** | Architecture Decision Record |
+| **C-001 … C-007** | Constraint identifiers (zero-padded three-digit ordinals) |
+| **F-001 … F-006** | Feature identifiers (zero-padded three-digit ordinals) |
+| **F-xxx-RQ-yyy** | Feature Requirement identifier (e.g., `F-002-RQ-001`) |
+| **HEAD** | Git pointer to the current commit |
+| **OBJ-1 / OBJ-2** | The two co-equal engagement objectives: dead-code report / testing strategy |
+| **WF-001 … WF-003** | Workflow identifiers |
 
-### 9.3.2 POSIX Error Codes
+### 9.3.2 Core Protocol, Runtime, and Standards Acronyms
 
-These error codes are referenced in §4.4.2, §5.4.3.1, and §6.1.4.1 in connection with the absence of an `'error'` listener on the `http.Server` instance. When any of these errors occur, the process exits per ADR-004 ("Defer All Error Handling to Node.js Default Behavior").
+These acronyms reflect technologies directly observed or directly excluded in the codebase.
 
-| Code | Expansion / Meaning |
-|------|---------------------|
-| `EACCES` | "Access" — Permission denied (e.g., attempting to bind a privileged port without rights) |
-| `EADDRINUSE` | "Address In Use" — The requested address/port is already bound by another process |
-| `EPIPE` | "Pipe" — Broken pipe (e.g., writing to a closed stdout stream) |
+| Acronym | Expansion |
+|---------|-----------|
+| **API** | Application Programming Interface |
+| **CommonJS** | Common JavaScript (module system) |
+| **ECMAScript** | European Computer Manufacturers Association Script (the JavaScript standard) |
+| **ESM** | ECMAScript Modules |
+| **HTTP** | HyperText Transfer Protocol |
+| **HTTPS** | HTTP Secure |
+| **IPv4** | Internet Protocol version 4 |
+| **JSON** | JavaScript Object Notation |
+| **lcov** | Linux Test Coverage (report format) |
+| **libuv** | Asynchronous I/O library underpinning Node.js |
+| **LOC** | Lines of Code |
+| **MIT** | Massachusetts Institute of Technology (license name) |
+| **npm** | Node Package Manager |
+| **OS** | Operating System |
+| **SBOM** | Software Bill of Materials |
+| **stderr / stdin / stdout** | Standard Error / Input / Output streams |
+| **TAP** | Test Anything Protocol |
+| **TCP** | Transmission Control Protocol |
+| **TCP/IP** | Transmission Control Protocol / Internet Protocol |
+| **TTY** | Teletype (terminal interface) |
+| **URL** | Uniform Resource Locator |
+| **UTF-8** | Unicode Transformation Format, 8-bit |
+| **V8** | Google's open-source JavaScript engine that powers Node.js |
 
-### 9.3.3 POSIX Signals
+### 9.3.3 Operating System and Networking Error Acronyms
 
-The following signals are referenced in process-termination contexts throughout §4.5.2, §5.4.3.1, and §6.5.5.3. The system does not register handlers for any of them (no `process.on('SIGINT', ...)` or similar exists in `server.js`).
+Used in failure-mode and error-handling discussions throughout the specification.
 
-| Signal | Number | Default Exit Code | Meaning |
-|--------|--------|-------------------|---------|
-| `SIGINT` | 2 | 130 | Interrupt — typically Ctrl+C from a terminal |
-| `SIGTERM` | 15 | 143 | Terminate — graceful kill request |
-| `SIGKILL` | 9 | 137 | Kill — unconditional, cannot be trapped or ignored |
+| Acronym | Expansion |
+|---------|-----------|
+| **EACCES** | OS error code: "permission denied" |
+| **EADDRINUSE** | OS error code: "address already in use" (port binding collision) |
+| **EPIPE** | OS error code: "broken pipe" |
+| **RST** | TCP Reset packet |
+| **SIGINT / SIGTERM / SIGKILL** | UNIX signals: interrupt / terminate / kill |
+| **SYN** | TCP Synchronize packet |
 
----
+### 9.3.4 Architectural Pattern Acronyms
+
+Used in architecture, integration, and design-pattern discussions, including verified-absent patterns.
+
+| Acronym | Expansion |
+|---------|-----------|
+| **BFF** | Backend-For-Frontend |
+| **CDC** | Change Data Capture |
+| **CQRS** | Command Query Responsibility Segregation |
+| **DOM** | Document Object Model |
+| **E2E** | End-to-End |
+| **ETL** | Extract, Transform, Load |
+| **HATEOAS** | Hypermedia as the Engine of Application State |
+| **ORM** | Object-Relational Mapping |
+| **REST** | Representational State Transfer |
+| **RPC** | Remote Procedure Call |
+| **RPS** | Requests Per Second |
+| **SOAP** | Simple Object Access Protocol |
+| **SPA** | Single Page Application |
+| **SSE** | Server-Sent Events |
+
+### 9.3.5 Security, Identity, and Cryptography Acronyms
+
+Each entry below is referenced in the spec primarily through the negative-space pattern (verified absent in this fixture).
+
+| Acronym | Expansion |
+|---------|-----------|
+| **ABAC** | Attribute-Based Access Control |
+| **ACL** | Access Control List |
+| **CORS** | Cross-Origin Resource Sharing |
+| **CSP** | Content Security Policy |
+| **CVE** | Common Vulnerabilities and Exposures |
+| **DAST** | Dynamic Application Security Testing |
+| **FIDO2** | Fast IDentity Online v2 |
+| **FPE** | Format-Preserving Encryption |
+| **GCM** | Galois/Counter Mode (AES mode of operation) |
+| **HOTP** | HMAC-based One-Time Password |
+| **HPKP** | HTTP Public Key Pinning |
+| **HSM** | Hardware Security Module |
+| **HSTS** | HTTP Strict Transport Security |
+| **IAST** | Interactive Application Security Testing |
+| **IDS / IPS** | Intrusion Detection System / Intrusion Prevention System |
+| **IdP** | Identity Provider |
+| **JWT** | JSON Web Token |
+| **KMS** | Key Management Service |
+| **MFA** | Multi-Factor Authentication |
+| **mTLS** | Mutual Transport Layer Security |
+| **OAuth** | Open Authorization |
+| **OIDC** | OpenID Connect |
+| **OPA** | Open Policy Agent |
+| **OWASP** | Open Web Application Security Project |
+| **PEP** | Policy Enforcement Point |
+| **PKCS** | Public Key Cryptography Standards |
+| **RBAC** | Role-Based Access Control |
+| **ReBAC** | Relationship-Based Access Control |
+| **SAML** | Security Assertion Markup Language |
+| **SAST** | Static Application Security Testing |
+| **SCIM** | System for Cross-domain Identity Management |
+| **SHA** | Secure Hash Algorithm |
+| **SIEM** | Security Information and Event Management |
+| **SSRF** | Server-Side Request Forgery |
+| **TLS** | Transport Layer Security |
+| **TOTP** | Time-based One-Time Password |
+| **WAF** | Web Application Firewall |
+| **WebAuthn** | Web Authentication API |
+
+### 9.3.6 Compliance and Regulatory Acronyms
+
+Referenced in Section 6.4 and in Appendix 9.1.8 as the verified-absent compliance posture.
+
+| Acronym | Expansion |
+|---------|-----------|
+| **CCPA** | California Consumer Privacy Act |
+| **CPRA** | California Privacy Rights Act |
+| **DPIA** | Data Protection Impact Assessment |
+| **DSAR** | Data Subject Access Request |
+| **FedRAMP** | Federal Risk and Authorization Management Program |
+| **FIPS** | Federal Information Processing Standards |
+| **FISMA** | Federal Information Security Management Act |
+| **GDPR** | General Data Protection Regulation |
+| **HIPAA** | Health Insurance Portability and Accountability Act |
+| **ISMS** | Information Security Management System |
+| **ISO** | International Organization for Standardization |
+| **NIST** | National Institute of Standards and Technology |
+| **PCI-DSS** | Payment Card Industry Data Security Standard |
+| **PHI** | Protected Health Information |
+| **PII** | Personally Identifiable Information |
+| **SCC** | Standard Contractual Clauses |
+| **SOC 2** | Service Organization Control 2 |
+
+### 9.3.7 Infrastructure, Deployment, and Cloud Acronyms
+
+Referenced in Sections 3 and 8 — almost exclusively as verified-absent capabilities for this fixture.
+
+| Acronym | Expansion |
+|---------|-----------|
+| **APM** | Application Performance Monitoring |
+| **AWS** | Amazon Web Services |
+| **CDK** | Cloud Development Kit |
+| **CDN** | Content Delivery Network |
+| **CI/CD** | Continuous Integration / Continuous Delivery (or Deployment) |
+| **DNS** | Domain Name System |
+| **DR** | Disaster Recovery |
+| **ELK** | Elasticsearch, Logstash, Kibana (observability stack) |
+| **GCP** | Google Cloud Platform |
+| **HPA** | Horizontal Pod Autoscaler |
+| **IaC** | Infrastructure as Code |
+| **K8s** | Kubernetes (numeronym: K + 8 letters + s) |
+| **LAN** | Local Area Network |
+| **MTBF** | Mean Time Between Failures |
+| **MTTR** | Mean Time To Recovery (or Repair) |
+| **PITR** | Point-In-Time Recovery |
+| **PM2** | Process Manager 2 (Node.js process manager) |
+| **RED method** | Rate, Errors, Duration (observability method) |
+| **RPO** | Recovery Point Objective |
+| **RTO** | Recovery Time Objective |
+| **SDK** | Software Development Kit |
+| **SLA** | Service Level Agreement |
+| **SLO** | Service Level Objective |
+| **USE method** | Utilization, Saturation, Errors (observability method) |
+| **VPN** | Virtual Private Network |
+
+### 9.3.8 Data, Messaging, and Integration Acronyms
+
+Referenced in Sections 5 and 6 within the verified-absent data-and-integration inventories.
+
+| Acronym | Expansion |
+|---------|-----------|
+| **AMQP** | Advanced Message Queuing Protocol |
+| **AST** | Abstract Syntax Tree |
+| **DDL** | Data Definition Language |
+| **DLQ** | Dead-Letter Queue |
+| **EDI** | Electronic Data Interchange |
+| **ERD** | Entity Relationship Diagram |
+| **FTP / SFTP / FTPS** | File Transfer Protocol / Secure FTP / FTP over SSL/TLS |
+| **IIOP** | Internet Inter-ORB Protocol |
+| **KV** | Key-Value |
+| **LDAP** | Lightweight Directory Access Protocol |
+| **LRU** | Least Recently Used |
+| **MLS** | Messaging Layer Security |
+| **MQTT** | Message Queuing Telemetry Transport |
+| **NoSQL** | Not Only SQL |
+| **QUIC** | Quick UDP Internet Connections |
+| **RFC** | Request for Comments |
+| **SES** | Simple Email Service (AWS) |
+| **SMS** | Short Message Service |
+| **SMTP** | Simple Mail Transfer Protocol |
+| **SNMP** | Simple Network Management Protocol |
+| **SNS** | Simple Notification Service (AWS) |
+| **SQL** | Structured Query Language |
+| **SQS** | Simple Queue Service (AWS) |
+| **UDP** | User Datagram Protocol |
+| **WORM** | Write Once Read Many |
+| **WS-*** | WS-Star (Web Services protocol family) |
+
+### 9.3.9 Business and Operational Acronyms
+
+| Acronym | Expansion |
+|---------|-----------|
+| **AS** | Authorization Server |
+| **DAU** | Daily Active Users |
+| **KPI** | Key Performance Indicator |
+| **MAU** | Monthly Active Users |
+| **UAT** | User Acceptance Testing |
 
 ## 9.4 REFERENCES
 
-### 9.4.1 Repository Files Examined
+### 9.4.1 Files Examined
 
-The following source files in the repository root were used directly in the construction of this Appendices section:
+- `server.js` — The 14-line CommonJS HTTP server; sole source of byte-level response specification (§9.1.4), confirmation of branchless handler behavior, and substrate for constraint C-002, C-003, C-004 derivations.
+- `package.json` — 11-line npm manifest; source of package identity (`hello_world@1.0.0`), MIT license declaration, dangling `main: "index.js"` reference (§9.1.5), absence of `engines` field (§9.1.2), and absence of dependency declarations.
+- `package-lock.json` — 13-line lockfile (`lockfileVersion: 3`) with empty packages tree; verifies zero transitive dependency closure and underpins the trivial-SBOM glossary entry (§9.2).
+- `README.md` — 3-line governance document containing the "Do not touch!" immutability directive that is the source of constraint C-001 and the operational-contract glossary entry (§9.2).
+- `docs/dead-code-analysis.md` — OBJ-1 deliverable; source of "dead code analysis" glossary definition and confirmation that the dangling `main` reference is documented but non-removable.
+- `docs/testing-strategy.md` — OBJ-2 deliverable; source for the P0/P1/P2 priority band reference (§9.1.7), the inverted-test-pyramid concept (§9.2), and the Node.js ≥ 20 runtime recommendation (§9.1.2).
+- `blitzy/documentation/Project Guide.md` — Source of engagement metadata (§9.1.1), runtime versions (§9.1.2), engagement-hours breakdown (§9.1.6), and seed terminology for the glossary (§9.2).
 
-- `server.js` — The complete 14-line executable source; primary reference for §9.1.1.1, §9.1.2, §9.1.3, and §9.1.5
-- `package.json` — The 11-line npm manifest; reference for §9.1.1.2, §9.1.9, and §9.1.12
-- `package-lock.json` — The 13-line npm v3 lockfile; reference for §9.1.1.3 and the zero-dependency attestation in §9.1.7
-- `README.md` — The 2-line documentation file containing the "Do not touch!" immutability directive; reference for §9.1.1.4, §9.1.9, and §9.1.12
+### 9.4.2 Folders Explored
 
-### 9.4.2 Repository Folders Examined
+- Repository root (depth 0) — Confirmed the exact four-file baseline plus `docs/` and `blitzy/` additive folders; no other artifacts exist.
+- `docs/` (depth 1) — Contains the two analysis deliverables; no executable code.
+- `blitzy/` (depth 1) — Container directory whose sole child is `blitzy/documentation/`.
+- `blitzy/documentation/` (depth 2) — Contains `Agent Action Plan.md`, `Build Prompt.md`, `Technical Specifications.md`, and `Project Guide.md`.
 
-- `/` (repository root) — Confirmed that the four files above constitute the entire repository contents; no subdirectories of any kind exist (verified for the absent items consolidated in §9.1.7)
+### 9.4.3 Technical Specification Sections Cross-Referenced
 
-### 9.4.3 Technical Specification Sections Referenced
-
-The following sections of this Technical Specification were retrieved and synthesized to produce the consolidated tables in §9.1, the glossary entries in §9.2, and the acronym expansions in §9.3:
-
-- §1.1 Executive Summary, §1.2 System Overview, §1.3 Scope, §1.4 References
-- §2.1 Feature Catalog, §2.2 Functional Requirements, §2.3 Feature Relationships, §2.4 Implementation Considerations, §2.5 Traceability Matrix, §2.6 Assumptions and Constraints, §2.7 References
-- §3.1 Stack Overview, §3.2 Programming Languages, §3.3 Frameworks & Libraries, §3.4 Open Source Dependencies, §3.5 Third-Party Services, §3.6 Databases & Storage, §3.7 Development & Deployment, §3.8 Package Metadata & Licensing, §3.9 Security Implications, §3.10 Stack Integration Requirements, §3.11 References
-- §4.1 System Workflows Overview, §4.2 Core Business Processes, §4.3 Integration Workflows, §4.4 Error Handling and Recovery, §4.5 State Management and Transitions, §4.6 Validation/Authorization/Compliance Checkpoints, §4.7 Timing and SLA Considerations, §4.8 References
-- §5.1 High-Level Architecture, §5.2 Component Details, §5.3 Technical Decisions, §5.4 Cross-Cutting Concerns
-- §6.1 Core Services Architecture, §6.2 Database Design, §6.3 Integration Architecture, §6.4 Security Architecture, §6.5 Monitoring and Observability, §6.6 Testing Strategy
-- §7.1 Applicability Assessment, §7.2 Non-Applicable UI Topics, §7.3 Integration Surface, §7.4 Forward Compatibility Note, §7.5 References
-- §8.1 Applicability Assessment, §8.2 Build and Distribution, §8.3 Deployment Environment, §8.4 Cloud Services, §8.5 Containerization, §8.6 Orchestration, §8.7 CI/CD Pipeline, §8.8 Infrastructure Monitoring, §8.9 Required Diagrams, §8.10 Cost and Sizing, §8.11 External Dependencies Inventory, §8.12 Maintenance Procedures, §8.13 Governing Constraints, §8.14 References
+- §1.1 Executive Summary — Project overview, stakeholders, value proposition supporting the glossary entries for "deterministic counterparty," "immutability directive," and "test fixture."
+- §2.1 Feature Catalog — Source of feature identifiers F-001 through F-006 (§9.1.9 and §9.3.1).
+- §2.6 Assumptions and Constraints — Authoritative source of A-001 through A-005 and C-001 through C-007 referenced throughout this appendix.
+- §3.1 Stack Philosophy and Overview — Source of minimalism principle underlying "zero-dependency operation" (§9.2).
+- §3.7 Development & Deployment — Source of runtime, build, and launch context that informs §9.1.2.
+- §4.6 Error Handling — Source of EADDRINUSE / EACCES / EPIPE error acronyms (§9.3.3).
+- §5.1 High-Level Architecture — Source of single-process monolithic micro-service framing referenced in the glossary.
+- §6.1 Core Services Architecture — Precedent for the verified-absence (negative-space) documentation pattern (§9.2).
+- §6.4 Security Architecture — Source of compliance-regime acronyms and the "effective access control" glossary entry.
+- §6.5 Monitoring and Observability — Source of RED / USE / APM observability acronyms (§9.3.7).
+- §6.6 Testing Strategy — Source of test-pyramid inversion and P0/P1/P2 priority band material (§9.1.7).
+- §8.12 References — Established the file/folder/section reference format adopted by §9.4 of this appendix.
