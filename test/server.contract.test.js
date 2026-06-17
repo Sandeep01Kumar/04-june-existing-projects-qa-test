@@ -91,6 +91,23 @@ describe('server.js HTTP contract (in-process)', () => {
     expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
   });
 
+  // P0 — Header coverage: standard auto-generated headers (AAP 0.1.1). Beyond the
+  // explicit Content-Type, Node auto-generates a Date header and a Connection token
+  // on every response. Assert their presence and FORMAT non-brittly — never pin the
+  // volatile Date value or a single Connection token.
+  test('GET / includes well-formed standard auto-generated headers (Date, Connection)', async () => {
+    const res = await request(baseURL).get('/');
+    // Date: present and parseable to a valid calendar date; the value itself is
+    // volatile (changes every second), so only its parseability is asserted.
+    expect(res.headers.date).toBeDefined();
+    expect(Number.isNaN(Date.parse(res.headers.date))).toBe(false);
+    // Connection: present with a valid HTTP connection token. supertest's default
+    // agent negotiates 'close'; assert the connection semantics rather than a brittle
+    // fixed value so the test survives client/runtime keep-alive differences.
+    expect(res.headers.connection).toBeDefined();
+    expect(['close', 'keep-alive']).toContain(res.headers.connection);
+  });
+
   // P2 — Startup-log assertion: the listen callback logs the readiness line
   // exactly once. Deterministic thanks to the beforeAll readiness wait.
   test('emits the readiness log line exactly once on startup', () => {
@@ -137,7 +154,9 @@ describe('server.js HTTP contract (in-process)', () => {
   test('ignores an empty request body', async () => {
     const res = await request(baseURL).post('/').send('');
     expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toBe(CONTENT_TYPE);
     expect(res.text).toBe(EXPECTED_BODY);
+    expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
   });
 
   test('ignores a large (~1MB) request body', async () => {
@@ -150,6 +169,7 @@ describe('server.js HTTP contract (in-process)', () => {
       .set('Connection', 'close')
       .send(largeBody);
     expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toBe(CONTENT_TYPE);
     expect(res.text).toBe(EXPECTED_BODY);
     expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
   });
@@ -158,7 +178,9 @@ describe('server.js HTTP contract (in-process)', () => {
     // supertest sets Content-Type: application/json; the server ignores it.
     const res = await request(baseURL).post('/').send({ ignored: true });
     expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toBe(CONTENT_TYPE);
     expect(res.text).toBe(EXPECTED_BODY);
+    expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
   });
 
   // P0 — Edge case: statelessness across sequential and concurrent requests.
@@ -166,7 +188,9 @@ describe('server.js HTTP contract (in-process)', () => {
     for (let i = 0; i < 5; i += 1) {
       const res = await request(baseURL).get('/');
       expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toBe(CONTENT_TYPE);
       expect(res.text).toBe(EXPECTED_BODY);
+      expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
     }
   });
 
@@ -176,6 +200,7 @@ describe('server.js HTTP contract (in-process)', () => {
     );
     responses.forEach((res) => {
       expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toBe(CONTENT_TYPE);
       expect(res.text).toBe(EXPECTED_BODY);
       expect(Buffer.byteLength(res.text)).toBe(EXPECTED_BYTES);
     });
