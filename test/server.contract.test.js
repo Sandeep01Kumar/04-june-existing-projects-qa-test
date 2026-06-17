@@ -42,6 +42,13 @@ const {
   CONTENT_TYPE,
   READY_LOG,
 } = require('./helpers/constants');
+// The bare node:http client from the shared black-box harness (agent: false, a
+// fresh connection per request). supertest/superagent cannot express
+// non-standard HTTP method tokens (extension methods such as M-SEARCH, or
+// unsupported tokens such as BREW), so the arbitrary-method coverage added below
+// issues those requests through this helper — putting the same raw method token
+// on the wire that a client like curl would send.
+const { httpRequest } = require('./helpers/server-harness');
 
 // Spy on console.log BEFORE requiring server.js so its startup log is captured.
 // jest.spyOn calls through to the real console.log by default (output still
@@ -134,6 +141,57 @@ describe('server.js HTTP contract (in-process)', () => {
     const res = await request(baseURL).head('/');
     expect(res.status).toBe(200);
     expect(res.headers['content-type']).toBe(CONTENT_TYPE);
+  });
+
+  // P0/P1 — Edge case: ARBITRARY / EXTENSION HTTP METHODS that reach the handler.
+  // ---------------------------------------------------------------------------
+  // The AAP contract is that 'every request, regardless of method or path, yields
+  // exactly 200' and that edge cases 'verify deterministic behavior across
+  // arbitrary HTTP methods' (AAP 0.1.1). server.js is branchless and never reads
+  // req.method (server.js lines 6-10), so EVERY method token that Node's HTTP
+  // parser recognizes and routes to the handler must produce the identical
+  // contract. These extension/WebDAV/UPnP/CalDAV methods are recognized by Node's
+  // llhttp parser (verified on this runtime) and therefore exercise the handler
+  // exactly like the standard verbs above, extending the method-determinism
+  // guarantee well beyond GET/POST/PUT/DELETE/PATCH/OPTIONS. supertest cannot
+  // express these non-standard tokens, so they are issued over the harness's bare
+  // node:http client (agent: false) — the same raw token a client like curl sends.
+  const extensionMethods = [
+    'M-SEARCH', 'PROPFIND', 'MKCOL', 'REPORT', 'PURGE', 'NOTIFY', 'SEARCH', 'MKCALENDAR',
+  ];
+  describe.each(extensionMethods)('%s / matches the GET contract', (method) => {
+    test('returns identical 200 / text-plain / body', async () => {
+      const res = await httpRequest(method, '/');
+      expect(res.statusCode).toBe(200);
+      expect(res.headers['content-type']).toBe(CONTENT_TYPE);
+      expect(res.body).toBe(EXPECTED_BODY);
+      expect(Buffer.byteLength(res.body)).toBe(EXPECTED_BYTES);
+    });
+  });
+
+  // P1 — Edge case / documented boundary: UNSUPPORTED CUSTOM METHOD TOKENS.
+  // ---------------------------------------------------------------------------
+  // Tokens that are NOT in Node's HTTP-parser (llhttp) recognized-method set —
+  // e.g. BREW (RFC 2324), FOO, CUSTOM — are rejected by the parser with a
+  // protocol-level 400 Bad Request BEFORE server.js's request handler ever runs.
+  // This is deterministic Node RUNTIME behavior in the C/llhttp layer beneath the
+  // JavaScript handler, NOT a defect in server.js: the handler cannot observe or
+  // override a rejection that occurs before it is invoked, so no Content-Type or
+  // body is set. Forcing such tokens to return 200 would require changing
+  // server.js, which is immutable under constraint C-001 (AAP 0.8.2). These tests
+  // therefore PIN the real, deterministic boundary of the 'arbitrary method'
+  // contract: it holds for every token that reaches the handler (above) and yields
+  // a parser-level 400 for tokens that do not. They mirror the QA reproduction
+  // (curl -X BREW http://127.0.0.1:3000/custom) exactly.
+  const unsupportedMethods = ['BREW', 'FOO', 'CUSTOM'];
+  describe.each(unsupportedMethods)('%s is rejected by the Node HTTP parser', (method) => {
+    test('returns a protocol-level 400 with no body before the handler runs', async () => {
+      const res = await httpRequest(method, '/custom');
+      expect(res.statusCode).toBe(400);
+      // The handler never executed, so it set no Content-Type and no body.
+      expect(res.headers['content-type']).toBeUndefined();
+      expect(res.body).toBe('');
+    });
   });
 
   // P0 — Edge case: arbitrary / encoded / deep paths and query strings all map to
