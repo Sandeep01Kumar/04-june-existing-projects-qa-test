@@ -9,7 +9,7 @@ A minimal Node.js + [Express](https://www.npmjs.com/package/express) tutorial HT
 
 ## Install
 
-This project now depends on Express, so installing dependencies is **required** before the server can start:
+This project now depends on Express (declared as `^5.2.1` in `package.json` and locked to `5.2.1` in `package-lock.json`), so installing dependencies is **required** before the server can start:
 
 ```bash
 npm install
